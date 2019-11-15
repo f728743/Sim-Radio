@@ -122,16 +122,6 @@
 		7C51BACE23487334005F0884 = {
 			isa = PBXGroup;
 			children = (
-				7CBD424B237F38AB008341CF /* DownloadedPersistence+CoreDataClass.swift */,
-				7CBD424C237F38AB008341CF /* DownloadedPersistence+CoreDataProperties.swift */,
-				7CBD424D237F38AB008341CF /* DownloadTaskPersistence+CoreDataClass.swift */,
-				7CBD424E237F38AB008341CF /* DownloadTaskPersistence+CoreDataProperties.swift */,
-				7CBD424F237F38AB008341CF /* SeriesPersistence+CoreDataClass.swift */,
-				7CBD4250237F38AB008341CF /* SeriesPersistence+CoreDataProperties.swift */,
-				7CBD4251237F38AB008341CF /* StationPersistence+CoreDataClass.swift */,
-				7CBD4252237F38AB008341CF /* StationPersistence+CoreDataProperties.swift */,
-				7CBD4253237F38AB008341CF /* DownloadFilePersistence+CoreDataClass.swift */,
-				7CBD4254237F38AB008341CF /* DownloadFilePersistence+CoreDataProperties.swift */,
 				7C51BAD923487334005F0884 /* Sim Radio */,
 				7C51BAD823487334005F0884 /* Products */,
 			);
@@ -167,6 +157,7 @@
 		7C51BAF2234873F0005F0884 /* Radio */ = {
 			isa = PBXGroup;
 			children = (
+				7CBD425F237F39E0008341CF /* MediaLibrary */,
 				7C0C4956237F339200358D91 /* MediaLibrary.swift */,
 				7C20F43E236C272400035D0E /* LibraryError.swift */,
 				7C51BAF423487414005F0884 /* NowPlayable.swift */,
@@ -268,6 +259,31 @@
 				7C51BB332348760F005F0884 /* NavigationController.swift */,
 			);
 			path = Controllers;
+			sourceTree = "<group>";
+		};
+		7CBD425F237F39E0008341CF /* MediaLibrary */ = {
+			isa = PBXGroup;
+			children = (
+				7CBD4260237F39F5008341CF /* PersistData */,
+			);
+			path = MediaLibrary;
+			sourceTree = "<group>";
+		};
+		7CBD4260237F39F5008341CF /* PersistData */ = {
+			isa = PBXGroup;
+			children = (
+				7CBD424B237F38AB008341CF /* DownloadedPersistence+CoreDataClass.swift */,
+				7CBD424C237F38AB008341CF /* DownloadedPersistence+CoreDataProperties.swift */,
+				7CBD424D237F38AB008341CF /* DownloadTaskPersistence+CoreDataClass.swift */,
+				7CBD424E237F38AB008341CF /* DownloadTaskPersistence+CoreDataProperties.swift */,
+				7CBD424F237F38AB008341CF /* SeriesPersistence+CoreDataClass.swift */,
+				7CBD4250237F38AB008341CF /* SeriesPersistence+CoreDataProperties.swift */,
+				7CBD4251237F38AB008341CF /* StationPersistence+CoreDataClass.swift */,
+				7CBD4252237F38AB008341CF /* StationPersistence+CoreDataProperties.swift */,
+				7CBD4253237F38AB008341CF /* DownloadFilePersistence+CoreDataClass.swift */,
+				7CBD4254237F38AB008341CF /* DownloadFilePersistence+CoreDataProperties.swift */,
+			);
+			path = PersistData;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
