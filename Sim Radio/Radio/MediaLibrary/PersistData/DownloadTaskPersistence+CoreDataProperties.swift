@@ -1,6 +1,6 @@
 //
 //  DownloadTaskPersistence+CoreDataProperties.swift
-//  Sim Radio
+//  RadioDownloader
 //
 //  Created by Alexey Vorobyov on 15.11.2019.
 //  Copyright © 2019 Alexey Vorobyov. All rights reserved.
@@ -10,15 +10,14 @@
 import Foundation
 import CoreData
 
-
 extension DownloadTaskPersistence {
 
     @nonobjc public class func fetchRequest() -> NSFetchRequest<DownloadTaskPersistence> {
         return NSFetchRequest<DownloadTaskPersistence>(entityName: "DownloadTask")
     }
 
-    @NSManaged public var downloaded: NSSet?
-    @NSManaged public var files: NSSet?
+    @NSManaged public var downloaded: NSSet
+    @NSManaged public var files: NSSet
     @NSManaged public var series: SeriesPersistence?
     @NSManaged public var station: StationPersistence?
 
