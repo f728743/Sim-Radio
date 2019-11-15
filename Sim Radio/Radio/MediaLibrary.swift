@@ -5,7 +5,7 @@
 
 import AVFoundation
 import UIKit
-
+import CoreData
 //typealias StationID = Int
 //typealias SeriesID = Int
 
@@ -33,6 +33,33 @@ class Autoincrement {
 }
 
 class MediaLibrary {
+
+    private lazy var persistentContainer: NSPersistentContainer = {
+        let container = NSPersistentContainer(name: "SimRadio")
+        container.loadPersistentStores(completionHandler: { storeDescription, error in
+            print(storeDescription)
+            if let error = error as NSError? {
+                fatalError("Unresolved error \(error), \(error.userInfo)")
+            }
+        })
+        return container
+    }()
+
+    private func fetch() {
+        let context = persistentContainer.viewContext
+        do {
+            let series = try context.fetch(SeriesPersistence.fetchRequest())
+//            self.series = series.compactMap { seriesManagedObject in
+//                guard let seriesManagedObject = seriesManagedObject as? SeriesPersistence else { return nil }
+//                return Series(persistentContainer: persistentContainer,
+//                              managedObject: seriesManagedObject)
+//            }
+            print("Loaded")
+        } catch let error as NSError {
+            print("Could not fetch. \(error), \(error.userInfo)")
+        }
+    }
+
     enum Source {
         case bundle, documents
     }
@@ -43,7 +70,8 @@ class MediaLibrary {
     private var seriesOfStation: [UUID: UUID] = [:]
 
     init() {
-        load(from: .bundle)
+          fetch()
+//        load(from: .bundle)
     }
 
     func series(ofStationWithID id: UUID) -> Series? {
@@ -61,14 +89,14 @@ class MediaLibrary {
     }
 
     func load(from source: Source) {
-        series.removeAll()
-        seriesOfStation.removeAll()
-        let urls = seriesUrls(fromDirectory: sourceUrl(source))
-        for url in urls {
-            if let series = try? loadSeries(from: url) {
-                self.series[series.seriesID] = series
-            }
-        }
+//        series.removeAll()
+//        seriesOfStation.removeAll()
+//        let urls = seriesUrls(fromDirectory: sourceUrl(source))
+//        for url in urls {
+//            if let series = try? loadSeries(from: url) {
+//                self.series[series.seriesID] = series
+//            }
+//        }
     }
     
     func sourceUrl(_ source: Source) -> URL {

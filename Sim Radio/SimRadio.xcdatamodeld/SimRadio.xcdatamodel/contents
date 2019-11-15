@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="15508" systemVersion="19B88" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="Downloaded" representedClassName="DownloadedPersistence" syncable="YES">
+        <attribute name="source" attributeType="URI"/>
+        <relationship name="task" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="DownloadTask" inverseName="downloaded" inverseEntity="DownloadTask"/>
+    </entity>
+    <entity name="DownloadFile" representedClassName=".DownloadFilePersistence" syncable="YES">
+        <attribute name="destination" optional="YES" attributeType="String"/>
+        <attribute name="source" optional="YES" attributeType="URI"/>
+        <attribute name="units" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <relationship name="task" maxCount="1" deletionRule="Nullify" destinationEntity="DownloadTask" inverseName="files" inverseEntity="DownloadTask"/>
+    </entity>
+    <entity name="DownloadTask" representedClassName=".DownloadTaskPersistence" syncable="YES">
+        <relationship name="downloaded" toMany="YES" deletionRule="Cascade" destinationEntity="Downloaded" inverseName="task" inverseEntity="Downloaded"/>
+        <relationship name="files" toMany="YES" deletionRule="Cascade" destinationEntity="DownloadFile" inverseName="task" inverseEntity="DownloadFile"/>
+        <relationship name="series" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Series" inverseName="downloadTask" inverseEntity="Series"/>
+        <relationship name="station" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Station" inverseName="downloadTask" inverseEntity="Station"/>
+    </entity>
+    <entity name="Series" representedClassName=".SeriesPersistence" syncable="YES">
+        <attribute name="directory" optional="YES" attributeType="String"/>
+        <attribute name="origin" optional="YES" attributeType="URI"/>
+        <relationship name="downloadTask" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="DownloadTask" inverseName="series" inverseEntity="DownloadTask"/>
+        <relationship name="stations" toMany="YES" deletionRule="Cascade" destinationEntity="Station" inverseName="series" inverseEntity="Station"/>
+    </entity>
+    <entity name="Station" representedClassName=".StationPersistence" syncable="YES">
+        <attribute name="directory" optional="YES" attributeType="String"/>
+        <attribute name="origin" optional="YES" attributeType="URI"/>
+        <relationship name="downloadTask" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="DownloadTask" inverseName="station" inverseEntity="DownloadTask"/>
+        <relationship name="series" maxCount="1" deletionRule="Nullify" destinationEntity="Series" inverseName="stations" inverseEntity="Series"/>
+    </entity>
+    <elements>
+        <element name="Downloaded" positionX="-45" positionY="54" width="128" height="73"/>
+        <element name="DownloadFile" positionX="-54" positionY="18" width="128" height="103"/>
+        <element name="DownloadTask" positionX="-36" positionY="45" width="128" height="103"/>
+        <element name="Series" positionX="-63" positionY="-18" width="128" height="103"/>
+        <element name="Station" positionX="-63" positionY="0" width="128" height="103"/>
+    </elements>
+</model>

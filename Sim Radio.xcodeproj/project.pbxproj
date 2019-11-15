@@ -43,6 +43,17 @@
 		7C51BB372348760F005F0884 /* PlayerCardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C51BB312348760F005F0884 /* PlayerCardViewController.swift */; };
 		7C51BB382348760F005F0884 /* MiniPlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C51BB322348760F005F0884 /* MiniPlayerViewController.swift */; };
 		7C51BB392348760F005F0884 /* NavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C51BB332348760F005F0884 /* NavigationController.swift */; };
+		7C9C3EA3237F368A0063D235 /* SimRadio.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 7C9C3EA1237F368A0063D235 /* SimRadio.xcdatamodeld */; };
+		7CBD4255237F38AB008341CF /* DownloadedPersistence+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CBD424B237F38AB008341CF /* DownloadedPersistence+CoreDataClass.swift */; };
+		7CBD4256237F38AB008341CF /* DownloadedPersistence+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CBD424C237F38AB008341CF /* DownloadedPersistence+CoreDataProperties.swift */; };
+		7CBD4257237F38AB008341CF /* DownloadTaskPersistence+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CBD424D237F38AB008341CF /* DownloadTaskPersistence+CoreDataClass.swift */; };
+		7CBD4258237F38AB008341CF /* DownloadTaskPersistence+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CBD424E237F38AB008341CF /* DownloadTaskPersistence+CoreDataProperties.swift */; };
+		7CBD4259237F38AB008341CF /* SeriesPersistence+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CBD424F237F38AB008341CF /* SeriesPersistence+CoreDataClass.swift */; };
+		7CBD425A237F38AB008341CF /* SeriesPersistence+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CBD4250237F38AB008341CF /* SeriesPersistence+CoreDataProperties.swift */; };
+		7CBD425B237F38AB008341CF /* StationPersistence+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CBD4251237F38AB008341CF /* StationPersistence+CoreDataClass.swift */; };
+		7CBD425C237F38AB008341CF /* StationPersistence+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CBD4252237F38AB008341CF /* StationPersistence+CoreDataProperties.swift */; };
+		7CBD425D237F38AB008341CF /* DownloadFilePersistence+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CBD4253237F38AB008341CF /* DownloadFilePersistence+CoreDataClass.swift */; };
+		7CBD425E237F38AB008341CF /* DownloadFilePersistence+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CBD4254237F38AB008341CF /* DownloadFilePersistence+CoreDataProperties.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -84,6 +95,17 @@
 		7C51BB312348760F005F0884 /* PlayerCardViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerCardViewController.swift; sourceTree = "<group>"; };
 		7C51BB322348760F005F0884 /* MiniPlayerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MiniPlayerViewController.swift; sourceTree = "<group>"; };
 		7C51BB332348760F005F0884 /* NavigationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavigationController.swift; sourceTree = "<group>"; };
+		7C9C3EA2237F368A0063D235 /* SimRadio.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = SimRadio.xcdatamodel; sourceTree = "<group>"; };
+		7CBD424B237F38AB008341CF /* DownloadedPersistence+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DownloadedPersistence+CoreDataClass.swift"; sourceTree = "<group>"; };
+		7CBD424C237F38AB008341CF /* DownloadedPersistence+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DownloadedPersistence+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		7CBD424D237F38AB008341CF /* DownloadTaskPersistence+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DownloadTaskPersistence+CoreDataClass.swift"; sourceTree = "<group>"; };
+		7CBD424E237F38AB008341CF /* DownloadTaskPersistence+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DownloadTaskPersistence+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		7CBD424F237F38AB008341CF /* SeriesPersistence+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SeriesPersistence+CoreDataClass.swift"; sourceTree = "<group>"; };
+		7CBD4250237F38AB008341CF /* SeriesPersistence+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SeriesPersistence+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		7CBD4251237F38AB008341CF /* StationPersistence+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "StationPersistence+CoreDataClass.swift"; sourceTree = "<group>"; };
+		7CBD4252237F38AB008341CF /* StationPersistence+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "StationPersistence+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		7CBD4253237F38AB008341CF /* DownloadFilePersistence+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DownloadFilePersistence+CoreDataClass.swift"; sourceTree = "<group>"; };
+		7CBD4254237F38AB008341CF /* DownloadFilePersistence+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DownloadFilePersistence+CoreDataProperties.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -100,6 +122,16 @@
 		7C51BACE23487334005F0884 = {
 			isa = PBXGroup;
 			children = (
+				7CBD424B237F38AB008341CF /* DownloadedPersistence+CoreDataClass.swift */,
+				7CBD424C237F38AB008341CF /* DownloadedPersistence+CoreDataProperties.swift */,
+				7CBD424D237F38AB008341CF /* DownloadTaskPersistence+CoreDataClass.swift */,
+				7CBD424E237F38AB008341CF /* DownloadTaskPersistence+CoreDataProperties.swift */,
+				7CBD424F237F38AB008341CF /* SeriesPersistence+CoreDataClass.swift */,
+				7CBD4250237F38AB008341CF /* SeriesPersistence+CoreDataProperties.swift */,
+				7CBD4251237F38AB008341CF /* StationPersistence+CoreDataClass.swift */,
+				7CBD4252237F38AB008341CF /* StationPersistence+CoreDataProperties.swift */,
+				7CBD4253237F38AB008341CF /* DownloadFilePersistence+CoreDataClass.swift */,
+				7CBD4254237F38AB008341CF /* DownloadFilePersistence+CoreDataProperties.swift */,
 				7C51BAD923487334005F0884 /* Sim Radio */,
 				7C51BAD823487334005F0884 /* Products */,
 			);
@@ -116,6 +148,7 @@
 		7C51BAD923487334005F0884 /* Sim Radio */ = {
 			isa = PBXGroup;
 			children = (
+				7C9C3EA1237F368A0063D235 /* SimRadio.xcdatamodeld */,
 				7C51BB2D2348760F005F0884 /* Controllers */,
 				7C51BB1823487509005F0884 /* DeckTransition */,
 				7C51BB13234874CE005F0884 /* ESTMusicIndicator */,
@@ -308,12 +341,17 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7CBD4257237F38AB008341CF /* DownloadTaskPersistence+CoreDataClass.swift in Sources */,
 				7C51BB2623487587005F0884 /* CardPresentingAnimationController.swift in Sources */,
 				7C51BB11234874B8005F0884 /* UINavigationBar.swift in Sources */,
+				7CBD4259237F38AB008341CF /* SeriesPersistence+CoreDataClass.swift in Sources */,
 				7C51BB10234874B8005F0884 /* UIView.swift in Sources */,
 				7C51BADB23487334005F0884 /* AppDelegate.swift in Sources */,
+				7CBD425D237F38AB008341CF /* DownloadFilePersistence+CoreDataClass.swift in Sources */,
+				7CBD425E237F38AB008341CF /* DownloadFilePersistence+CoreDataProperties.swift in Sources */,
 				7C51BB352348760F005F0884 /* LibraryViewController.swift in Sources */,
 				7C51BB0A2348747E005F0884 /* HairlineView.swift in Sources */,
+				7CBD425A237F38AB008341CF /* SeriesPersistence+CoreDataProperties.swift in Sources */,
 				7C51BB092348747E005F0884 /* MarqueeLabel.swift in Sources */,
 				7C51BB2C234875E7005F0884 /* CardHaptic.swift in Sources */,
 				7C51BB16234874E6005F0884 /* ESTMusicIndicatorContentView.swift in Sources */,
@@ -327,9 +365,12 @@
 				7C51BB052348747E005F0884 /* LibraryCollectionView.swift in Sources */,
 				7C51BB2423487587005F0884 /* CardDismissingAnimationController.swift in Sources */,
 				7C51BB382348760F005F0884 /* MiniPlayerViewController.swift in Sources */,
+				7CBD4258237F38AB008341CF /* DownloadTaskPersistence+CoreDataProperties.swift in Sources */,
 				7C51BB17234874E6005F0884 /* ESTMusicIndicatorView.swift in Sources */,
 				7C51BAF923487414005F0884 /* NowPlayable.swift in Sources */,
+				7C9C3EA3237F368A0063D235 /* SimRadio.xcdatamodeld in Sources */,
 				7C51BB392348760F005F0884 /* NavigationController.swift in Sources */,
+				7CBD4255237F38AB008341CF /* DownloadedPersistence+CoreDataClass.swift in Sources */,
 				7C51BB362348760F005F0884 /* RootViewController.swift in Sources */,
 				7C51BAFA23487414005F0884 /* PlaylistBuilder.swift in Sources */,
 				7C51BB082348747E005F0884 /* ControlsButton.swift in Sources */,
@@ -340,6 +381,9 @@
 				7C20F43F236C272400035D0E /* LibraryError.swift in Sources */,
 				7C51BB072348747E005F0884 /* LibraryCollectionViewCell.swift in Sources */,
 				7C51BB2323487587005F0884 /* CardPresentationController.swift in Sources */,
+				7CBD425C237F38AB008341CF /* StationPersistence+CoreDataProperties.swift in Sources */,
+				7CBD425B237F38AB008341CF /* StationPersistence+CoreDataClass.swift in Sources */,
+				7CBD4256237F38AB008341CF /* DownloadedPersistence+CoreDataProperties.swift in Sources */,
 				7C51BB0B2348747E005F0884 /* SeriesHeaderTableViewCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -540,6 +584,19 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		7C9C3EA1237F368A0063D235 /* SimRadio.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				7C9C3EA2237F368A0063D235 /* SimRadio.xcdatamodel */,
+			);
+			currentVersion = 7C9C3EA2237F368A0063D235 /* SimRadio.xcdatamodel */;
+			path = SimRadio.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = 7C51BACF23487334005F0884 /* Project object */;
 }
