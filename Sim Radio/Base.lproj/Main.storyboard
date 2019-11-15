@@ -1,0 +1,497 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14868" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="qRN-Dn-tzl">
+    <device id="retina5_5" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14824"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Library-->
+        <scene sceneID="EJS-oO-g5j">
+            <objects>
+                <viewController id="SRe-IY-1R5" customClass="LibraryViewController" customModule="Sim_Radio" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="12Y-FY-DN8">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <viewLayoutGuide key="safeArea" id="gdZ-eJ-Trj"/>
+                    </view>
+                    <navigationItem key="navigationItem" title="Library" id="nL9-4j-p4k">
+                        <barButtonItem key="rightBarButtonItem" image="Plus" id="DLZ-xS-Iav">
+                            <connections>
+                                <action selector="add:" destination="SRe-IY-1R5" id="0Gk-1L-JA1"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                    <connections>
+                        <segue destination="31E-8m-6Ho" kind="show" identifier="showSeries" id="Kpz-4g-ba3"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="CAo-DJ-XRv" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="975" y="-1176"/>
+        </scene>
+        <!--Series View Controller-->
+        <scene sceneID="391-yT-1Oi">
+            <objects>
+                <viewController id="31E-8m-6Ho" customClass="SeriesViewController" customModule="Sim_Radio" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="7kF-3E-k1P">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <viewLayoutGuide key="safeArea" id="ODy-uC-jtd"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="96s-Xl-2ox"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Szt-Rr-SrU" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1709" y="-1176"/>
+        </scene>
+        <!--Root View Controller-->
+        <scene sceneID="T2x-qf-Km7">
+            <objects>
+                <viewController id="qRN-Dn-tzl" userLabel="Root View Controller" customClass="RootViewController" customModule="Sim_Radio" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="O3a-Yz-K3N">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="2WV-8B-8qZ" userLabel="Root Container View">
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                                <connections>
+                                    <segue destination="awK-CQ-dwJ" kind="embed" identifier="navigationController" id="4zm-DC-2K4"/>
+                                </connections>
+                            </containerView>
+                            <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="iah-jM-Rg6" userLabel="Mini Player Container View">
+                                <rect key="frame" x="0.0" y="672" width="414" height="64"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="64" id="4f8-7K-tDY"/>
+                                </constraints>
+                                <connections>
+                                    <segue destination="d0C-CK-4dJ" kind="embed" identifier="miniPlayerController" id="YTX-rp-zgm"/>
+                                </connections>
+                            </containerView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="2WV-8B-8qZ" firstAttribute="trailing" secondItem="GWe-U6-5jc" secondAttribute="trailing" id="CQH-4w-nTe"/>
+                            <constraint firstItem="iah-jM-Rg6" firstAttribute="leading" secondItem="GWe-U6-5jc" secondAttribute="leading" id="Ypw-8g-fpX"/>
+                            <constraint firstItem="GWe-U6-5jc" firstAttribute="bottom" secondItem="2WV-8B-8qZ" secondAttribute="bottom" id="cgZ-5d-HbK"/>
+                            <constraint firstItem="iah-jM-Rg6" firstAttribute="trailing" secondItem="GWe-U6-5jc" secondAttribute="trailing" id="hRS-Zu-YAw"/>
+                            <constraint firstItem="2WV-8B-8qZ" firstAttribute="leading" secondItem="GWe-U6-5jc" secondAttribute="leading" id="hVm-Z9-mOY"/>
+                            <constraint firstItem="2WV-8B-8qZ" firstAttribute="top" secondItem="GWe-U6-5jc" secondAttribute="top" id="jQe-ft-gPz"/>
+                            <constraint firstItem="iah-jM-Rg6" firstAttribute="bottom" secondItem="GWe-U6-5jc" secondAttribute="bottom" id="vxO-dK-hy9"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="GWe-U6-5jc"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="8ec-J7-je8" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-465.21739130434787" y="-1176.358695652174"/>
+        </scene>
+        <!--Mini  Plaer View Controller-->
+        <scene sceneID="Szq-jW-o8f">
+            <objects>
+                <viewController id="d0C-CK-4dJ" userLabel="Mini  Plaer View Controller" customClass="MiniPlayerViewController" customModule="Sim_Radio" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="XbU-sD-MUe">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="64"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="zCT-cP-mYB">
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="64"/>
+                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="sHr-9O-d8f">
+                                    <rect key="frame" x="0.0" y="0.0" width="414" height="64"/>
+                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                    <subviews>
+                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="nZc-Ld-te1" customClass="HairlineView" customModule="Sim_Radio" customModuleProvider="target">
+                                            <rect key="frame" x="0.0" y="0.0" width="414" height="72"/>
+                                            <color key="backgroundColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        </view>
+                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Tdp-Me-BIF" userLabel="Art Background View">
+                                            <rect key="frame" x="20" y="8" width="48" height="48"/>
+                                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        </view>
+                                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Cover Artwork" translatesAutoresizingMaskIntoConstraints="NO" id="pzy-Qt-jEu" userLabel="Art Image View">
+                                            <rect key="frame" x="20" y="8" width="48" height="48"/>
+                                            <constraints>
+                                                <constraint firstAttribute="width" secondItem="pzy-Qt-jEu" secondAttribute="height" multiplier="1:1" id="DOM-3t-C9r"/>
+                                            </constraints>
+                                        </imageView>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Not Playng" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ek2-EI-qlK" userLabel="Station Title">
+                                            <rect key="frame" x="84" y="21.666666666666671" width="84" height="21"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" reversesTitleShadowWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="IwL-EP-iq1" userLabel="Play-Pause" customClass="ControlsButton" customModule="Sim_Radio" customModuleProvider="target">
+                                            <rect key="frame" x="309" y="10" width="44" height="44"/>
+                                            <constraints>
+                                                <constraint firstAttribute="width" constant="44" id="HDr-20-7w9"/>
+                                                <constraint firstAttribute="height" constant="44" id="a0J-Oc-Cyb"/>
+                                            </constraints>
+                                            <state key="normal" image="Mini Play"/>
+                                            <connections>
+                                                <action selector="playOrPause:" destination="d0C-CK-4dJ" eventType="touchUpInside" id="DwT-g5-yHe"/>
+                                            </connections>
+                                        </button>
+                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" reversesTitleShadowWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="QBJ-ev-UhS" userLabel="FastForward" customClass="ControlsButton" customModule="Sim_Radio" customModuleProvider="target">
+                                            <rect key="frame" x="357" y="10" width="44" height="44"/>
+                                            <constraints>
+                                                <constraint firstAttribute="width" constant="44" id="x1A-xz-i2l"/>
+                                                <constraint firstAttribute="height" constant="44" id="yI8-ni-qc0"/>
+                                            </constraints>
+                                            <state key="normal" image="Mini FastForward"/>
+                                            <connections>
+                                                <action selector="fastForward:" destination="d0C-CK-4dJ" eventType="touchUpInside" id="6pv-xc-WDI"/>
+                                            </connections>
+                                        </button>
+                                    </subviews>
+                                    <gestureRecognizers/>
+                                    <constraints>
+                                        <constraint firstItem="QBJ-ev-UhS" firstAttribute="centerY" secondItem="IwL-EP-iq1" secondAttribute="centerY" id="0WG-g3-HgT"/>
+                                        <constraint firstItem="Ek2-EI-qlK" firstAttribute="centerY" secondItem="sHr-9O-d8f" secondAttribute="centerY" id="1xF-lG-IaV"/>
+                                        <constraint firstItem="pzy-Qt-jEu" firstAttribute="top" secondItem="sHr-9O-d8f" secondAttribute="top" constant="8" id="6Rl-rG-ffG"/>
+                                        <constraint firstAttribute="bottom" secondItem="nZc-Ld-te1" secondAttribute="bottom" constant="-8" id="76v-ps-7wr"/>
+                                        <constraint firstAttribute="bottom" secondItem="pzy-Qt-jEu" secondAttribute="bottom" constant="8" id="DKA-gQ-T1r"/>
+                                        <constraint firstAttribute="trailing" secondItem="nZc-Ld-te1" secondAttribute="trailing" id="E2V-1W-6fT"/>
+                                        <constraint firstItem="Ek2-EI-qlK" firstAttribute="centerY" secondItem="pzy-Qt-jEu" secondAttribute="centerY" id="IQt-V9-imD"/>
+                                        <constraint firstItem="nZc-Ld-te1" firstAttribute="top" secondItem="sHr-9O-d8f" secondAttribute="top" id="Jkd-du-G2f"/>
+                                        <constraint firstItem="Tdp-Me-BIF" firstAttribute="bottom" secondItem="pzy-Qt-jEu" secondAttribute="bottom" id="KUY-8I-9Dq"/>
+                                        <constraint firstItem="nZc-Ld-te1" firstAttribute="leading" secondItem="sHr-9O-d8f" secondAttribute="leading" id="NOR-a3-PRp"/>
+                                        <constraint firstItem="Ek2-EI-qlK" firstAttribute="leading" secondItem="pzy-Qt-jEu" secondAttribute="trailing" constant="16" id="RdL-Ff-8dm"/>
+                                        <constraint firstItem="Tdp-Me-BIF" firstAttribute="trailing" secondItem="pzy-Qt-jEu" secondAttribute="trailing" id="WeQ-hQ-UfZ"/>
+                                        <constraint firstItem="Tdp-Me-BIF" firstAttribute="top" secondItem="pzy-Qt-jEu" secondAttribute="top" id="Yw1-eS-qc6"/>
+                                        <constraint firstItem="IwL-EP-iq1" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="Ek2-EI-qlK" secondAttribute="trailing" constant="16" id="cQE-hO-YHN"/>
+                                        <constraint firstItem="pzy-Qt-jEu" firstAttribute="leading" secondItem="sHr-9O-d8f" secondAttribute="leading" constant="20" id="doR-q7-LVv"/>
+                                        <constraint firstItem="QBJ-ev-UhS" firstAttribute="leading" secondItem="IwL-EP-iq1" secondAttribute="trailing" constant="4" id="imK-sT-mEd"/>
+                                        <constraint firstItem="Tdp-Me-BIF" firstAttribute="leading" secondItem="pzy-Qt-jEu" secondAttribute="leading" id="rU7-g9-LZd"/>
+                                        <constraint firstItem="IwL-EP-iq1" firstAttribute="centerY" secondItem="sHr-9O-d8f" secondAttribute="centerY" id="xXg-rq-sBy"/>
+                                        <constraint firstAttribute="trailing" secondItem="QBJ-ev-UhS" secondAttribute="trailing" constant="13" id="yex-Xm-p5M"/>
+                                    </constraints>
+                                    <connections>
+                                        <outletCollection property="gestureRecognizers" destination="i3K-db-W5d" appends="YES" id="OTf-Hk-a21"/>
+                                    </connections>
+                                </view>
+                                <blurEffect style="extraLight"/>
+                            </visualEffectView>
+                        </subviews>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="zCT-cP-mYB" firstAttribute="bottom" secondItem="Sxn-tU-qQ8" secondAttribute="bottom" id="2De-Si-6QB"/>
+                            <constraint firstItem="zCT-cP-mYB" firstAttribute="leading" secondItem="Sxn-tU-qQ8" secondAttribute="leading" id="70O-xg-17g"/>
+                            <constraint firstItem="zCT-cP-mYB" firstAttribute="top" secondItem="Sxn-tU-qQ8" secondAttribute="top" id="mf6-AG-iS7"/>
+                            <constraint firstItem="zCT-cP-mYB" firstAttribute="trailing" secondItem="Sxn-tU-qQ8" secondAttribute="trailing" id="pgY-3j-LuU"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="Sxn-tU-qQ8"/>
+                    </view>
+                    <connections>
+                        <outlet property="artBackgroundView" destination="Tdp-Me-BIF" id="0oX-iY-KDe"/>
+                        <outlet property="artImageView" destination="pzy-Qt-jEu" id="Wep-6H-203"/>
+                        <outlet property="fastForwardButton" destination="QBJ-ev-UhS" id="ayN-Fc-4DW"/>
+                        <outlet property="playOrPauseButton" destination="IwL-EP-iq1" id="feR-V5-Ugp"/>
+                        <outlet property="stationTitle" destination="Ek2-EI-qlK" id="ECA-zF-mpH"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="VkU-WJ-ipm" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <tapGestureRecognizer id="i3K-db-W5d">
+                    <connections>
+                        <action selector="tapGesture:" destination="d0C-CK-4dJ" id="BME-NS-4Mq"/>
+                    </connections>
+                </tapGestureRecognizer>
+            </objects>
+            <point key="canvasLocation" x="-465.21739130434787" y="-754.07608695652175"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="58L-yd-2nO">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="awK-CQ-dwJ" customClass="NavigationController" customModule="Sim_Radio" customModuleProvider="target" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="lu0-Fa-Wh3">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <color key="tintColor" red="0.99916261429999997" green="0.17425110939999999" blue="0.3347000182" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="SRe-IY-1R5" kind="relationship" relationship="rootViewController" id="aDR-CD-jS8"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="csy-Db-O98" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="259" y="-1176"/>
+        </scene>
+        <!--Player Card View Controller-->
+        <scene sceneID="ktN-h2-YVd">
+            <objects>
+                <viewController storyboardIdentifier="PlayerCardViewController" id="POK-A3-xE5" userLabel="Player Card View Controller" customClass="PlayerCardViewController" customModule="Sim_Radio" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="DJW-jx-HXQ">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" alpha="0.60000002384185791" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="zCz-yE-I91" userLabel="Art Colorful Shadow Image View">
+                                <rect key="frame" x="32" y="32" width="350" height="350"/>
+                            </imageView>
+                            <view alpha="0.25" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="9Gq-ge-yd4" userLabel="Art Shadow View">
+                                <rect key="frame" x="32" y="32" width="350" height="350"/>
+                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </view>
+                            <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="CHU-YJ-Hit">
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="9h2-S9-wJX">
+                                    <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                </view>
+                                <blurEffect style="light"/>
+                            </visualEffectView>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="NU7-99-5pE" userLabel="Mini Player Image View">
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="64"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="64" id="nDN-Hl-WJS"/>
+                                </constraints>
+                            </imageView>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="RBE-jt-HKV" userLabel="Art Background View">
+                                <rect key="frame" x="32" y="32" width="350" height="350"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="0ny-Ic-6ZB" userLabel="Art View">
+                                <rect key="frame" x="32" y="32" width="350" height="350"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" secondItem="0ny-Ic-6ZB" secondAttribute="height" multiplier="1:1" id="tbH-yh-wbq"/>
+                                </constraints>
+                            </view>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="tMT-dY-ion">
+                                <rect key="frame" x="32" y="32" width="350" height="350"/>
+                            </imageView>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="DOq-oc-ZVX" userLabel="Title Stack">
+                                <rect key="frame" x="4" y="402" width="406" height="56.666666666666686"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Station title" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="EjY-3b-Xkp" userLabel="Station Title" customClass="MarqueeLabel" customModule="Sim_Radio" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="0.0" width="406" height="26.333333333333332"/>
+                                        <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="22"/>
+                                        <nil key="highlightedColor"/>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="fadeLength">
+                                                <real key="value" value="30"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="animationDelay">
+                                                <real key="value" value="4"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="leadingBuffer">
+                                                <real key="value" value="0.0"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="trailingBuffer">
+                                                <real key="value" value="30"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="scrollDuration">
+                                                <real key="value" value="20"/>
+                                            </userDefinedRuntimeAttribute>
+                                        </userDefinedRuntimeAttributes>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Station info" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Kim-PV-dBF" userLabel="Station Info" customClass="MarqueeLabel" customModule="Sim_Radio" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="30.333333333333314" width="406" height="26.333333333333329"/>
+                                        <color key="tintColor" red="1" green="0.25007479399999999" blue="0.084036610580000004" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="22"/>
+                                        <color key="textColor" red="0.99916261429999997" green="0.17425110939999999" blue="0.3347000182" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <nil key="highlightedColor"/>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="fadeLength">
+                                                <real key="value" value="30"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="leadingBuffer">
+                                                <real key="value" value="0.0"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="trailingBuffer">
+                                                <real key="value" value="30"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="animationDelay">
+                                                <real key="value" value="4"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="scrollDuration">
+                                                <real key="value" value="20"/>
+                                            </userDefinedRuntimeAttribute>
+                                        </userDefinedRuntimeAttributes>
+                                    </label>
+                                </subviews>
+                            </stackView>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="30" translatesAutoresizingMaskIntoConstraints="NO" id="Aej-cZ-ph8" userLabel="Controls Stack">
+                                <rect key="frame" x="0.0" y="498.66666666666674" width="414" height="192"/>
+                                <subviews>
+                                    <stackView opaque="NO" contentMode="scaleToFill" spacing="44" translatesAutoresizingMaskIntoConstraints="NO" id="qrm-PV-WxJ" userLabel="Control Buttons Stack">
+                                        <rect key="frame" x="61" y="0.0" width="292" height="68"/>
+                                        <subviews>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="YTt-J4-QJA" userLabel="Rewind" customClass="ControlsButton" customModule="Sim_Radio" customModuleProvider="target">
+                                                <rect key="frame" x="0.0" y="0.0" width="68" height="68"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" constant="68" id="HQC-N4-Ype"/>
+                                                    <constraint firstAttribute="height" constant="68" id="Reu-Hf-Ldp"/>
+                                                </constraints>
+                                                <state key="normal" image="Rewind"/>
+                                                <connections>
+                                                    <action selector="rewind:" destination="POK-A3-xE5" eventType="touchUpInside" id="hBS-kd-GVT"/>
+                                                </connections>
+                                            </button>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bDI-bl-x0I" userLabel="Play-Pause" customClass="ControlsButton" customModule="Sim_Radio" customModuleProvider="target">
+                                                <rect key="frame" x="112" y="0.0" width="68" height="68"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" constant="68" id="hyn-5X-eMv"/>
+                                                    <constraint firstAttribute="height" constant="68" id="orS-9K-OrR"/>
+                                                </constraints>
+                                                <state key="normal" image="Play"/>
+                                                <connections>
+                                                    <action selector="playOrPause:" destination="POK-A3-xE5" eventType="touchUpInside" id="LuX-iI-sBP"/>
+                                                </connections>
+                                            </button>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="GlH-3c-RhH" userLabel="FastForward" customClass="ControlsButton" customModule="Sim_Radio" customModuleProvider="target">
+                                                <rect key="frame" x="224" y="0.0" width="68" height="68"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" constant="68" id="ekg-JB-VkD"/>
+                                                    <constraint firstAttribute="height" constant="68" id="sZb-J4-8fh"/>
+                                                </constraints>
+                                                <state key="normal" image="FastForward"/>
+                                                <connections>
+                                                    <action selector="fastForward:" destination="POK-A3-xE5" eventType="touchUpInside" id="UJ3-Ru-HcM"/>
+                                                </connections>
+                                            </button>
+                                        </subviews>
+                                    </stackView>
+                                    <stackView opaque="NO" contentMode="scaleToFill" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="nJH-0J-8u7" userLabel="Volume Stack View">
+                                        <rect key="frame" x="30" y="97.999999999999943" width="354" height="40"/>
+                                        <subviews>
+                                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Min Volume" translatesAutoresizingMaskIntoConstraints="NO" id="OQ5-Zd-YdD">
+                                                <rect key="frame" x="0.0" y="10" width="20" height="20"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" constant="20" id="9hS-VZ-tKV"/>
+                                                    <constraint firstAttribute="height" constant="20" id="o60-qK-VOQ"/>
+                                                </constraints>
+                                            </imageView>
+                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="e0Q-M3-VAA">
+                                                <rect key="frame" x="20" y="0.0" width="314" height="40"/>
+                                                <subviews>
+                                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="o3J-b0-pl7" userLabel="Fake Slider View">
+                                                        <rect key="frame" x="8" y="19" width="294" height="2"/>
+                                                        <color key="backgroundColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="height" constant="2" id="3zq-0x-eYG" userLabel="height = 2"/>
+                                                        </constraints>
+                                                    </view>
+                                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Phi-gn-BHx" customClass="MPVolumeView">
+                                                        <rect key="frame" x="4" y="11" width="302" height="30"/>
+                                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="height" constant="30" id="BG2-bE-gL6"/>
+                                                        </constraints>
+                                                    </view>
+                                                </subviews>
+                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <constraints>
+                                                    <constraint firstItem="o3J-b0-pl7" firstAttribute="leading" secondItem="e0Q-M3-VAA" secondAttribute="leading" constant="8" id="DgU-iW-8Jm"/>
+                                                    <constraint firstItem="o3J-b0-pl7" firstAttribute="centerY" secondItem="e0Q-M3-VAA" secondAttribute="centerY" id="G54-ps-Efv"/>
+                                                    <constraint firstItem="Phi-gn-BHx" firstAttribute="top" secondItem="e0Q-M3-VAA" secondAttribute="top" constant="11" id="IME-p3-O8d"/>
+                                                    <constraint firstAttribute="height" constant="40" id="TgF-ee-qh9"/>
+                                                    <constraint firstAttribute="trailing" secondItem="Phi-gn-BHx" secondAttribute="trailing" constant="8" id="WbK-Jk-7rK"/>
+                                                    <constraint firstItem="Phi-gn-BHx" firstAttribute="leading" secondItem="e0Q-M3-VAA" secondAttribute="leading" constant="4" id="eVM-IX-hb0"/>
+                                                    <constraint firstAttribute="trailing" secondItem="o3J-b0-pl7" secondAttribute="trailing" constant="12" id="lOI-w3-u0n"/>
+                                                </constraints>
+                                            </view>
+                                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Max Volume" translatesAutoresizingMaskIntoConstraints="NO" id="8pz-Nb-eBz">
+                                                <rect key="frame" x="334" y="10" width="20" height="20"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="20" id="cSr-0G-Iw6"/>
+                                                    <constraint firstAttribute="width" constant="20" id="cna-V4-ETk"/>
+                                                </constraints>
+                                            </imageView>
+                                        </subviews>
+                                    </stackView>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="led-gT-G1a" userLabel="Airplay">
+                                        <rect key="frame" x="195" y="167.99999999999994" width="24" height="24"/>
+                                        <state key="normal" image="Airplay"/>
+                                        <connections>
+                                            <action selector="pickPlaybackRoute:" destination="POK-A3-xE5" eventType="touchUpInside" id="hYy-Va-nUJ"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstAttribute="trailing" secondItem="nJH-0J-8u7" secondAttribute="trailing" constant="30" id="XRv-rH-pjx"/>
+                                    <constraint firstItem="nJH-0J-8u7" firstAttribute="leading" secondItem="Aej-cZ-ph8" secondAttribute="leading" constant="30" id="dW2-sx-cTe"/>
+                                </constraints>
+                            </stackView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="NU7-99-5pE" firstAttribute="trailing" secondItem="fpv-Nw-SBU" secondAttribute="trailing" id="21D-dp-aOl"/>
+                            <constraint firstItem="DOq-oc-ZVX" firstAttribute="top" secondItem="0ny-Ic-6ZB" secondAttribute="bottom" constant="20" id="2sa-to-de6"/>
+                            <constraint firstItem="0ny-Ic-6ZB" firstAttribute="trailing" secondItem="tMT-dY-ion" secondAttribute="trailing" id="30s-9l-6jz"/>
+                            <constraint firstItem="Aej-cZ-ph8" firstAttribute="top" secondItem="DOq-oc-ZVX" secondAttribute="bottom" constant="40" id="5wM-IT-wxy"/>
+                            <constraint firstItem="RBE-jt-HKV" firstAttribute="leading" secondItem="zCz-yE-I91" secondAttribute="leading" id="6og-Hc-g5H"/>
+                            <constraint firstItem="RBE-jt-HKV" firstAttribute="trailing" secondItem="zCz-yE-I91" secondAttribute="trailing" id="7eH-GL-iH8"/>
+                            <constraint firstItem="fpv-Nw-SBU" firstAttribute="trailing" secondItem="0ny-Ic-6ZB" secondAttribute="trailing" constant="32" id="8Z0-Ep-Nlj"/>
+                            <constraint firstAttribute="trailing" secondItem="Aej-cZ-ph8" secondAttribute="trailing" id="AgH-c5-Vsx"/>
+                            <constraint firstItem="tMT-dY-ion" firstAttribute="top" secondItem="zCz-yE-I91" secondAttribute="top" id="Ki8-rc-xoa"/>
+                            <constraint firstItem="tMT-dY-ion" firstAttribute="top" secondItem="0ny-Ic-6ZB" secondAttribute="top" id="M94-IX-Djj"/>
+                            <constraint firstItem="tMT-dY-ion" firstAttribute="leading" secondItem="0ny-Ic-6ZB" secondAttribute="leading" id="NcK-VJ-KdV"/>
+                            <constraint firstItem="Aej-cZ-ph8" firstAttribute="leading" secondItem="DJW-jx-HXQ" secondAttribute="leading" id="RHG-bt-AIM"/>
+                            <constraint firstItem="0ny-Ic-6ZB" firstAttribute="leading" secondItem="fpv-Nw-SBU" secondAttribute="leading" constant="32" id="Rf4-4F-2rf"/>
+                            <constraint firstItem="9Gq-ge-yd4" firstAttribute="trailing" secondItem="zCz-yE-I91" secondAttribute="trailing" id="SKK-y1-gvl"/>
+                            <constraint firstItem="fpv-Nw-SBU" firstAttribute="trailing" secondItem="CHU-YJ-Hit" secondAttribute="trailing" id="ViM-Ve-Nwt"/>
+                            <constraint firstItem="tMT-dY-ion" firstAttribute="bottom" secondItem="zCz-yE-I91" secondAttribute="bottom" id="Xxo-Ca-ssT"/>
+                            <constraint firstItem="9Gq-ge-yd4" firstAttribute="top" secondItem="zCz-yE-I91" secondAttribute="top" id="Yek-dP-aev"/>
+                            <constraint firstItem="9Gq-ge-yd4" firstAttribute="bottom" secondItem="zCz-yE-I91" secondAttribute="bottom" id="ae3-BZ-TFH"/>
+                            <constraint firstItem="tMT-dY-ion" firstAttribute="trailing" secondItem="zCz-yE-I91" secondAttribute="trailing" id="ahw-2b-NYg"/>
+                            <constraint firstItem="CHU-YJ-Hit" firstAttribute="top" secondItem="fpv-Nw-SBU" secondAttribute="top" id="c9Q-Sh-yRt"/>
+                            <constraint firstItem="0ny-Ic-6ZB" firstAttribute="top" secondItem="fpv-Nw-SBU" secondAttribute="top" constant="32" id="dKL-yV-qLc"/>
+                            <constraint firstItem="DOq-oc-ZVX" firstAttribute="leading" secondItem="fpv-Nw-SBU" secondAttribute="leading" constant="4" id="hId-8I-Jqe"/>
+                            <constraint firstItem="CHU-YJ-Hit" firstAttribute="leading" secondItem="fpv-Nw-SBU" secondAttribute="leading" id="m4c-HV-4NI"/>
+                            <constraint firstItem="RBE-jt-HKV" firstAttribute="top" secondItem="zCz-yE-I91" secondAttribute="top" id="mGG-An-jt7"/>
+                            <constraint firstItem="fpv-Nw-SBU" firstAttribute="bottom" secondItem="CHU-YJ-Hit" secondAttribute="bottom" id="o1t-2O-Q2x"/>
+                            <constraint firstItem="NU7-99-5pE" firstAttribute="leading" secondItem="fpv-Nw-SBU" secondAttribute="leading" id="p8Q-LY-Vtd"/>
+                            <constraint firstItem="tMT-dY-ion" firstAttribute="leading" secondItem="zCz-yE-I91" secondAttribute="leading" id="pVq-91-TE4"/>
+                            <constraint firstItem="NU7-99-5pE" firstAttribute="top" secondItem="fpv-Nw-SBU" secondAttribute="top" id="pu0-KV-yZN"/>
+                            <constraint firstItem="fpv-Nw-SBU" firstAttribute="trailing" secondItem="DOq-oc-ZVX" secondAttribute="trailing" constant="4" id="qNg-hT-NG2"/>
+                            <constraint firstItem="0ny-Ic-6ZB" firstAttribute="bottom" secondItem="tMT-dY-ion" secondAttribute="bottom" id="qnX-7M-Nrx"/>
+                            <constraint firstItem="RBE-jt-HKV" firstAttribute="bottom" secondItem="zCz-yE-I91" secondAttribute="bottom" id="r7c-ir-W2c"/>
+                            <constraint firstItem="9Gq-ge-yd4" firstAttribute="leading" secondItem="zCz-yE-I91" secondAttribute="leading" id="tWv-we-Eem"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="fpv-Nw-SBU"/>
+                    </view>
+                    <connections>
+                        <outlet property="artBackgroundView" destination="RBE-jt-HKV" id="6xC-Rb-N2U"/>
+                        <outlet property="artColorfulShadowImageView" destination="zCz-yE-I91" id="zM4-Ok-fSi"/>
+                        <outlet property="artImageBottomInset" destination="qnX-7M-Nrx" id="0ro-6J-c2M"/>
+                        <outlet property="artImageLeadingInset" destination="NcK-VJ-KdV" id="Hup-O8-KyF"/>
+                        <outlet property="artImageTopInset" destination="M94-IX-Djj" id="tJF-0A-cpN"/>
+                        <outlet property="artImageTrailingInset" destination="30s-9l-6jz" id="QSW-hM-rxV"/>
+                        <outlet property="artImageView" destination="tMT-dY-ion" id="ag5-a3-IbS"/>
+                        <outlet property="artShadowView" destination="9Gq-ge-yd4" id="u4u-cb-V2c"/>
+                        <outlet property="artViewLeadingInset" destination="Rf4-4F-2rf" id="a0E-11-Zpn"/>
+                        <outlet property="artViewTopInset" destination="dKL-yV-qLc" id="FfX-Yr-klg"/>
+                        <outlet property="artViewTrailingInset" destination="8Z0-Ep-Nlj" id="VdY-kk-BeT"/>
+                        <outlet property="fastForwardButton" destination="GlH-3c-RhH" id="kTT-9J-Ydy"/>
+                        <outlet property="miniPlayerImageView" destination="NU7-99-5pE" id="Yho-v8-9x8"/>
+                        <outlet property="playOrPauseButton" destination="bDI-bl-x0I" id="fmQ-aj-UiR"/>
+                        <outlet property="rewindButton" destination="YTt-J4-QJA" id="bbU-zb-bzy"/>
+                        <outlet property="stationInfo" destination="Kim-PV-dBF" id="W9V-fI-mAb"/>
+                        <outlet property="stationTitle" destination="EjY-3b-Xkp" id="2QZ-cx-3GX"/>
+                        <outlet property="visualEffectView" destination="CHU-YJ-Hit" id="bjH-1s-JtH"/>
+                        <outlet property="volumeSlider" destination="Phi-gn-BHx" id="N3O-RR-yer"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="uqx-fk-626" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="257.97101449275362" y="-480.16304347826093"/>
+        </scene>
+    </scenes>
+    <resources>
+        <image name="Airplay" width="24" height="24"/>
+        <image name="Cover Artwork" width="280" height="280"/>
+        <image name="FastForward" width="40" height="25"/>
+        <image name="Max Volume" width="16" height="14"/>
+        <image name="Min Volume" width="7" height="10"/>
+        <image name="Mini FastForward" width="26" height="17"/>
+        <image name="Mini Play" width="27" height="27"/>
+        <image name="Play" width="56" height="56"/>
+        <image name="Plus" width="16" height="17"/>
+        <image name="Rewind" width="40" height="25"/>
+    </resources>
+</document>

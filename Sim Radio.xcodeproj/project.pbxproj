@@ -1,0 +1,545 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 50;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		7C0C4957237F339200358D91 /* MediaLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C0C4956237F339200358D91 /* MediaLibrary.swift */; };
+		7C20F43F236C272400035D0E /* LibraryError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C20F43E236C272400035D0E /* LibraryError.swift */; };
+		7C51BADB23487334005F0884 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C51BADA23487334005F0884 /* AppDelegate.swift */; };
+		7C51BAE223487334005F0884 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7C51BAE023487334005F0884 /* Main.storyboard */; };
+		7C51BAE423487335005F0884 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7C51BAE323487335005F0884 /* Assets.xcassets */; };
+		7C51BAE723487335005F0884 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7C51BAE523487335005F0884 /* LaunchScreen.storyboard */; };
+		7C51BAF1234873DF005F0884 /* Radio.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C51BAF0234873DF005F0884 /* Radio.swift */; };
+		7C51BAF823487414005F0884 /* Playlist.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C51BAF323487414005F0884 /* Playlist.swift */; };
+		7C51BAF923487414005F0884 /* NowPlayable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C51BAF423487414005F0884 /* NowPlayable.swift */; };
+		7C51BAFA23487414005F0884 /* PlaylistBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C51BAF523487414005F0884 /* PlaylistBuilder.swift */; };
+		7C51BAFB23487414005F0884 /* PlaylistManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C51BAF623487414005F0884 /* PlaylistManager.swift */; };
+		7C51BB052348747E005F0884 /* LibraryCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C51BAFE2348747D005F0884 /* LibraryCollectionView.swift */; };
+		7C51BB062348747E005F0884 /* SeriesTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C51BAFF2348747D005F0884 /* SeriesTableViewCell.swift */; };
+		7C51BB072348747E005F0884 /* LibraryCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C51BB002348747D005F0884 /* LibraryCollectionViewCell.swift */; };
+		7C51BB082348747E005F0884 /* ControlsButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C51BB012348747D005F0884 /* ControlsButton.swift */; };
+		7C51BB092348747E005F0884 /* MarqueeLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C51BB022348747D005F0884 /* MarqueeLabel.swift */; };
+		7C51BB0A2348747E005F0884 /* HairlineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C51BB032348747D005F0884 /* HairlineView.swift */; };
+		7C51BB0B2348747E005F0884 /* SeriesHeaderTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C51BB042348747D005F0884 /* SeriesHeaderTableViewCell.swift */; };
+		7C51BB10234874B8005F0884 /* UIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C51BB0D234874B8005F0884 /* UIView.swift */; };
+		7C51BB11234874B8005F0884 /* UINavigationBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C51BB0E234874B8005F0884 /* UINavigationBar.swift */; };
+		7C51BB12234874B8005F0884 /* Date.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C51BB0F234874B8005F0884 /* Date.swift */; };
+		7C51BB16234874E6005F0884 /* ESTMusicIndicatorContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C51BB14234874E6005F0884 /* ESTMusicIndicatorContentView.swift */; };
+		7C51BB17234874E6005F0884 /* ESTMusicIndicatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C51BB15234874E6005F0884 /* ESTMusicIndicatorView.swift */; };
+		7C51BB1D23487557005F0884 /* CardIndicatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C51BB1C23487557005F0884 /* CardIndicatorView.swift */; };
+		7C51BB2323487587005F0884 /* CardPresentationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C51BB1F23487587005F0884 /* CardPresentationController.swift */; };
+		7C51BB2423487587005F0884 /* CardDismissingAnimationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C51BB2023487587005F0884 /* CardDismissingAnimationController.swift */; };
+		7C51BB2523487587005F0884 /* CardTransitioningDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C51BB2123487587005F0884 /* CardTransitioningDelegate.swift */; };
+		7C51BB2623487587005F0884 /* CardPresentingAnimationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C51BB2223487587005F0884 /* CardPresentingAnimationController.swift */; };
+		7C51BB29234875B7005F0884 /* CardControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C51BB28234875B7005F0884 /* CardControllerDelegate.swift */; };
+		7C51BB2C234875E7005F0884 /* CardHaptic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C51BB2B234875E7005F0884 /* CardHaptic.swift */; };
+		7C51BB342348760F005F0884 /* SeriesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C51BB2E2348760F005F0884 /* SeriesViewController.swift */; };
+		7C51BB352348760F005F0884 /* LibraryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C51BB2F2348760F005F0884 /* LibraryViewController.swift */; };
+		7C51BB362348760F005F0884 /* RootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C51BB302348760F005F0884 /* RootViewController.swift */; };
+		7C51BB372348760F005F0884 /* PlayerCardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C51BB312348760F005F0884 /* PlayerCardViewController.swift */; };
+		7C51BB382348760F005F0884 /* MiniPlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C51BB322348760F005F0884 /* MiniPlayerViewController.swift */; };
+		7C51BB392348760F005F0884 /* NavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C51BB332348760F005F0884 /* NavigationController.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		7C0C4956237F339200358D91 /* MediaLibrary.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaLibrary.swift; sourceTree = "<group>"; };
+		7C20F43E236C272400035D0E /* LibraryError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryError.swift; sourceTree = "<group>"; };
+		7C51BAD723487334005F0884 /* Sim Radio.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Sim Radio.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		7C51BADA23487334005F0884 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		7C51BAE123487334005F0884 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		7C51BAE323487335005F0884 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		7C51BAE623487335005F0884 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		7C51BAE823487335005F0884 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		7C51BAF0234873DF005F0884 /* Radio.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Radio.swift; sourceTree = "<group>"; };
+		7C51BAF323487414005F0884 /* Playlist.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Playlist.swift; sourceTree = "<group>"; };
+		7C51BAF423487414005F0884 /* NowPlayable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NowPlayable.swift; sourceTree = "<group>"; };
+		7C51BAF523487414005F0884 /* PlaylistBuilder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaylistBuilder.swift; sourceTree = "<group>"; };
+		7C51BAF623487414005F0884 /* PlaylistManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaylistManager.swift; sourceTree = "<group>"; };
+		7C51BAFE2348747D005F0884 /* LibraryCollectionView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LibraryCollectionView.swift; sourceTree = "<group>"; };
+		7C51BAFF2348747D005F0884 /* SeriesTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SeriesTableViewCell.swift; sourceTree = "<group>"; };
+		7C51BB002348747D005F0884 /* LibraryCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LibraryCollectionViewCell.swift; sourceTree = "<group>"; };
+		7C51BB012348747D005F0884 /* ControlsButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ControlsButton.swift; sourceTree = "<group>"; };
+		7C51BB022348747D005F0884 /* MarqueeLabel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MarqueeLabel.swift; sourceTree = "<group>"; };
+		7C51BB032348747D005F0884 /* HairlineView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HairlineView.swift; sourceTree = "<group>"; };
+		7C51BB042348747D005F0884 /* SeriesHeaderTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SeriesHeaderTableViewCell.swift; sourceTree = "<group>"; };
+		7C51BB0D234874B8005F0884 /* UIView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIView.swift; sourceTree = "<group>"; };
+		7C51BB0E234874B8005F0884 /* UINavigationBar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UINavigationBar.swift; sourceTree = "<group>"; };
+		7C51BB0F234874B8005F0884 /* Date.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Date.swift; sourceTree = "<group>"; };
+		7C51BB14234874E6005F0884 /* ESTMusicIndicatorContentView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ESTMusicIndicatorContentView.swift; sourceTree = "<group>"; };
+		7C51BB15234874E6005F0884 /* ESTMusicIndicatorView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ESTMusicIndicatorView.swift; sourceTree = "<group>"; };
+		7C51BB1C23487557005F0884 /* CardIndicatorView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CardIndicatorView.swift; sourceTree = "<group>"; };
+		7C51BB1F23487587005F0884 /* CardPresentationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CardPresentationController.swift; sourceTree = "<group>"; };
+		7C51BB2023487587005F0884 /* CardDismissingAnimationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CardDismissingAnimationController.swift; sourceTree = "<group>"; };
+		7C51BB2123487587005F0884 /* CardTransitioningDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CardTransitioningDelegate.swift; sourceTree = "<group>"; };
+		7C51BB2223487587005F0884 /* CardPresentingAnimationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CardPresentingAnimationController.swift; sourceTree = "<group>"; };
+		7C51BB28234875B7005F0884 /* CardControllerDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CardControllerDelegate.swift; sourceTree = "<group>"; };
+		7C51BB2B234875E7005F0884 /* CardHaptic.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CardHaptic.swift; sourceTree = "<group>"; };
+		7C51BB2E2348760F005F0884 /* SeriesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SeriesViewController.swift; sourceTree = "<group>"; };
+		7C51BB2F2348760F005F0884 /* LibraryViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LibraryViewController.swift; sourceTree = "<group>"; };
+		7C51BB302348760F005F0884 /* RootViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RootViewController.swift; sourceTree = "<group>"; };
+		7C51BB312348760F005F0884 /* PlayerCardViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerCardViewController.swift; sourceTree = "<group>"; };
+		7C51BB322348760F005F0884 /* MiniPlayerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MiniPlayerViewController.swift; sourceTree = "<group>"; };
+		7C51BB332348760F005F0884 /* NavigationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavigationController.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		7C51BAD423487334005F0884 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		7C51BACE23487334005F0884 = {
+			isa = PBXGroup;
+			children = (
+				7C51BAD923487334005F0884 /* Sim Radio */,
+				7C51BAD823487334005F0884 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		7C51BAD823487334005F0884 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				7C51BAD723487334005F0884 /* Sim Radio.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		7C51BAD923487334005F0884 /* Sim Radio */ = {
+			isa = PBXGroup;
+			children = (
+				7C51BB2D2348760F005F0884 /* Controllers */,
+				7C51BB1823487509005F0884 /* DeckTransition */,
+				7C51BB13234874CE005F0884 /* ESTMusicIndicator */,
+				7C51BB0C234874A0005F0884 /* Extensions */,
+				7C51BAFD2348745E005F0884 /* Views */,
+				7C51BAF2234873F0005F0884 /* Radio */,
+				7C51BADA23487334005F0884 /* AppDelegate.swift */,
+				7C51BAE023487334005F0884 /* Main.storyboard */,
+				7C51BAE323487335005F0884 /* Assets.xcassets */,
+				7C51BAE523487335005F0884 /* LaunchScreen.storyboard */,
+				7C51BAE823487335005F0884 /* Info.plist */,
+			);
+			path = "Sim Radio";
+			sourceTree = "<group>";
+		};
+		7C51BAF2234873F0005F0884 /* Radio */ = {
+			isa = PBXGroup;
+			children = (
+				7C0C4956237F339200358D91 /* MediaLibrary.swift */,
+				7C20F43E236C272400035D0E /* LibraryError.swift */,
+				7C51BAF423487414005F0884 /* NowPlayable.swift */,
+				7C51BAF323487414005F0884 /* Playlist.swift */,
+				7C51BAF523487414005F0884 /* PlaylistBuilder.swift */,
+				7C51BAF623487414005F0884 /* PlaylistManager.swift */,
+				7C51BAF0234873DF005F0884 /* Radio.swift */,
+			);
+			path = Radio;
+			sourceTree = "<group>";
+		};
+		7C51BAFD2348745E005F0884 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				7C51BB012348747D005F0884 /* ControlsButton.swift */,
+				7C51BB032348747D005F0884 /* HairlineView.swift */,
+				7C51BAFE2348747D005F0884 /* LibraryCollectionView.swift */,
+				7C51BB002348747D005F0884 /* LibraryCollectionViewCell.swift */,
+				7C51BB022348747D005F0884 /* MarqueeLabel.swift */,
+				7C51BB042348747D005F0884 /* SeriesHeaderTableViewCell.swift */,
+				7C51BAFF2348747D005F0884 /* SeriesTableViewCell.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		7C51BB0C234874A0005F0884 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				7C51BB0F234874B8005F0884 /* Date.swift */,
+				7C51BB0E234874B8005F0884 /* UINavigationBar.swift */,
+				7C51BB0D234874B8005F0884 /* UIView.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		7C51BB13234874CE005F0884 /* ESTMusicIndicator */ = {
+			isa = PBXGroup;
+			children = (
+				7C51BB14234874E6005F0884 /* ESTMusicIndicatorContentView.swift */,
+				7C51BB15234874E6005F0884 /* ESTMusicIndicatorView.swift */,
+			);
+			path = ESTMusicIndicator;
+			sourceTree = "<group>";
+		};
+		7C51BB1823487509005F0884 /* DeckTransition */ = {
+			isa = PBXGroup;
+			children = (
+				7C51BB2A234875CD005F0884 /* Models */,
+				7C51BB272348759E005F0884 /* Protocols */,
+				7C51BB1E23487571005F0884 /* TransitioningDelegate */,
+				7C51BB1B23487543005F0884 /* Views */,
+			);
+			path = DeckTransition;
+			sourceTree = "<group>";
+		};
+		7C51BB1B23487543005F0884 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				7C51BB1C23487557005F0884 /* CardIndicatorView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		7C51BB1E23487571005F0884 /* TransitioningDelegate */ = {
+			isa = PBXGroup;
+			children = (
+				7C51BB2023487587005F0884 /* CardDismissingAnimationController.swift */,
+				7C51BB1F23487587005F0884 /* CardPresentationController.swift */,
+				7C51BB2223487587005F0884 /* CardPresentingAnimationController.swift */,
+				7C51BB2123487587005F0884 /* CardTransitioningDelegate.swift */,
+			);
+			path = TransitioningDelegate;
+			sourceTree = "<group>";
+		};
+		7C51BB272348759E005F0884 /* Protocols */ = {
+			isa = PBXGroup;
+			children = (
+				7C51BB28234875B7005F0884 /* CardControllerDelegate.swift */,
+			);
+			path = Protocols;
+			sourceTree = "<group>";
+		};
+		7C51BB2A234875CD005F0884 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				7C51BB2B234875E7005F0884 /* CardHaptic.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		7C51BB2D2348760F005F0884 /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				7C51BB2E2348760F005F0884 /* SeriesViewController.swift */,
+				7C51BB2F2348760F005F0884 /* LibraryViewController.swift */,
+				7C51BB302348760F005F0884 /* RootViewController.swift */,
+				7C51BB312348760F005F0884 /* PlayerCardViewController.swift */,
+				7C51BB322348760F005F0884 /* MiniPlayerViewController.swift */,
+				7C51BB332348760F005F0884 /* NavigationController.swift */,
+			);
+			path = Controllers;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		7C51BAD623487334005F0884 /* Sim Radio */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 7C51BAEB23487335005F0884 /* Build configuration list for PBXNativeTarget "Sim Radio" */;
+			buildPhases = (
+				7C51BAD323487334005F0884 /* Sources */,
+				7C51BAD423487334005F0884 /* Frameworks */,
+				7C51BAD523487334005F0884 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Sim Radio";
+			productName = "Sim Radio";
+			productReference = 7C51BAD723487334005F0884 /* Sim Radio.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		7C51BACF23487334005F0884 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 1100;
+				LastUpgradeCheck = 1100;
+				ORGANIZATIONNAME = "Alexey Vorobyov";
+				TargetAttributes = {
+					7C51BAD623487334005F0884 = {
+						CreatedOnToolsVersion = 11.0;
+					};
+				};
+			};
+			buildConfigurationList = 7C51BAD223487334005F0884 /* Build configuration list for PBXProject "Sim Radio" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 7C51BACE23487334005F0884;
+			productRefGroup = 7C51BAD823487334005F0884 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				7C51BAD623487334005F0884 /* Sim Radio */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		7C51BAD523487334005F0884 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7C51BAE723487335005F0884 /* LaunchScreen.storyboard in Resources */,
+				7C51BAE423487335005F0884 /* Assets.xcassets in Resources */,
+				7C51BAE223487334005F0884 /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		7C51BAD323487334005F0884 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7C51BB2623487587005F0884 /* CardPresentingAnimationController.swift in Sources */,
+				7C51BB11234874B8005F0884 /* UINavigationBar.swift in Sources */,
+				7C51BB10234874B8005F0884 /* UIView.swift in Sources */,
+				7C51BADB23487334005F0884 /* AppDelegate.swift in Sources */,
+				7C51BB352348760F005F0884 /* LibraryViewController.swift in Sources */,
+				7C51BB0A2348747E005F0884 /* HairlineView.swift in Sources */,
+				7C51BB092348747E005F0884 /* MarqueeLabel.swift in Sources */,
+				7C51BB2C234875E7005F0884 /* CardHaptic.swift in Sources */,
+				7C51BB16234874E6005F0884 /* ESTMusicIndicatorContentView.swift in Sources */,
+				7C51BB29234875B7005F0884 /* CardControllerDelegate.swift in Sources */,
+				7C51BB372348760F005F0884 /* PlayerCardViewController.swift in Sources */,
+				7C51BB1D23487557005F0884 /* CardIndicatorView.swift in Sources */,
+				7C51BB2523487587005F0884 /* CardTransitioningDelegate.swift in Sources */,
+				7C51BB062348747E005F0884 /* SeriesTableViewCell.swift in Sources */,
+				7C0C4957237F339200358D91 /* MediaLibrary.swift in Sources */,
+				7C51BB12234874B8005F0884 /* Date.swift in Sources */,
+				7C51BB052348747E005F0884 /* LibraryCollectionView.swift in Sources */,
+				7C51BB2423487587005F0884 /* CardDismissingAnimationController.swift in Sources */,
+				7C51BB382348760F005F0884 /* MiniPlayerViewController.swift in Sources */,
+				7C51BB17234874E6005F0884 /* ESTMusicIndicatorView.swift in Sources */,
+				7C51BAF923487414005F0884 /* NowPlayable.swift in Sources */,
+				7C51BB392348760F005F0884 /* NavigationController.swift in Sources */,
+				7C51BB362348760F005F0884 /* RootViewController.swift in Sources */,
+				7C51BAFA23487414005F0884 /* PlaylistBuilder.swift in Sources */,
+				7C51BB082348747E005F0884 /* ControlsButton.swift in Sources */,
+				7C51BAFB23487414005F0884 /* PlaylistManager.swift in Sources */,
+				7C51BAF1234873DF005F0884 /* Radio.swift in Sources */,
+				7C51BB342348760F005F0884 /* SeriesViewController.swift in Sources */,
+				7C51BAF823487414005F0884 /* Playlist.swift in Sources */,
+				7C20F43F236C272400035D0E /* LibraryError.swift in Sources */,
+				7C51BB072348747E005F0884 /* LibraryCollectionViewCell.swift in Sources */,
+				7C51BB2323487587005F0884 /* CardPresentationController.swift in Sources */,
+				7C51BB0B2348747E005F0884 /* SeriesHeaderTableViewCell.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		7C51BAE023487334005F0884 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				7C51BAE123487334005F0884 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		7C51BAE523487335005F0884 /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				7C51BAE623487335005F0884 /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		7C51BAE923487335005F0884 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		7C51BAEA23487335005F0884 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		7C51BAEC23487335005F0884 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = XKHPTWMD44;
+				INFOPLIST_FILE = "Sim Radio/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "acme.Sim-Radio";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		7C51BAED23487335005F0884 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = XKHPTWMD44;
+				INFOPLIST_FILE = "Sim Radio/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "acme.Sim-Radio";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		7C51BAD223487334005F0884 /* Build configuration list for PBXProject "Sim Radio" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7C51BAE923487335005F0884 /* Debug */,
+				7C51BAEA23487335005F0884 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		7C51BAEB23487335005F0884 /* Build configuration list for PBXNativeTarget "Sim Radio" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7C51BAEC23487335005F0884 /* Debug */,
+				7C51BAED23487335005F0884 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 7C51BACF23487334005F0884 /* Project object */;
+}
