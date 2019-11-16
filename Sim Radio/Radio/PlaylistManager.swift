@@ -5,55 +5,45 @@
 
 import AVFoundation
 
-typealias Tag = String
 typealias AudioFileGroups = [Tag: [AudioFile]]
 
 class PlaylistManager {
     let timescale: CMTimeScale = 1000
 
     private let library: MediaLibrary
-    private var playlists: [UUID: Playlist] = [:]
-    private var commonFileGroups: [UUID: AudioFileGroups] = [:]
+    private var playlists: [URL: Playlist] = [:]
+    private var commonFileGroups: [URL: AudioFileGroups] = [:]
 
     init(library: MediaLibrary) {
         self.library = library
     }
 
-    func getPlaylist(ofStation id: UUID) throws -> Playlist {
-        if let playlist = playlists[id] {
+    func getPlaylist(of station: Station) throws -> Playlist {
+        if let playlist = playlists[station.origin] {
             return playlist
         }
-        let playlist = try createPlaylist(ofStation: id)
-        playlists[id] = playlist
+        let playlist = try createPlaylist(of: station)
+        playlists[station.origin] = playlist
         return playlist
     }
 
-    func getCommonFileGroups(ofSeries id: UUID) throws -> AudioFileGroups {
-        if let fileGroups = commonFileGroups[id] {
+    func getCommonFileGroups(of series: Series) throws -> AudioFileGroups {
+        if let fileGroups = commonFileGroups[series.origin] {
             return fileGroups
         }
-        let fileGroups = try createCommonFileGroups(ofSeries: id)
-        commonFileGroups[id] = fileGroups
+        let fileGroups = try createCommonFileGroups(of: series)
+        commonFileGroups[series.origin] = fileGroups
         return fileGroups
     }
 
-    func createPlaylist(ofStation id: UUID) throws -> Playlist {
-        guard let station = library.station(withId: id) else {
-            throw LibraryError.invalidStationID(id: id)
-        }
-        guard let series = library.series(ofStationWithID: id) else {
-            throw LibraryError.invalidSeriesID(id: id)
-        }
-        let commonFiles = try getCommonFileGroups(ofSeries: series.seriesID)
+    func createPlaylist(of station: Station) throws -> Playlist {
+        let commonFiles = try getCommonFileGroups(of: station.series)
         return try Playlist(commonFiles: commonFiles, station: station, timescale: timescale)
     }
 
-    func createCommonFileGroups(ofSeries id: UUID) throws -> AudioFileGroups {
-        guard let series = library.series(id: id) else {
-            throw LibraryError.invalidSeriesID(id: id)
-        }
+    func createCommonFileGroups(of series: Series) throws -> AudioFileGroups {
         return Dictionary(uniqueKeysWithValues: try series.model.common.fileGroups.map {
-            ($0.tag, try $0.files.map { try AudioFile(baseUrl: series.url, model: $0, timescale: timescale) })
+            ($0.tag, try $0.files.map { try AudioFile(baseUrl: series.origin, model: $0, timescale: timescale) })
         })
     }
 }

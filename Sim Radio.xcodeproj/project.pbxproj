@@ -7,8 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		7C0C4957237F339200358D91 /* MediaLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C0C4956237F339200358D91 /* MediaLibrary.swift */; };
-		7C20F43F236C272400035D0E /* LibraryError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C20F43E236C272400035D0E /* LibraryError.swift */; };
 		7C51BADB23487334005F0884 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C51BADA23487334005F0884 /* AppDelegate.swift */; };
 		7C51BAE223487334005F0884 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7C51BAE023487334005F0884 /* Main.storyboard */; };
 		7C51BAE423487335005F0884 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7C51BAE323487335005F0884 /* Assets.xcassets */; };
@@ -43,6 +41,22 @@
 		7C51BB372348760F005F0884 /* PlayerCardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C51BB312348760F005F0884 /* PlayerCardViewController.swift */; };
 		7C51BB382348760F005F0884 /* MiniPlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C51BB322348760F005F0884 /* MiniPlayerViewController.swift */; };
 		7C51BB392348760F005F0884 /* NavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C51BB332348760F005F0884 /* NavigationController.swift */; };
+		7C83493E237F3B7F00C7C355 /* AsyncOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C834939237F3B7E00C7C355 /* AsyncOperation.swift */; };
+		7C83493F237F3B7F00C7C355 /* AudiofilesDownloadOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C83493A237F3B7E00C7C355 /* AudiofilesDownloadOperation.swift */; };
+		7C834940237F3B7F00C7C355 /* FileDownloadOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C83493B237F3B7E00C7C355 /* FileDownloadOperation.swift */; };
+		7C834941237F3B7F00C7C355 /* SeriesModelDownloadOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C83493C237F3B7F00C7C355 /* SeriesModelDownloadOperation.swift */; };
+		7C834942237F3B7F00C7C355 /* StationModelDownloadOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C83493D237F3B7F00C7C355 /* StationModelDownloadOperation.swift */; };
+		7C834945237F3B8E00C7C355 /* DownloadError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C834943237F3B8E00C7C355 /* DownloadError.swift */; };
+		7C834946237F3B8E00C7C355 /* FilesDownloadTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C834944237F3B8E00C7C355 /* FilesDownloadTask.swift */; };
+		7C83494B237FC37A00C7C355 /* MediaLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C834947237FC37A00C7C355 /* MediaLibrary.swift */; };
+		7C83494C237FC37A00C7C355 /* Series.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C834948237FC37A00C7C355 /* Series.swift */; };
+		7C83494D237FC37A00C7C355 /* LibraryError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C834949237FC37A00C7C355 /* LibraryError.swift */; };
+		7C83494E237FC37A00C7C355 /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C83494A237FC37A00C7C355 /* Model.swift */; };
+		7C834952237FC3D500C7C355 /* Double+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C83494F237FC3D500C7C355 /* Double+Extension.swift */; };
+		7C834953237FC3D500C7C355 /* FileManager+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C834950237FC3D500C7C355 /* FileManager+Extension.swift */; };
+		7C834954237FC3D500C7C355 /* String+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C834951237FC3D500C7C355 /* String+Extension.swift */; };
+		7C834958237FC44400C7C355 /* Progress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C834956237FC44400C7C355 /* Progress.swift */; };
+		7C834959237FC44400C7C355 /* Synchronization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C834957237FC44400C7C355 /* Synchronization.swift */; };
 		7C9C3EA3237F368A0063D235 /* SimRadio.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 7C9C3EA1237F368A0063D235 /* SimRadio.xcdatamodeld */; };
 		7CBD4255237F38AB008341CF /* DownloadedPersistence+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CBD424B237F38AB008341CF /* DownloadedPersistence+CoreDataClass.swift */; };
 		7CBD4256237F38AB008341CF /* DownloadedPersistence+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CBD424C237F38AB008341CF /* DownloadedPersistence+CoreDataProperties.swift */; };
@@ -57,8 +71,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		7C0C4956237F339200358D91 /* MediaLibrary.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaLibrary.swift; sourceTree = "<group>"; };
-		7C20F43E236C272400035D0E /* LibraryError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryError.swift; sourceTree = "<group>"; };
 		7C51BAD723487334005F0884 /* Sim Radio.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Sim Radio.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		7C51BADA23487334005F0884 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		7C51BAE123487334005F0884 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -95,6 +107,22 @@
 		7C51BB312348760F005F0884 /* PlayerCardViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerCardViewController.swift; sourceTree = "<group>"; };
 		7C51BB322348760F005F0884 /* MiniPlayerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MiniPlayerViewController.swift; sourceTree = "<group>"; };
 		7C51BB332348760F005F0884 /* NavigationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavigationController.swift; sourceTree = "<group>"; };
+		7C834939237F3B7E00C7C355 /* AsyncOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AsyncOperation.swift; sourceTree = "<group>"; };
+		7C83493A237F3B7E00C7C355 /* AudiofilesDownloadOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudiofilesDownloadOperation.swift; sourceTree = "<group>"; };
+		7C83493B237F3B7E00C7C355 /* FileDownloadOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileDownloadOperation.swift; sourceTree = "<group>"; };
+		7C83493C237F3B7F00C7C355 /* SeriesModelDownloadOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SeriesModelDownloadOperation.swift; sourceTree = "<group>"; };
+		7C83493D237F3B7F00C7C355 /* StationModelDownloadOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StationModelDownloadOperation.swift; sourceTree = "<group>"; };
+		7C834943237F3B8E00C7C355 /* DownloadError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DownloadError.swift; sourceTree = "<group>"; };
+		7C834944237F3B8E00C7C355 /* FilesDownloadTask.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FilesDownloadTask.swift; sourceTree = "<group>"; };
+		7C834947237FC37A00C7C355 /* MediaLibrary.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaLibrary.swift; sourceTree = "<group>"; };
+		7C834948237FC37A00C7C355 /* Series.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Series.swift; sourceTree = "<group>"; };
+		7C834949237FC37A00C7C355 /* LibraryError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LibraryError.swift; sourceTree = "<group>"; };
+		7C83494A237FC37A00C7C355 /* Model.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
+		7C83494F237FC3D500C7C355 /* Double+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Double+Extension.swift"; sourceTree = "<group>"; };
+		7C834950237FC3D500C7C355 /* FileManager+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "FileManager+Extension.swift"; sourceTree = "<group>"; };
+		7C834951237FC3D500C7C355 /* String+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "String+Extension.swift"; sourceTree = "<group>"; };
+		7C834956237FC44400C7C355 /* Progress.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Progress.swift; sourceTree = "<group>"; };
+		7C834957237FC44400C7C355 /* Synchronization.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Synchronization.swift; sourceTree = "<group>"; };
 		7C9C3EA2237F368A0063D235 /* SimRadio.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = SimRadio.xcdatamodel; sourceTree = "<group>"; };
 		7CBD424B237F38AB008341CF /* DownloadedPersistence+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DownloadedPersistence+CoreDataClass.swift"; sourceTree = "<group>"; };
 		7CBD424C237F38AB008341CF /* DownloadedPersistence+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DownloadedPersistence+CoreDataProperties.swift"; sourceTree = "<group>"; };
@@ -138,6 +166,7 @@
 		7C51BAD923487334005F0884 /* Sim Radio */ = {
 			isa = PBXGroup;
 			children = (
+				7C834955237FC42700C7C355 /* Misc */,
 				7C9C3EA1237F368A0063D235 /* SimRadio.xcdatamodeld */,
 				7C51BB2D2348760F005F0884 /* Controllers */,
 				7C51BB1823487509005F0884 /* DeckTransition */,
@@ -158,8 +187,6 @@
 			isa = PBXGroup;
 			children = (
 				7CBD425F237F39E0008341CF /* MediaLibrary */,
-				7C0C4956237F339200358D91 /* MediaLibrary.swift */,
-				7C20F43E236C272400035D0E /* LibraryError.swift */,
 				7C51BAF423487414005F0884 /* NowPlayable.swift */,
 				7C51BAF323487414005F0884 /* Playlist.swift */,
 				7C51BAF523487414005F0884 /* PlaylistBuilder.swift */,
@@ -186,6 +213,9 @@
 		7C51BB0C234874A0005F0884 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				7C83494F237FC3D500C7C355 /* Double+Extension.swift */,
+				7C834950237FC3D500C7C355 /* FileManager+Extension.swift */,
+				7C834951237FC3D500C7C355 /* String+Extension.swift */,
 				7C51BB0F234874B8005F0884 /* Date.swift */,
 				7C51BB0E234874B8005F0884 /* UINavigationBar.swift */,
 				7C51BB0D234874B8005F0884 /* UIView.swift */,
@@ -261,9 +291,45 @@
 			path = Controllers;
 			sourceTree = "<group>";
 		};
+		7C834937237F3B2C00C7C355 /* Download */ = {
+			isa = PBXGroup;
+			children = (
+				7C834943237F3B8E00C7C355 /* DownloadError.swift */,
+				7C834944237F3B8E00C7C355 /* FilesDownloadTask.swift */,
+				7C834938237F3B3F00C7C355 /* Operations */,
+			);
+			path = Download;
+			sourceTree = "<group>";
+		};
+		7C834938237F3B3F00C7C355 /* Operations */ = {
+			isa = PBXGroup;
+			children = (
+				7C834939237F3B7E00C7C355 /* AsyncOperation.swift */,
+				7C83493A237F3B7E00C7C355 /* AudiofilesDownloadOperation.swift */,
+				7C83493B237F3B7E00C7C355 /* FileDownloadOperation.swift */,
+				7C83493C237F3B7F00C7C355 /* SeriesModelDownloadOperation.swift */,
+				7C83493D237F3B7F00C7C355 /* StationModelDownloadOperation.swift */,
+			);
+			path = Operations;
+			sourceTree = "<group>";
+		};
+		7C834955237FC42700C7C355 /* Misc */ = {
+			isa = PBXGroup;
+			children = (
+				7C834956237FC44400C7C355 /* Progress.swift */,
+				7C834957237FC44400C7C355 /* Synchronization.swift */,
+			);
+			path = Misc;
+			sourceTree = "<group>";
+		};
 		7CBD425F237F39E0008341CF /* MediaLibrary */ = {
 			isa = PBXGroup;
 			children = (
+				7C834949237FC37A00C7C355 /* LibraryError.swift */,
+				7C834947237FC37A00C7C355 /* MediaLibrary.swift */,
+				7C83494A237FC37A00C7C355 /* Model.swift */,
+				7C834948237FC37A00C7C355 /* Series.swift */,
+				7C834937237F3B2C00C7C355 /* Download */,
 				7CBD4260237F39F5008341CF /* PersistData */,
 			);
 			path = MediaLibrary;
@@ -365,23 +431,32 @@
 				7C51BADB23487334005F0884 /* AppDelegate.swift in Sources */,
 				7CBD425D237F38AB008341CF /* DownloadFilePersistence+CoreDataClass.swift in Sources */,
 				7CBD425E237F38AB008341CF /* DownloadFilePersistence+CoreDataProperties.swift in Sources */,
+				7C834954237FC3D500C7C355 /* String+Extension.swift in Sources */,
 				7C51BB352348760F005F0884 /* LibraryViewController.swift in Sources */,
 				7C51BB0A2348747E005F0884 /* HairlineView.swift in Sources */,
+				7C834946237F3B8E00C7C355 /* FilesDownloadTask.swift in Sources */,
+				7C834953237FC3D500C7C355 /* FileManager+Extension.swift in Sources */,
+				7C834941237F3B7F00C7C355 /* SeriesModelDownloadOperation.swift in Sources */,
+				7C83494D237FC37A00C7C355 /* LibraryError.swift in Sources */,
 				7CBD425A237F38AB008341CF /* SeriesPersistence+CoreDataProperties.swift in Sources */,
 				7C51BB092348747E005F0884 /* MarqueeLabel.swift in Sources */,
 				7C51BB2C234875E7005F0884 /* CardHaptic.swift in Sources */,
 				7C51BB16234874E6005F0884 /* ESTMusicIndicatorContentView.swift in Sources */,
 				7C51BB29234875B7005F0884 /* CardControllerDelegate.swift in Sources */,
+				7C834940237F3B7F00C7C355 /* FileDownloadOperation.swift in Sources */,
 				7C51BB372348760F005F0884 /* PlayerCardViewController.swift in Sources */,
+				7C834952237FC3D500C7C355 /* Double+Extension.swift in Sources */,
 				7C51BB1D23487557005F0884 /* CardIndicatorView.swift in Sources */,
+				7C834958237FC44400C7C355 /* Progress.swift in Sources */,
 				7C51BB2523487587005F0884 /* CardTransitioningDelegate.swift in Sources */,
 				7C51BB062348747E005F0884 /* SeriesTableViewCell.swift in Sources */,
-				7C0C4957237F339200358D91 /* MediaLibrary.swift in Sources */,
+				7C834945237F3B8E00C7C355 /* DownloadError.swift in Sources */,
 				7C51BB12234874B8005F0884 /* Date.swift in Sources */,
 				7C51BB052348747E005F0884 /* LibraryCollectionView.swift in Sources */,
 				7C51BB2423487587005F0884 /* CardDismissingAnimationController.swift in Sources */,
 				7C51BB382348760F005F0884 /* MiniPlayerViewController.swift in Sources */,
 				7CBD4258237F38AB008341CF /* DownloadTaskPersistence+CoreDataProperties.swift in Sources */,
+				7C83494B237FC37A00C7C355 /* MediaLibrary.swift in Sources */,
 				7C51BB17234874E6005F0884 /* ESTMusicIndicatorView.swift in Sources */,
 				7C51BAF923487414005F0884 /* NowPlayable.swift in Sources */,
 				7C9C3EA3237F368A0063D235 /* SimRadio.xcdatamodeld in Sources */,
@@ -393,13 +468,18 @@
 				7C51BAFB23487414005F0884 /* PlaylistManager.swift in Sources */,
 				7C51BAF1234873DF005F0884 /* Radio.swift in Sources */,
 				7C51BB342348760F005F0884 /* SeriesViewController.swift in Sources */,
+				7C83494E237FC37A00C7C355 /* Model.swift in Sources */,
+				7C83493F237F3B7F00C7C355 /* AudiofilesDownloadOperation.swift in Sources */,
 				7C51BAF823487414005F0884 /* Playlist.swift in Sources */,
-				7C20F43F236C272400035D0E /* LibraryError.swift in Sources */,
+				7C834942237F3B7F00C7C355 /* StationModelDownloadOperation.swift in Sources */,
 				7C51BB072348747E005F0884 /* LibraryCollectionViewCell.swift in Sources */,
+				7C834959237FC44400C7C355 /* Synchronization.swift in Sources */,
 				7C51BB2323487587005F0884 /* CardPresentationController.swift in Sources */,
+				7C83494C237FC37A00C7C355 /* Series.swift in Sources */,
 				7CBD425C237F38AB008341CF /* StationPersistence+CoreDataProperties.swift in Sources */,
 				7CBD425B237F38AB008341CF /* StationPersistence+CoreDataClass.swift in Sources */,
 				7CBD4256237F38AB008341CF /* DownloadedPersistence+CoreDataProperties.swift in Sources */,
+				7C83493E237F3B7F00C7C355 /* AsyncOperation.swift in Sources */,
 				7C51BB0B2348747E005F0884 /* SeriesHeaderTableViewCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

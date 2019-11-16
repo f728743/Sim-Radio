@@ -41,7 +41,7 @@ extension SeriesViewController: RadioObserver {
     func radio(_ raio: Radio, didStartPlaying station: Station) {
         tableView.visibleCells.forEach { cell in
             if let cell = cell as? SeriesTableViewCell {
-                cell.state = cell.stationID == station.stationID ? .playing : .stopped
+                cell.state = cell.station === station ? .playing : .stopped
             }
         }
     }
@@ -49,7 +49,7 @@ extension SeriesViewController: RadioObserver {
     func radio(_ raio: Radio, didPausePlaybackOf station: Station) {
         tableView.visibleCells.forEach { cell in
             if let cell = cell as? SeriesTableViewCell {
-                cell.state = cell.stationID == station.stationID ? .paused : .stopped
+                cell.state = cell.station === station ? .paused : .stopped
             }
         }
     }
@@ -67,8 +67,8 @@ extension SeriesViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if indexPath.section == 1 {
             if let series = series {
-                let station = Array(series.stations.values)[indexPath.row]
-                radio.play(stationWithId: station.stationID)
+                let station = series.stations[indexPath.row]
+                radio.play(station: station)
                 tableView.deselectRow(at: indexPath, animated: true)
             }
         }
@@ -95,8 +95,7 @@ extension SeriesViewController: UITableViewDataSource {
             return headerCell
         }
         let cell = tableView.dequeueReusableCell(withIdentifier: SeriesTableViewCell.reuseId, for: indexPath) as! SeriesTableViewCell
-        let station = Array(series!.stations.values)[indexPath.row]
-        cell.stationID = station.stationID
+        let station = series!.stations[indexPath.row]
         cell.logoImageView.image = station.logo
         cell.titleLabel.text = station.model.info.title
         cell.infoLabel.text = station.model.info.genre
@@ -106,12 +105,12 @@ extension SeriesViewController: UITableViewDataSource {
         switch radio.state {
         case .idle:
             cell.state = .stopped
-        case let .paused(stationID):
-            if cell.stationID == stationID {
+        case let .paused(station):
+            if cell.station === station {
                 cell.state = .paused
             }
-        case let .playing(stationID):
-            if cell.stationID == stationID {
+        case let .playing(station):
+            if cell.station === station {
                 cell.state = .playing
             }
         }

@@ -16,7 +16,7 @@ class SeriesTableViewCell: UITableViewCell {
         }
     }
 
-    var stationID = UUID()
+    var station: Station?
 
     let logoImageView: UIImageView = {
         let imageView = UIImageView()

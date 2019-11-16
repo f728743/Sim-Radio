@@ -5,7 +5,7 @@
 
 import UIKit
 
-struct LibraryConstants {
+struct LibraryCollectionViewConstants {
     static let leftDistanceToView: CGFloat = 20
     static let rightDistanceToView: CGFloat = 20
     static let minimumLineSpacing: CGFloat = 20
@@ -31,8 +31,8 @@ class LibraryCollectionView: UICollectionView {
         dataSource = self
         register(LibraryCollectionViewCell.self, forCellWithReuseIdentifier: LibraryCollectionViewCell.reuseId)
         translatesAutoresizingMaskIntoConstraints = false
-        layout.minimumLineSpacing = LibraryConstants.minimumLineSpacing
-        contentInset = UIEdgeInsets(top: 0, left: LibraryConstants.leftDistanceToView, bottom: 0, right: LibraryConstants.rightDistanceToView)
+        layout.minimumLineSpacing = LibraryCollectionViewConstants.minimumLineSpacing
+        contentInset = UIEdgeInsets(top: 0, left: LibraryCollectionViewConstants.leftDistanceToView, bottom: 0, right: LibraryCollectionViewConstants.rightDistanceToView)
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -53,18 +53,18 @@ extension LibraryCollectionView: UICollectionViewDelegate, UICollectionViewDataS
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = dequeueReusableCell(withReuseIdentifier: LibraryCollectionViewCell.reuseId, for: indexPath) as! LibraryCollectionViewCell
-        let series = Array(library.series.values)[indexPath.row]
+        let series = library.series[indexPath.row]
         cell.logoImageView.image = series.logo
         cell.titleLabel.text = series.model.info.title
         return cell
     }
 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath)  {
-        let series = Array(library.series.values)[indexPath.row]
+        let series = library.series[indexPath.row]
         libraryDelegate?.libraryCollectionView(self, didSelectSeries: series)
     }
 
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: LibraryConstants.itemWidth, height: LibraryConstants.itemHeight)
+        return CGSize(width: LibraryCollectionViewConstants.itemWidth, height: LibraryCollectionViewConstants.itemHeight)
     }
 }

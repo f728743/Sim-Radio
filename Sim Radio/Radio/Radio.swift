@@ -14,18 +14,18 @@ struct RadioDisplay {
 }
 
 protocol RadioControl {
-    func play(stationWithId stationID: UUID)
+    func play(station: Station)
     func togglePausePlay()
     func nextStation()
     func previousStation()
     func turnOff()
 }
 
-class Radio: RadioControl {
+class Radio {
     private var isInterrupted: Bool = false
     private var player: AVPlayer?
     private var playerNum = 0
-    private let playerCounter = Autoincrement()
+    private var playerCounter = 0
     private let playlistManager: PlaylistManager
     
     private let nowPlayableBehavior = NowPlayableBehavior()
@@ -61,8 +61,8 @@ class Radio: RadioControl {
         switch state {
         case .idle:
             return nil
-        case let .playing(stationID), let .paused(stationID):
-            return library.station(withId: stationID)
+        case let .playing(station), let .paused(station):
+            return station
         }
     }
     
@@ -70,8 +70,8 @@ class Radio: RadioControl {
         switch state {
         case .idle:
             return nil
-        case let .playing(stationID), let .paused(stationID):
-            return library.series(ofStationWithID: stationID)
+        case let .playing(station), let .paused(station):
+            return station.series
         }
     }
     
@@ -115,43 +115,33 @@ class Radio: RadioControl {
             case .idle:
                 observer.radioDidStop(self)
                 
-            case let .playing(stationID):
-                if let station = library.station(withId: stationID) {
-                    updateNowPlayableMetadata(station)
-                    observer.radio(self, didStartPlaying: station)
-                }
-                
-            case let .paused(stationID):
-                if let station = library.station(withId: stationID) {
-                    updateNowPlayableMetadata(station)
-                    observer.radio(self, didPausePlaybackOf: station)
-                }
+            case let .playing(station):
+                updateNowPlayableMetadata(station)
+                observer.radio(self, didStartPlaying: station)
+
+            case let .paused(station):
+                updateNowPlayableMetadata(station)
+                observer.radio(self, didPausePlaybackOf: station)
             }
         }
     }
     
-    func nextStationId(afterStationWithId stationID: UUID) -> UUID {
-        guard let series = library.series(ofStationWithID: stationID) else {
-            return stationID
-        }
-        let stations = Array(series.stations.values)
-        guard let index = stations.firstIndex(where: { $0.stationID == stationID }) else {
-            return stationID
+    func nextStation(after station: Station) -> Station {
+        let stations = station.series.stations
+        guard let index = stations.firstIndex(where: { $0 === station }) else {
+            return station
         }
         let nextStationIndex = index + 1 >= stations.count ? 0 : index + 1
-        return stations[nextStationIndex].stationID
+        return stations[nextStationIndex]
     }
     
-    func prevStationId(beforeStationWithId stationID: UUID) -> UUID {
-        guard let series = library.series(ofStationWithID: stationID) else {
-            return stationID
+    func previousStation(before station: Station) -> Station {
+        let stations = station.series.stations
+        guard let index = stations.firstIndex(where: { $0 === station }) else {
+            return station
         }
-        let stations = Array(series.stations.values)
-        guard let index = stations.firstIndex(where: { $0.stationID == stationID }) else {
-            return stationID
-        }
-        let prevStationIndex = index == 0 ? stations.count - 1 : index - 1
-        return stations[prevStationIndex].stationID
+        let previousStationIndex = index == 0 ? stations.count - 1 : index - 1
+        return stations[previousStationIndex]
     }
 }
 
@@ -205,8 +195,8 @@ extension Radio {
             print("interrupted ended, shouldPlay = ", shouldPlay)
             
             isInterrupted = false
-            if case .playing(let stationID) = state {
-                if let station = library.station(withId : stationID), shouldPlay {
+            if case .playing(let station) = state {
+                if shouldPlay {
                     startPlayback(station: station)
                 } else {
                     pause()
@@ -222,15 +212,13 @@ extension Radio {
         
         var trackNumber = 0
         var trackCount = 0
-        
-        if let series = library.series(ofStationWithID: station.stationID) {
-            let stations = Array(series.stations.values)
-            if let mumber = stations.firstIndex(where: { $0.stationID == station.stationID }) {
-                trackCount = stations.count
-                trackNumber = mumber
-            }
+
+        let stations = station.series.stations
+        if let mumber = stations.firstIndex(where: { $0 === station }) {
+            trackCount = stations.count
+            trackNumber = mumber
         }
-        
+
         var artist = display.dj
         if let a = artist {
             artist = "Hosted by \(a)"
@@ -250,52 +238,47 @@ extension Radio {
     }
 }
 
-// MARK: Implementation of RadioControl
+// MARK: RadioControl extension
 
-extension Radio {
-    func play(stationWithId stationID: UUID) {
-        if case let .playing(currentStationId) = state {
-            if currentStationId == stationID {
+extension Radio: RadioControl {
+    func play(station: Station) {
+        if case let .playing(currentStation) = state {
+            if currentStation === station {
                 return
             }
         }
-        
-        if let station = library.station(withId: stationID) {
-            state = .playing(stationID: stationID)
-            startPlayback(station: station)
-        }
+        state = .playing(station: station)
+        startPlayback(station: station)
     }
     
     func togglePausePlay() {
         switch state {
         case .idle:
-            let nonEmptySeries = Array(library.series.filter { $0.value.stations.count > 0 }.values)
+            let nonEmptySeries = library.series.filter { $0.stations.count > 0 }
             guard !nonEmptySeries.isEmpty else { return }
             let series = nonEmptySeries[Int(drand48() * Double(nonEmptySeries.count))]
-            let stations = Array(series.stations.values)
+            let stations = series.stations
             guard !stations.isEmpty else { return }
             let station = stations[Int(drand48() * Double(stations.count))]
-            state = .playing(stationID: station.stationID)
+            state = .playing(station: station)
             startPlayback(station: station)
             
-        case let .playing(stationID):
-            state = .paused(stationID: stationID)
+        case let .playing(station):
+            state = .paused(station: station)
             stopPlayback()
             
-        case let .paused(stationID):
-            if let station = library.station(withId: stationID) {
-                state = .playing(stationID: stationID)
-                startPlayback(station: station)
-            }
+        case let .paused(station):
+            state = .playing(station: station)
+            startPlayback(station: station)
         }
     }
     
     func nextStation() {
         switch state {
-        case let .playing(stationID):
-            play(stationWithId: nextStationId(afterStationWithId: stationID))
-        case let .paused(stationID):
-            state = .paused(stationID: nextStationId(afterStationWithId: stationID))
+        case let .playing(station):
+            play(station: nextStation(after: station))
+        case let .paused(station):
+            state = .paused(station: nextStation(after: station))
         default:
             break
         }
@@ -303,11 +286,10 @@ extension Radio {
     
     func previousStation() {
         switch state {
-        case let .playing(stationID):
-            play(stationWithId: prevStationId(beforeStationWithId: stationID))
-        case let .paused(stationID):
-            state = .paused(stationID: prevStationId(beforeStationWithId: stationID))
-            
+        case let .playing(station):
+            play(station: previousStation(before: station))
+        case let .paused(station):
+            state = .paused(station: previousStation(before: station))
         default:
             break
         }
@@ -338,15 +320,15 @@ private extension Radio {
     
     func startPlayback(station: Station) {
         player = nil
-        play(station: station.stationID, mode: .playingFirst)
+        play(station: station, mode: .playingFirst)
     }
     
     func stopPlayback() {
         player = nil
     }
     
-    func play(station id: UUID, mode: PlayingMode) {
-        guard let playlist = try? playlistManager.getPlaylist(ofStation: id) else {
+    func play(station: Station, mode: PlayingMode) {
+        guard let playlist = try? playlistManager.getPlaylist(of: station) else {
             return
         }
         
@@ -358,25 +340,25 @@ private extension Radio {
         let player = AVPlayer(playerItem: playerItem)
         player.play()
         self.player = player
-        playerNum = playerCounter.next()
-        
+        playerNum = playerCounter
+        playerCounter += 1
         // in order to prevent the frequent creating of a long playlist in cases of quick button presses before creating playlist we waiting a couple of seconds
         Timer.scheduledTimer(timeInterval: 2.0,
                              target: self,
                              selector: #selector(scheduleKeepPlaying),
-                             userInfo: (playerNum: playerNum, playlist: playlist, playerItem: playerItem, stationID: id),
+                             userInfo: (playerNum: playerNum, playlist: playlist, playerItem: playerItem, station: station),
                              repeats: false)
     }
     
     @objc func scheduleKeepPlaying(timer: Timer)
     {
-        if let userInfo = timer.userInfo as? (playerNum: Int, playlist: Playlist, playerItem: AVPlayerItem, stationID: UUID) {
+        if let userInfo = timer.userInfo as? (playerNum: Int, playlist: Playlist, playerItem: AVPlayerItem, station: Station) {
             if userInfo.playerNum == self.playerNum {
                 NotificationCenter.default.addObserver(forName: .AVPlayerItemDidPlayToEndTime,
                                                        object: userInfo.playerItem,
                                                        queue: .main
                 ) {
-                    [weak self] _ in self?.play(station: userInfo.stationID, mode: .playingNext)
+                    [weak self] _ in self?.play(station: userInfo.station, mode: .playingNext)
                 }
                 DispatchQueue.global(qos: .userInitiated).async {
                     try? userInfo.playlist.prepareNextPlayerItem(minDuraton: 1 * 60 * 60)
@@ -396,8 +378,8 @@ extension Radio {
 extension Radio {
     enum State {
         case idle
-        case playing(stationID: UUID)
-        case paused(stationID: UUID)
+        case playing(station: Station)
+        case paused(station: Station)
     }
 }
 
