@@ -1,6 +1,6 @@
 //
 //  Model.swift
-//  RadioDownloader
+//  Sim Radio
 //
 
 import Foundation

@@ -19,7 +19,7 @@ class MediaLibrary {
         return queue
     }()
     private lazy var persistentContainer: NSPersistentContainer = {
-        let container = NSPersistentContainer(name: "RadioDownloader")
+        let container = NSPersistentContainer(name: "SimRadio")
         container.loadPersistentStores(completionHandler: { storeDescription, error in
             print(storeDescription)
             if let error = error as NSError? {

@@ -1,6 +1,6 @@
 //
 //  StationModelDownloadOperation.swift
-//  RadioDownloader
+//  Sim Radio
 //
 
 import Foundation

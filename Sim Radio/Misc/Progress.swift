@@ -1,6 +1,6 @@
 //
 //  Progress.swift
-//  RadioDownloader
+//  Sim Radio
 //
 
 class Progress {

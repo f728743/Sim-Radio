@@ -1,6 +1,6 @@
 //
 //  SynchronizedDictionary.swift
-//  RadioDownloader
+//  Sim Radio
 //
 
 import Foundation

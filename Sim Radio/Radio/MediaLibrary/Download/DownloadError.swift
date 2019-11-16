@@ -1,6 +1,6 @@
 //
 //  DownloadError.swift
-//  RadioDownloader
+//  Sim Radio
 //
 
 import Foundation

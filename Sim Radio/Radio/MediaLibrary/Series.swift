@@ -1,6 +1,6 @@
 //
 //  Series.swift
-//  RadioDownloader
+//  Sim Radio
 //
 
 import UIKit
