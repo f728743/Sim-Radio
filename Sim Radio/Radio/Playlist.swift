@@ -9,7 +9,9 @@ func urlTail(_ url: URL) -> String {
     let pattern = #".+\/(.+\/.+)"#
     let urlString = url.absoluteString
     let regex = try? NSRegularExpression(pattern: pattern)
-    if let match = regex?.firstMatch(in: urlString, options: [], range: NSRange(location: 0, length: urlString.utf16.count)) {
+    if let match = regex?.firstMatch(in: urlString,
+                                     options: [],
+                                     range: NSRange(location: 0, length: urlString.utf16.count)) {
         if let tailRange = Range(match.range(at: 1), in: urlString) {
             return String(urlString[tailRange])
         }
@@ -60,24 +62,35 @@ class Compositor {
     init() throws {
         composition = AVMutableComposition()
         audioMix = AVMutableAudioMix()
-        guard let mainTrack = composition.addMutableTrack(withMediaType: .audio, preferredTrackID: kCMPersistentTrackID_Invalid) else {
-            throw LibraryError.compositionCreatingError
+        guard let mainTrack = composition.addMutableTrack(
+            withMediaType: .audio,
+            preferredTrackID: kCMPersistentTrackID_Invalid) else {
+                throw LibraryError.compositionCreatingError
         }
         self.mainTrack = mainTrack
-        guard let mixTrack = composition.addMutableTrack(withMediaType: .audio, preferredTrackID: kCMPersistentTrackID_Invalid) else {
-            throw LibraryError.compositionCreatingError
+        guard let mixTrack = composition.addMutableTrack(
+            withMediaType: .audio,
+            preferredTrackID: kCMPersistentTrackID_Invalid) else {
+                throw LibraryError.compositionCreatingError
         }
         self.mixTrack = mixTrack
         params = AVMutableAudioMixInputParameters(track: mainTrack)
     }
 
-    func insert(_ item: AudioComponent, starting from: CMTime, to destination: Destination, withOffset offset: CMTime) throws {
+    func insert(_ item: AudioComponent,
+                starting from: CMTime,
+                to destination: Destination,
+                withOffset offset: CMTime) throws {
         if item.playing.end <= from {
             return
         }
         let playingTime = calcPlayingTime(range: item.playing, starting: from, withOffset: offset)
 
-//        print("  \(urlTail(item.url)), \(item.playing.start.seconds.rounded(toPlaces: 2))-\(item.playing.end.seconds.rounded(toPlaces: 2)) range \(playingTime.range.start.seconds.rounded(toPlaces: 2))-\(playingTime.range.end.seconds.rounded(toPlaces: 2)), at \(playingTime.positionInComposition.seconds.rounded(toPlaces: 2))")
+        //        print("  \(urlTail(item.url)), \(item.playing.start.seconds.rounded(toPlaces: 2))" +
+        //            "-\(item.playing.end.seconds.rounded(toPlaces: 2)) range " +
+        //            "\(playingTime.range.start.seconds.rounded(toPlaces: 2))-" +
+        //            "\(playingTime.range.end.seconds.rounded(toPlaces: 2)), at" +
+        //            " \(playingTime.positionInComposition.seconds.rounded(toPlaces: 2))")
 
         let compositionTrack = destination == .main ? mainTrack : mixTrack
         let asset = AVURLAsset(url: item.url)
@@ -90,11 +103,15 @@ class Compositor {
         }
     }
 
-    func insert(playlist: [AudioComponent], from: CMTime, to: CMTime, withOffset offset: CMTime) throws -> (depleted: Bool, lastRange: CMTimeRange) {
+    func insert(playlist: [AudioComponent],
+                from: CMTime,
+                to: CMTime,
+                withOffset offset: CMTime) throws -> (depleted: Bool, lastRange: CMTimeRange) {
         var depleted = true
         var lastRange = CMTimeRange()
         for item in playlist {
-//            print("item", urlTail(item.url), item.playing.start.seconds.rounded(toPlaces: 2), "-", item.playing.end.seconds.rounded(toPlaces: 2))
+//            print("item \(urlTail(item.url)) \(item.playing.start.seconds.rounded(toPlaces: 2))-" +
+//                "\(item.playing.end.seconds.rounded(toPlaces: 2))")
             if item.playing.start > to {
                 depleted = false
                 break
@@ -159,7 +176,11 @@ class Playlist {
             let tomorrowsPlaylist = try playlistBuilder.createPlaylist(duration: dayLength)
             let lastPlayingTime = calcPlayingTime(range: firstPlaylist.lastRange, starting: from, withOffset: .zero)
             let offset = lastPlayingTime.range.duration + lastPlayingTime.positionInComposition
-            let insertResult = try compositor.insert(playlist: tomorrowsPlaylist, from: nextDayFrom, to: tomorrowsTo, withOffset: offset)
+            let insertResult = try compositor.insert(
+                playlist: tomorrowsPlaylist,
+                from: nextDayFrom,
+                to: tomorrowsTo,
+                withOffset: offset)
             lastPlaying = (range: insertResult.lastRange, day: tomorrow)
         }
         return compositor.playerItem

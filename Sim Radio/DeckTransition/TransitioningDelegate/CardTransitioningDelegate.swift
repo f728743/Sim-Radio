@@ -12,7 +12,9 @@ public final class CardTransitioningDelegate: NSObject, UIViewControllerTransiti
     public var presentInitialHeight: CGFloat = 0
     public var dismissEndingHeight: CGFloat = 0
 
-    public func presentationController(forPresented presented: UIViewController, presenting: UIViewController?, source _: UIViewController) -> UIPresentationController? {
+    public func presentationController(forPresented presented: UIViewController,
+                                       presenting: UIViewController?,
+                                       source _: UIViewController) -> UIPresentationController? {
         let controller = CardPresentationController(presentedViewController: presented, presenting: presenting)
         controller.cornerRadius = cornerRadius
         controller.transitioningDelegate = self
@@ -21,7 +23,9 @@ public final class CardTransitioningDelegate: NSObject, UIViewControllerTransiti
         return controller
     }
 
-    public func animationController(forPresented presented: UIViewController, presenting _: UIViewController, source _: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+    public func animationController(forPresented presented: UIViewController,
+                                    presenting _: UIViewController,
+                                    source _: UIViewController) -> UIViewControllerAnimatedTransitioning? {
         let presentingController = CardPresentingAnimationController()
         presentingController.initialHeight = presentInitialHeight
         presentingController.cornerRadius = cornerRadius
@@ -29,7 +33,8 @@ public final class CardTransitioningDelegate: NSObject, UIViewControllerTransiti
         return presentingController
     }
 
-    public func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+    public func animationController(
+        forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
         let dismissingController = CardDismissingAnimationController()
         dismissingController.transitionDuration = transitionDuration
         dismissingController.endingHeight = dismissEndingHeight

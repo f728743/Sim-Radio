@@ -76,12 +76,11 @@ class NowPlayableBehavior {
             forName: AVAudioSession.interruptionNotification,
             object: audioSession,
             queue: .main
-        ) {
-            [unowned self] notification in
+        ) { [unowned self] notification in
             self.handleAudioSessionInterruption(notification: notification)
         }
         try audioSession.setCategory(.playback, mode: .default)
-//        try audioSession.setCategory(.playback, mode: .default, options: [.mixWithOthers, .allowAirPlay])
+        //        try audioSession.setCategory(.playback, mode: .default, options: [.mixWithOthers, .allowAirPlay])
 
         try audioSession.setActive(true)
     }
@@ -127,7 +126,8 @@ class NowPlayableBehavior {
 extension NowPlayableBehavior {
     func configureRemoteCommands(_ commands: [NowPlayableCommand],
                                  disabledCommands: [NowPlayableCommand],
-                                 commandHandler: @escaping (NowPlayableCommand, MPRemoteCommandEvent) -> MPRemoteCommandHandlerStatus) throws {
+                                 commandHandler: @escaping (NowPlayableCommand, MPRemoteCommandEvent
+        ) -> MPRemoteCommandHandlerStatus) throws {
         for cmd in NowPlayableCommand.allCases {
             cmd.removeHandler()
             if commands.contains(cmd) {

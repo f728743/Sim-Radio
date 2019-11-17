@@ -30,7 +30,8 @@ struct AudioComponent: CustomStringConvertible {
     let mixes: [AudioComponent]
 
     public var description: String {
-        return "\(urlTail(url)), [\(playing.start.seconds.rounded(toPlaces: 2))-\((playing.start.seconds + playing.duration.seconds).rounded(toPlaces: 2))]"
+        return "\(urlTail(url)), [\(playing.start.seconds.rounded(toPlaces: 2))-" +
+        "\((playing.start.seconds + playing.duration.seconds).rounded(toPlaces: 2))]"
     }
 }
 
@@ -136,7 +137,9 @@ class ConditionGroupAnd: MixPlayngCondition {
     }
 
     func isAccepted(nextFragment tag: Tag, starts sec: TimeInterval) -> Bool {
-        return !group.isEmpty && group.firstIndex(where: { $0.isAccepted(nextFragment: tag, starts: sec) == false }) == nil
+        return !group.isEmpty && group.firstIndex(where: {
+            $0.isAccepted(nextFragment: tag, starts: sec) == false
+        }) == nil
     }
 }
 
@@ -336,7 +339,9 @@ class PlaylistBuilder {
         while moment < dayLength {
             let fragment = try makeFragment(tag: fragmentTag, nextTag: nextFragmentTag, starts: moment)
             result.append(fragment)
+            // swiftlint:disable shorthand_operator
             moment = moment + fragment.playing.duration
+            // swiftlint:enable shorthand_operator
             fragmentTag = nextFragmentTag
             nextFragmentTag = try getNextFragmentTag(after: fragmentTag)
         }
