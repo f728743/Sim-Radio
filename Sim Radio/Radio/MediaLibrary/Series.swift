@@ -53,10 +53,12 @@ class Series {
     var directory: String {
         return managedObject.directory
     }
+    var directoryURL: URL {
+        return FileManager.documents.appendingPathComponent(directory)
+    }
     var title: String {
         return model.info.title
     }
-
     let model: Model.Series
     let logo: UIImage
     private(set) var stations: [Station] = []

@@ -166,8 +166,8 @@
 		7C51BAD923487334005F0884 /* Sim Radio */ = {
 			isa = PBXGroup;
 			children = (
+				7C5294A623800E2500737224 /* Resources */,
 				7C834955237FC42700C7C355 /* Misc */,
-				7C9C3EA1237F368A0063D235 /* SimRadio.xcdatamodeld */,
 				7C51BB2D2348760F005F0884 /* Controllers */,
 				7C51BB1823487509005F0884 /* DeckTransition */,
 				7C51BB13234874CE005F0884 /* ESTMusicIndicator */,
@@ -175,9 +175,6 @@
 				7C51BAFD2348745E005F0884 /* Views */,
 				7C51BAF2234873F0005F0884 /* Radio */,
 				7C51BADA23487334005F0884 /* AppDelegate.swift */,
-				7C51BAE023487334005F0884 /* Main.storyboard */,
-				7C51BAE323487335005F0884 /* Assets.xcassets */,
-				7C51BAE523487335005F0884 /* LaunchScreen.storyboard */,
 				7C51BAE823487335005F0884 /* Info.plist */,
 			);
 			path = "Sim Radio";
@@ -289,6 +286,17 @@
 				7C51BB332348760F005F0884 /* NavigationController.swift */,
 			);
 			path = Controllers;
+			sourceTree = "<group>";
+		};
+		7C5294A623800E2500737224 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				7C51BAE323487335005F0884 /* Assets.xcassets */,
+				7C51BAE523487335005F0884 /* LaunchScreen.storyboard */,
+				7C51BAE023487334005F0884 /* Main.storyboard */,
+				7C9C3EA1237F368A0063D235 /* SimRadio.xcdatamodeld */,
+			);
+			path = Resources;
 			sourceTree = "<group>";
 		};
 		7C834937237F3B2C00C7C355 /* Download */ = {

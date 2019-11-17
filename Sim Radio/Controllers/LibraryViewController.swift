@@ -38,6 +38,7 @@ class LibraryViewController: UIViewController, LibraryCollectionViewDelegate {
         performSegue(withIdentifier: "showSeries", sender: series)
     }
 }
+
 extension LibraryViewController {
     @IBAction func add(_ sender: Any) {
         showURLInputDialog()

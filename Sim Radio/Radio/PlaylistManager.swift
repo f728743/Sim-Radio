@@ -43,7 +43,7 @@ class PlaylistManager {
 
     func createCommonFileGroups(of series: Series) throws -> AudioFileGroups {
         return Dictionary(uniqueKeysWithValues: try series.model.common.fileGroups.map {
-            ($0.tag, try $0.files.map { try AudioFile(baseUrl: series.origin, model: $0, timescale: timescale) })
+            ($0.tag, try $0.files.map { try AudioFile(baseUrl: series.directoryURL, model: $0, timescale: timescale) })
         })
     }
 }
