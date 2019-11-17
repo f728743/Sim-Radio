@@ -8,21 +8,21 @@ import UIKit
 class LibraryViewController: UIViewController, LibraryCollectionViewDelegate {
     weak var radio: Radio!
     private var libraryCollectionView = LibraryCollectionView()
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
         view.addSubview(libraryCollectionView)
-        
+
         libraryCollectionView.library = radio.library
         libraryCollectionView.libraryDelegate = self
-        
+
         libraryCollectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         libraryCollectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
         libraryCollectionView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
         libraryCollectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
     }
-    
+
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "showSeries" {
             if let vc = segue.destination as? SeriesViewController {
@@ -33,7 +33,7 @@ class LibraryViewController: UIViewController, LibraryCollectionViewDelegate {
             }
         }
     }
-    
+
     func libraryCollectionView(_ libraryCollectionView: LibraryCollectionView, didSelectSeries series: Series) {
         performSegue(withIdentifier: "showSeries", sender: series)
     }
@@ -44,7 +44,7 @@ extension LibraryViewController {
         showURLInputDialog()
 //        self.radio.downloader.download(urlString:"")
     }
-    
+
     func showURLInputDialog() {
         let alertController = UIAlertController(title: "Add radio station", message: "Enter station or series URL", preferredStyle: .alert)
         alertController.addTextField { (textField) in
@@ -63,5 +63,3 @@ extension LibraryViewController {
         self.present(alertController, animated: true, completion: nil)
     }
 }
-
-

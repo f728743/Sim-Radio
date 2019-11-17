@@ -101,7 +101,7 @@ class CardPresentationController: UIPresentationController, UIGestureRecognizerD
             self.backgroundView.topAnchor.constraint(equalTo: window.topAnchor),
             self.backgroundView.leftAnchor.constraint(equalTo: window.leftAnchor),
             self.backgroundView.rightAnchor.constraint(equalTo: window.rightAnchor),
-            self.backgroundView.bottomAnchor.constraint(equalTo: window.bottomAnchor),
+            self.backgroundView.bottomAnchor.constraint(equalTo: window.bottomAnchor)
         ])
 
         let transformForSnapshotView = CGAffineTransform.identity
@@ -120,7 +120,7 @@ class CardPresentationController: UIPresentationController, UIGestureRecognizerD
         presentedView.layer.masksToBounds = true
 
         presentedViewController.transitionCoordinator?.animate(
-            alongsideTransition: { [weak self] context in
+            alongsideTransition: { [weak self] _ in
                 guard let `self` = self else { return }
                 self.snapshotView?.transform = transformForSnapshotView
                 self.gradeView.alpha = self.alpha
@@ -186,7 +186,7 @@ class CardPresentationController: UIPresentationController, UIGestureRecognizerD
         snapshotView?.addCornerRadiusAnimation(cornerRadius: 0, duration: 0.6)
 
         presentedViewController.transitionCoordinator?.animate(
-            alongsideTransition: { [weak self] context in
+            alongsideTransition: { [weak self] _ in
                 guard let `self` = self else { return }
                 self.snapshotView?.transform = .identity
                 self.snapshotViewContainer.transform = finalTransform
@@ -428,7 +428,7 @@ extension CardPresentationController {
             view.topAnchor.constraint(equalTo: superView.topAnchor),
             view.leftAnchor.constraint(equalTo: superView.leftAnchor),
             view.rightAnchor.constraint(equalTo: superView.rightAnchor),
-            view.bottomAnchor.constraint(equalTo: superView.bottomAnchor),
+            view.bottomAnchor.constraint(equalTo: superView.bottomAnchor)
         ])
     }
 }

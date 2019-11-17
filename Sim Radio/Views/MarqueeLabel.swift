@@ -657,7 +657,7 @@ open class MarqueeLabel: UILabel, CAAnimationDelegate {
                 FadeStep(timeStep: startFadeTime - animationDuration, // Maintain fade state until just before reaching end of scroll animation
                          edgeFades: [.leading, .trailing]),
                 ScrollStep(timeStep: animationDuration, timingFunction: animationCurve, // Ending point (back at home), with animationCurve transition, with trailing fade
-                           position: .away, edgeFades: .trailing),
+                           position: .away, edgeFades: .trailing)
             ]
 
             // Set frame and text
@@ -697,7 +697,7 @@ open class MarqueeLabel: UILabel, CAAnimationDelegate {
                     FadeStep(timeStep: 0.2, edgeFades: [.leading, .trailing]), // 0.2 sec after delay ends, fade trailing edge back in as well
                     FadeStep(timeStep: -0.2, edgeFades: [.leading, .trailing]), // Maintain fade state until 0.2 sec before reaching home position
                     ScrollStep(timeStep: animationDuration, timingFunction: animationCurve, // Ending point, back at home, with only trailing fade
-                               position: .home, edgeFades: .trailing),
+                               position: .home, edgeFades: .trailing)
                 ]
             } else { // .left or .right
                 sequence = scrollSequence ?? [
@@ -707,7 +707,7 @@ open class MarqueeLabel: UILabel, CAAnimationDelegate {
                     FadeStep(timeStep: -0.2, edgeFades: [.leading, .trailing]), // Maintain fade state until 0.2 sec before reaching away position
                     ScrollStep(timeStep: animationDuration, timingFunction: animationCurve, // Away position, using animationCurve transition, with only leading edge faded in
                                position: .away, edgeFades: .leading),
-                    ScrollStep(timeStep: animationDelay, position: .away, edgeFades: .leading), // "Delay" at away, maintaining fade state
+                    ScrollStep(timeStep: animationDelay, position: .away, edgeFades: .leading) // "Delay" at away, maintaining fade state
                 ]
             }
         }

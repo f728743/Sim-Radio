@@ -59,7 +59,7 @@ extension LibraryCollectionView: UICollectionViewDelegate, UICollectionViewDataS
         return cell
     }
 
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath)  {
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let series = library.series[indexPath.row]
         libraryDelegate?.libraryCollectionView(self, didSelectSeries: series)
     }

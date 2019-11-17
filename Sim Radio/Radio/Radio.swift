@@ -27,9 +27,9 @@ class Radio {
     private var playerNum = 0
     private var playerCounter = 0
     private let playlistManager: PlaylistManager
-    
+
     private let nowPlayableBehavior = NowPlayableBehavior()
-    
+
     var display: RadioDisplay {
         if let station = currentStation {
             let info = station.model.info
@@ -37,26 +37,26 @@ class Radio {
         }
         return RadioDisplay(logo: UIImage(named: "Cover Artwork")!, title: "Not Playing", genre: nil, dj: nil)
     }
-    
+
     let library = MediaLibrary()
-    
+
     var playPauseButtonState: PlayPauseButtonState {
         if case .playing = state {
             return .pause
         }
         return .play
     }
-    
+
     var switchStarionEnabled: Bool {
         return currentSeries?.stations.count ?? 0 > 1
     }
-    
+
     private(set) var state = State.idle {
         didSet {
             stateDidChange()
         }
     }
-    
+
     private var currentStation: Station? {
         switch state {
         case .idle:
@@ -65,7 +65,7 @@ class Radio {
             return station
         }
     }
-    
+
     private var currentSeries: Series? {
         switch state {
         case .idle:
@@ -74,9 +74,9 @@ class Radio {
             return station.series
         }
     }
-    
+
     private var observations = [ObjectIdentifier: Observation]()
-    
+
     init() {
         playlistManager = PlaylistManager(library: library)
         let registeredCommands: [NowPlayableCommand] =
@@ -86,22 +86,22 @@ class Radio {
              .stop,
              .nextTrack,
              .previousTrack]
-        
+
         let disabledCommands = [NowPlayableCommand]()
-        
+
         do {
             try nowPlayableBehavior.handleNowPlayableConfiguration(
                 commands: registeredCommands, disabledCommands: disabledCommands,
                 commandHandler: handleCommand(command:event:),
                 interruptionHandler: handleInterrupt(with:)
             )
-            
+
             try nowPlayableBehavior.startSession()
         } catch {
             print("Failed to handleNowPlayableConfiguration, error: \(error)")
         }
     }
-    
+
     func stateDidChange() {
         for (id, observation) in observations {
             // If the observer is no longer in memory, we
@@ -110,11 +110,11 @@ class Radio {
                 observations.removeValue(forKey: id)
                 continue
             }
-            
+
             switch state {
             case .idle:
                 observer.radioDidStop(self)
-                
+
             case let .playing(station):
                 updateNowPlayableMetadata(station)
                 observer.radio(self, didStartPlaying: station)
@@ -125,7 +125,7 @@ class Radio {
             }
         }
     }
-    
+
     func nextStation(after station: Station) -> Station {
         let stations = station.series.stations
         guard let index = stations.firstIndex(where: { $0 === station }) else {
@@ -134,7 +134,7 @@ class Radio {
         let nextStationIndex = index + 1 >= stations.count ? 0 : index + 1
         return stations[nextStationIndex]
     }
-    
+
     func previousStation(before station: Station) -> Station {
         let stations = station.series.stations
         guard let index = stations.firstIndex(where: { $0 === station }) else {
@@ -155,15 +155,15 @@ extension Radio {
             default:
                 break
             }
-            
+
         case .play:
             switch state {
-            case .paused(_), .idle:
+            case .paused, .idle:
                 togglePausePlay()
             default:
                 break
             }
-            
+
         case .stop:
             switch state {
             case .playing:
@@ -171,29 +171,29 @@ extension Radio {
             default:
                 break
             }
-            
+
         case .togglePausePlay:
             togglePausePlay()
-            
+
         case .nextTrack:
             nextStation()
-            
+
         case .previousTrack:
             previousStation()
         }
-        
+
         return .success
     }
-    
+
     private func handleInterrupt(with interruption: NowPlayableInterruption) {
         switch interruption {
         case .began:
             print("interrupted began")
             isInterrupted = true
-            
+
         case let .ended(shouldPlay):
             print("interrupted ended, shouldPlay = ", shouldPlay)
-            
+
             isInterrupted = false
             if case .playing(let station) = state {
                 if shouldPlay {
@@ -206,10 +206,10 @@ extension Radio {
             print(error.localizedDescription)
         }
     }
-    
+
     func updateNowPlayableMetadata(_ station: Station) {
         let img = display.logo
-        
+
         var trackNumber = 0
         var trackCount = 0
 
@@ -223,7 +223,7 @@ extension Radio {
         if let a = artist {
             artist = "Hosted by \(a)"
         }
-        
+
         let meta = NowPlayableStaticMetadata(
             mediaType: .audio,
             isLiveStream: true,
@@ -250,7 +250,7 @@ extension Radio: RadioControl {
         state = .playing(station: station)
         startPlayback(station: station)
     }
-    
+
     func togglePausePlay() {
         switch state {
         case .idle:
@@ -262,17 +262,17 @@ extension Radio: RadioControl {
             let station = stations[Int(drand48() * Double(stations.count))]
             state = .playing(station: station)
             startPlayback(station: station)
-            
+
         case let .playing(station):
             state = .paused(station: station)
             stopPlayback()
-            
+
         case let .paused(station):
             state = .playing(station: station)
             startPlayback(station: station)
         }
     }
-    
+
     func nextStation() {
         switch state {
         case let .playing(station):
@@ -283,7 +283,7 @@ extension Radio: RadioControl {
             break
         }
     }
-    
+
     func previousStation() {
         switch state {
         case let .playing(station):
@@ -294,7 +294,7 @@ extension Radio: RadioControl {
             break
         }
     }
-    
+
     func turnOff() {
         state = .idle
         player = nil
@@ -305,7 +305,7 @@ extension Radio: RadioControl {
 func currentSecondOfDay() -> Double {
     let now = Date()
     let calendar = Calendar.current
-    
+
     let h = calendar.component(.hour, from: now)
     let m = calendar.component(.minute, from: now)
     let s = calendar.component(.second, from: now)
@@ -317,26 +317,26 @@ private extension Radio {
         case playingFirst
         case playingNext
     }
-    
+
     func startPlayback(station: Station) {
         player = nil
         play(station: station, mode: .playingFirst)
     }
-    
+
     func stopPlayback() {
         player = nil
     }
-    
+
     func play(station: Station, mode: PlayingMode) {
         guard let playlist = try? playlistManager.getPlaylist(of: station) else {
             return
         }
-        
+
         let nowSec = currentSecondOfDay()
         guard let playerItem = mode == .playingFirst ? try? playlist.getFirstPlayerItem(fromSecond: nowSec, minDuraton: 1 * 60) : playlist.nextPlayerItem else {
             return
         }
-        
+
         let player = AVPlayer(playerItem: playerItem)
         player.play()
         self.player = player
@@ -349,9 +349,8 @@ private extension Radio {
                              userInfo: (playerNum: playerNum, playlist: playlist, playerItem: playerItem, station: station),
                              repeats: false)
     }
-    
-    @objc func scheduleKeepPlaying(timer: Timer)
-    {
+
+    @objc func scheduleKeepPlaying(timer: Timer) {
         if let userInfo = timer.userInfo as? (playerNum: Int, playlist: Playlist, playerItem: AVPlayerItem, station: Station) {
             if userInfo.playerNum == self.playerNum {
                 NotificationCenter.default.addObserver(forName: .AVPlayerItemDidPlayToEndTime,
@@ -406,7 +405,7 @@ extension Radio {
         let id = ObjectIdentifier(observer)
         observations[id] = Observation(observer: observer)
     }
-    
+
     func removeObserver(_ observer: RadioObserver) {
         let id = ObjectIdentifier(observer)
         observations.removeValue(forKey: id)
