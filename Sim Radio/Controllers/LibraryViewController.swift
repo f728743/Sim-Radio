@@ -46,7 +46,9 @@ extension LibraryViewController {
     }
 
     func showURLInputDialog() {
-        let alertController = UIAlertController(title: "Add radio station", message: "Enter station or series URL", preferredStyle: .alert)
+        let alertController = UIAlertController(title: "Add radio station",
+                                                message: "Enter station or series URL",
+                                                preferredStyle: .alert)
         alertController.addTextField { (textField) in
             textField.placeholder = "URL"
         }

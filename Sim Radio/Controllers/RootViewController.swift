@@ -11,15 +11,17 @@ class RootViewController: UIViewController {
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "navigationController" {
-            let nc = segue.destination as! NavigationController
-            nc.radio = radio
+            if let nc = segue.destination as? NavigationController {
+                nc.radio = radio
+            }
         }
 
         if segue.identifier == "miniPlayerController" {
-            let mp = segue.destination as! MiniPlayerViewController
-            mp.radio = radio
-            mp.delegate = self
-            miniPlayer = mp
+            if let mp = segue.destination as? MiniPlayerViewController {
+                mp.radio = radio
+                mp.delegate = self
+                miniPlayer = mp
+            }
         }
     }
 }

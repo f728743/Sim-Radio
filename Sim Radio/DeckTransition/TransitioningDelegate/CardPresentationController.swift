@@ -13,8 +13,9 @@ class CardPresentationController: UIPresentationController, UIGestureRecognizerD
     var hideIndicatorWhenScroll: Bool = false
     var translateForDismiss: CGFloat = 200
     var hapticMoments: [CardHapticMoments] = [.willDismissIfRelease]
-
+    // swiftlint:disable weak_delegate
     var transitioningDelegate: UIViewControllerTransitioningDelegate?
+    // swiftlint:enable weak_delegate
     weak var cardDelegate: CardControllerDelegate?
 
     var pan: UIPanGestureRecognizer?
@@ -129,7 +130,7 @@ class CardPresentationController: UIPresentationController, UIGestureRecognizerD
                 self.indicatorView.alpha = 1
             }, completion: { _ in
                 self.snapshotView?.transform = .identity
-            }
+        }
         )
 
         if hapticMoments.contains(.willPresent) {
@@ -288,7 +289,7 @@ extension CardPresentationController {
                         self.presentedView?.transform = .identity
                         self.gradeView.alpha = self.alpha
                         self.indicatorView.alpha = 1
-                    }
+                }
                 )
             }
 
@@ -392,7 +393,8 @@ extension CardPresentationController {
     }
 
     private func updateSnapshot() {
-        guard let currentSnapshotView = presentingViewController.view.snapshotView(afterScreenUpdates: true) else { return }
+        guard let currentSnapshotView = presentingViewController.view
+            .snapshotView(afterScreenUpdates: true) else { return }
         snapshotView?.removeFromSuperview()
         snapshotViewContainer.addSubview(currentSnapshotView)
         constraints(view: currentSnapshotView, to: snapshotViewContainer)
@@ -409,7 +411,8 @@ extension CardPresentationController {
     }
 
     private func updateSnapshotAspectRatio() {
-        guard let containerView = containerView, snapshotViewContainer.translatesAutoresizingMaskIntoConstraints == false else { return }
+        guard let containerView = containerView,
+            snapshotViewContainer.translatesAutoresizingMaskIntoConstraints == false else { return }
 
         snapshotViewTopConstraint?.isActive = false
         snapshotViewWidthConstraint?.isActive = false
@@ -418,9 +421,15 @@ extension CardPresentationController {
         let snapshotReferenceSize = presentingViewController.view.frame.size
         let aspectRatio = snapshotReferenceSize.width / snapshotReferenceSize.height
 
-        snapshotViewTopConstraint = snapshotViewContainer.topAnchor.constraint(equalTo: containerView.topAnchor, constant: topSpace)
-        snapshotViewWidthConstraint = snapshotViewContainer.widthAnchor.constraint(equalTo: containerView.widthAnchor, multiplier: scaleForPresentingView)
-        snapshotViewAspectRatioConstraint = snapshotViewContainer.widthAnchor.constraint(equalTo: snapshotViewContainer.heightAnchor, multiplier: aspectRatio)
+        snapshotViewTopConstraint = snapshotViewContainer.topAnchor.constraint(
+            equalTo: containerView.topAnchor,
+            constant: topSpace)
+        snapshotViewWidthConstraint = snapshotViewContainer.widthAnchor.constraint(
+            equalTo: containerView.widthAnchor,
+            multiplier: scaleForPresentingView)
+        snapshotViewAspectRatioConstraint = snapshotViewContainer.widthAnchor.constraint(
+            equalTo: snapshotViewContainer.heightAnchor,
+            multiplier: aspectRatio)
 
         snapshotViewTopConstraint?.isActive = true
         snapshotViewWidthConstraint?.isActive = true

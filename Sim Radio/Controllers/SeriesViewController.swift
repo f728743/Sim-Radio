@@ -89,17 +89,20 @@ extension SeriesViewController: UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if indexPath.section == 0 {
-            let headerCell = tableView.dequeueReusableCell(withIdentifier: SeriesHeaderTableViewCell.reuseId) as! SeriesHeaderTableViewCell
+            let headerCell = tableView.dequeueReusableCell(
+                withIdentifier: SeriesHeaderTableViewCell.reuseId) as? SeriesHeaderTableViewCell ??
+                SeriesHeaderTableViewCell()
             headerCell.logoImageView.image = series?.logo
             headerCell.titleLabel.text = series?.model.info.title
             return headerCell
         }
-        let cell = tableView.dequeueReusableCell(withIdentifier: SeriesTableViewCell.reuseId, for: indexPath) as! SeriesTableViewCell
+        let cell = tableView.dequeueReusableCell(
+            withIdentifier: SeriesTableViewCell.reuseId, for: indexPath) as? SeriesTableViewCell ??
+            SeriesTableViewCell()
         let station = series!.stations[indexPath.row]
         cell.logoImageView.image = station.logo
         cell.titleLabel.text = station.model.info.title
         cell.infoLabel.text = station.model.info.genre
-
         cell.state = .stopped
 
         switch radio.state {

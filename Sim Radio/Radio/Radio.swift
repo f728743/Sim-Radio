@@ -362,9 +362,10 @@ private extension Radio {
             playerItem: AVPlayerItem,
             station: Station) {
             if userInfo.playerNum == self.playerNum {
-                NotificationCenter.default.addObserver(forName: .AVPlayerItemDidPlayToEndTime,
-                                                       object: userInfo.playerItem,
-                                                       queue: .main
+                NotificationCenter.default.addObserver(
+                    forName: .AVPlayerItemDidPlayToEndTime,
+                    object: userInfo.playerItem,
+                    queue: .main
                 ) { [weak self] _ in
                     self?.play(station: userInfo.station, mode: .playingNext)
                 }

@@ -73,7 +73,9 @@ class ESTMusicIndicatorContentView: UIView {
         let layer: CALayer = CALayer()
         layer.anchorPoint = CGPoint(x: 0.0, y: 1.0) // At the bottom-left corner
         layer.position = CGPoint(x: xOffset, y: kBarMaxPeakHeight) // In superview's coordinate
-        layer.bounds = CGRect(x: 0.0, y: 0.0, width: kBarWidth, height: 3) // (CGFloat(layerIndex) * kBarMaxPeakHeight/CGFloat(kBarCount))) // In its own coordinate }
+        // (CGFloat(layerIndex) * kBarMaxPeakHeight/CGFloat(kBarCount))) // In its own coordinate }
+        layer.bounds = CGRect(x: 0.0, y: 0.0, width: kBarWidth, height: 3)
+
         return layer
     }
 
@@ -125,7 +127,8 @@ class ESTMusicIndicatorContentView: UIView {
     }
 
     func startOscillation() {
-        let basePeriod = kMinBaseOscillationPeriod + (drand48() * (kMaxBaseOscillationPeriod - kMinBaseOscillationPeriod))
+        let basePeriod = kMinBaseOscillationPeriod +
+            (drand48() * (kMaxBaseOscillationPeriod - kMinBaseOscillationPeriod))
 
         for layer in barLayers {
             startOscillatingBarLayer(layer, basePeriod: basePeriod)
@@ -154,7 +157,8 @@ class ESTMusicIndicatorContentView: UIView {
 
     private func startOscillatingBarLayer(_ layer: CALayer, basePeriod: CFTimeInterval) {
         // arc4random_uniform() will return a uniformly distributed random number **less** upper_bound.
-        let peakHeight: CGFloat = kBarMinPeakHeight + CGFloat(arc4random_uniform(UInt32(kBarMaxPeakHeight - kBarMinPeakHeight + 1)))
+        let peakHeight: CGFloat = kBarMinPeakHeight +
+            CGFloat(arc4random_uniform(UInt32(kBarMaxPeakHeight - kBarMinPeakHeight + 1)))
 
         var fromBouns = layer.bounds
         fromBouns.size.height = kBarIdleHeight
