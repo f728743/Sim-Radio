@@ -24,8 +24,8 @@ class LibraryViewController: UIViewController, LibraryCollectionViewDelegate {
     }
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "showSeries" {
-            if let vc = segue.destination as? SeriesViewController {
+        if segue.identifier == "showStations" {
+            if let vc = segue.destination as? StationsViewController {
                 if let series = sender as? Series {
                     vc.radio = radio
                     vc.series = series
@@ -35,7 +35,7 @@ class LibraryViewController: UIViewController, LibraryCollectionViewDelegate {
     }
 
     func libraryCollectionView(_ libraryCollectionView: LibraryCollectionView, didSelectSeries series: Series) {
-        performSegue(withIdentifier: "showSeries", sender: series)
+        performSegue(withIdentifier: "showStations", sender: series)
     }
 }
 

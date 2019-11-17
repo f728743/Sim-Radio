@@ -5,8 +5,8 @@
 
 import UIKit
 
-class SeriesHeaderTableViewCell: UITableViewCell {
-    static let reuseId = "SeriesHeaderTableViewCell"
+class StationsHeaderTableViewCell: UITableViewCell {
+    static let reuseId = "StationsHeaderTableViewCell"
 
     let logoImageView: UIImageView = {
         let imageView = UIImageView()

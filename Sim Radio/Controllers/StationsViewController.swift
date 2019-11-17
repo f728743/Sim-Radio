@@ -1,11 +1,11 @@
 //
-//  SeriesViewController.swift
+//  StationsViewController.swift
 //  Sim Radio
 //
 
 import UIKit
 
-class SeriesViewController: UIViewController {
+class StationsViewController: UIViewController {
     private var tableView = UITableView()
 
     var series: Series?
@@ -21,8 +21,9 @@ class SeriesViewController: UIViewController {
         tableView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
         tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
 
-        tableView.register(SeriesHeaderTableViewCell.self, forCellReuseIdentifier: SeriesHeaderTableViewCell.reuseId)
-        tableView.register(SeriesTableViewCell.self, forCellReuseIdentifier: SeriesTableViewCell.reuseId)
+        tableView.register(StationsHeaderTableViewCell.self,
+                           forCellReuseIdentifier: StationsHeaderTableViewCell.reuseId)
+        tableView.register(StationTableViewCell.self, forCellReuseIdentifier: StationTableViewCell.reuseId)
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.tableFooterView = UIView(frame: .zero)
 
@@ -37,10 +38,10 @@ class SeriesViewController: UIViewController {
     }
 }
 
-extension SeriesViewController: RadioObserver {
+extension StationsViewController: RadioObserver {
     func radio(_ raio: Radio, didStartPlaying station: Station) {
         tableView.visibleCells.forEach { cell in
-            if let cell = cell as? SeriesTableViewCell {
+            if let cell = cell as? StationTableViewCell {
                 cell.state = cell.station === station ? .playing : .stopped
             }
         }
@@ -48,7 +49,7 @@ extension SeriesViewController: RadioObserver {
 
     func radio(_ raio: Radio, didPausePlaybackOf station: Station) {
         tableView.visibleCells.forEach { cell in
-            if let cell = cell as? SeriesTableViewCell {
+            if let cell = cell as? StationTableViewCell {
                 cell.state = cell.station === station ? .paused : .stopped
             }
         }
@@ -56,14 +57,14 @@ extension SeriesViewController: RadioObserver {
 
     func radioDidStop(_ radio: Radio) {
         tableView.visibleCells.forEach { cell in
-            if let cell = cell as? SeriesTableViewCell {
+            if let cell = cell as? StationTableViewCell {
                 cell.state = .stopped
             }
         }
     }
 }
 
-extension SeriesViewController: UITableViewDelegate {
+extension StationsViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if indexPath.section == 1 {
             if let series = series {
@@ -75,7 +76,7 @@ extension SeriesViewController: UITableViewDelegate {
     }
 }
 
-extension SeriesViewController: UITableViewDataSource {
+extension StationsViewController: UITableViewDataSource {
     func numberOfSections(in tableView: UITableView) -> Int {
         return 2
     }
@@ -90,15 +91,15 @@ extension SeriesViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if indexPath.section == 0 {
             let headerCell = tableView.dequeueReusableCell(
-                withIdentifier: SeriesHeaderTableViewCell.reuseId) as? SeriesHeaderTableViewCell ??
-                SeriesHeaderTableViewCell()
+                withIdentifier: StationsHeaderTableViewCell.reuseId) as? StationsHeaderTableViewCell ??
+                StationsHeaderTableViewCell()
             headerCell.logoImageView.image = series?.logo
             headerCell.titleLabel.text = series?.model.info.title
             return headerCell
         }
         let cell = tableView.dequeueReusableCell(
-            withIdentifier: SeriesTableViewCell.reuseId, for: indexPath) as? SeriesTableViewCell ??
-            SeriesTableViewCell()
+            withIdentifier: StationTableViewCell.reuseId, for: indexPath) as? StationTableViewCell ??
+            StationTableViewCell()
         let station = series!.stations[indexPath.row]
         cell.station = station
         cell.logoImageView.image = station.logo

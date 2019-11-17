@@ -17,12 +17,12 @@
 		7C51BAFA23487414005F0884 /* PlaylistBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C51BAF523487414005F0884 /* PlaylistBuilder.swift */; };
 		7C51BAFB23487414005F0884 /* PlaylistManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C51BAF623487414005F0884 /* PlaylistManager.swift */; };
 		7C51BB052348747E005F0884 /* LibraryCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C51BAFE2348747D005F0884 /* LibraryCollectionView.swift */; };
-		7C51BB062348747E005F0884 /* SeriesTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C51BAFF2348747D005F0884 /* SeriesTableViewCell.swift */; };
+		7C51BB062348747E005F0884 /* StationTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C51BAFF2348747D005F0884 /* StationTableViewCell.swift */; };
 		7C51BB072348747E005F0884 /* LibraryCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C51BB002348747D005F0884 /* LibraryCollectionViewCell.swift */; };
 		7C51BB082348747E005F0884 /* ControlsButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C51BB012348747D005F0884 /* ControlsButton.swift */; };
 		7C51BB092348747E005F0884 /* MarqueeLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C51BB022348747D005F0884 /* MarqueeLabel.swift */; };
 		7C51BB0A2348747E005F0884 /* HairlineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C51BB032348747D005F0884 /* HairlineView.swift */; };
-		7C51BB0B2348747E005F0884 /* SeriesHeaderTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C51BB042348747D005F0884 /* SeriesHeaderTableViewCell.swift */; };
+		7C51BB0B2348747E005F0884 /* StationsHeaderTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C51BB042348747D005F0884 /* StationsHeaderTableViewCell.swift */; };
 		7C51BB10234874B8005F0884 /* UIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C51BB0D234874B8005F0884 /* UIView.swift */; };
 		7C51BB11234874B8005F0884 /* UINavigationBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C51BB0E234874B8005F0884 /* UINavigationBar.swift */; };
 		7C51BB12234874B8005F0884 /* Date.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C51BB0F234874B8005F0884 /* Date.swift */; };
@@ -35,7 +35,7 @@
 		7C51BB2623487587005F0884 /* CardPresentingAnimationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C51BB2223487587005F0884 /* CardPresentingAnimationController.swift */; };
 		7C51BB29234875B7005F0884 /* CardControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C51BB28234875B7005F0884 /* CardControllerDelegate.swift */; };
 		7C51BB2C234875E7005F0884 /* CardHaptic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C51BB2B234875E7005F0884 /* CardHaptic.swift */; };
-		7C51BB342348760F005F0884 /* SeriesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C51BB2E2348760F005F0884 /* SeriesViewController.swift */; };
+		7C51BB342348760F005F0884 /* StationsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C51BB2E2348760F005F0884 /* StationsViewController.swift */; };
 		7C51BB352348760F005F0884 /* LibraryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C51BB2F2348760F005F0884 /* LibraryViewController.swift */; };
 		7C51BB362348760F005F0884 /* RootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C51BB302348760F005F0884 /* RootViewController.swift */; };
 		7C51BB372348760F005F0884 /* PlayerCardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C51BB312348760F005F0884 /* PlayerCardViewController.swift */; };
@@ -83,12 +83,12 @@
 		7C51BAF523487414005F0884 /* PlaylistBuilder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaylistBuilder.swift; sourceTree = "<group>"; };
 		7C51BAF623487414005F0884 /* PlaylistManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaylistManager.swift; sourceTree = "<group>"; };
 		7C51BAFE2348747D005F0884 /* LibraryCollectionView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LibraryCollectionView.swift; sourceTree = "<group>"; };
-		7C51BAFF2348747D005F0884 /* SeriesTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SeriesTableViewCell.swift; sourceTree = "<group>"; };
+		7C51BAFF2348747D005F0884 /* StationTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StationTableViewCell.swift; sourceTree = "<group>"; };
 		7C51BB002348747D005F0884 /* LibraryCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LibraryCollectionViewCell.swift; sourceTree = "<group>"; };
 		7C51BB012348747D005F0884 /* ControlsButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ControlsButton.swift; sourceTree = "<group>"; };
 		7C51BB022348747D005F0884 /* MarqueeLabel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MarqueeLabel.swift; sourceTree = "<group>"; };
 		7C51BB032348747D005F0884 /* HairlineView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HairlineView.swift; sourceTree = "<group>"; };
-		7C51BB042348747D005F0884 /* SeriesHeaderTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SeriesHeaderTableViewCell.swift; sourceTree = "<group>"; };
+		7C51BB042348747D005F0884 /* StationsHeaderTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StationsHeaderTableViewCell.swift; sourceTree = "<group>"; };
 		7C51BB0D234874B8005F0884 /* UIView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIView.swift; sourceTree = "<group>"; };
 		7C51BB0E234874B8005F0884 /* UINavigationBar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UINavigationBar.swift; sourceTree = "<group>"; };
 		7C51BB0F234874B8005F0884 /* Date.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Date.swift; sourceTree = "<group>"; };
@@ -101,7 +101,7 @@
 		7C51BB2223487587005F0884 /* CardPresentingAnimationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CardPresentingAnimationController.swift; sourceTree = "<group>"; };
 		7C51BB28234875B7005F0884 /* CardControllerDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CardControllerDelegate.swift; sourceTree = "<group>"; };
 		7C51BB2B234875E7005F0884 /* CardHaptic.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CardHaptic.swift; sourceTree = "<group>"; };
-		7C51BB2E2348760F005F0884 /* SeriesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SeriesViewController.swift; sourceTree = "<group>"; };
+		7C51BB2E2348760F005F0884 /* StationsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StationsViewController.swift; sourceTree = "<group>"; };
 		7C51BB2F2348760F005F0884 /* LibraryViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LibraryViewController.swift; sourceTree = "<group>"; };
 		7C51BB302348760F005F0884 /* RootViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RootViewController.swift; sourceTree = "<group>"; };
 		7C51BB312348760F005F0884 /* PlayerCardViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerCardViewController.swift; sourceTree = "<group>"; };
@@ -201,8 +201,8 @@
 				7C51BAFE2348747D005F0884 /* LibraryCollectionView.swift */,
 				7C51BB002348747D005F0884 /* LibraryCollectionViewCell.swift */,
 				7C51BB022348747D005F0884 /* MarqueeLabel.swift */,
-				7C51BB042348747D005F0884 /* SeriesHeaderTableViewCell.swift */,
-				7C51BAFF2348747D005F0884 /* SeriesTableViewCell.swift */,
+				7C51BB042348747D005F0884 /* StationsHeaderTableViewCell.swift */,
+				7C51BAFF2348747D005F0884 /* StationTableViewCell.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -278,7 +278,7 @@
 		7C51BB2D2348760F005F0884 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				7C51BB2E2348760F005F0884 /* SeriesViewController.swift */,
+				7C51BB2E2348760F005F0884 /* StationsViewController.swift */,
 				7C51BB2F2348760F005F0884 /* LibraryViewController.swift */,
 				7C51BB302348760F005F0884 /* RootViewController.swift */,
 				7C51BB312348760F005F0884 /* PlayerCardViewController.swift */,
@@ -478,7 +478,7 @@
 				7C51BB1D23487557005F0884 /* CardIndicatorView.swift in Sources */,
 				7C834958237FC44400C7C355 /* Progress.swift in Sources */,
 				7C51BB2523487587005F0884 /* CardTransitioningDelegate.swift in Sources */,
-				7C51BB062348747E005F0884 /* SeriesTableViewCell.swift in Sources */,
+				7C51BB062348747E005F0884 /* StationTableViewCell.swift in Sources */,
 				7C834945237F3B8E00C7C355 /* DownloadError.swift in Sources */,
 				7C51BB12234874B8005F0884 /* Date.swift in Sources */,
 				7C51BB052348747E005F0884 /* LibraryCollectionView.swift in Sources */,
@@ -496,7 +496,7 @@
 				7C51BB082348747E005F0884 /* ControlsButton.swift in Sources */,
 				7C51BAFB23487414005F0884 /* PlaylistManager.swift in Sources */,
 				7C51BAF1234873DF005F0884 /* Radio.swift in Sources */,
-				7C51BB342348760F005F0884 /* SeriesViewController.swift in Sources */,
+				7C51BB342348760F005F0884 /* StationsViewController.swift in Sources */,
 				7C83494E237FC37A00C7C355 /* Model.swift in Sources */,
 				7C83493F237F3B7F00C7C355 /* AudiofilesDownloadOperation.swift in Sources */,
 				7C51BAF823487414005F0884 /* Playlist.swift in Sources */,
@@ -509,7 +509,7 @@
 				7CBD425B237F38AB008341CF /* StationPersistence+CoreDataClass.swift in Sources */,
 				7CBD4256237F38AB008341CF /* DownloadedPersistence+CoreDataProperties.swift in Sources */,
 				7C83493E237F3B7F00C7C355 /* AsyncOperation.swift in Sources */,
-				7C51BB0B2348747E005F0884 /* SeriesHeaderTableViewCell.swift in Sources */,
+				7C51BB0B2348747E005F0884 /* StationsHeaderTableViewCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

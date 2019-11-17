@@ -5,8 +5,8 @@
 
 import UIKit
 
-class SeriesTableViewCell: UITableViewCell {
-    static let reuseId = "SeriesTableViewCell"
+class StationTableViewCell: UITableViewCell {
+    static let reuseId = "StationTableViewCell"
 
     var state: ESTMusicIndicatorViewState = .stopped {
         didSet {
