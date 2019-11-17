@@ -16,9 +16,9 @@
 		7C51BAF923487414005F0884 /* NowPlayable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C51BAF423487414005F0884 /* NowPlayable.swift */; };
 		7C51BAFA23487414005F0884 /* PlaylistBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C51BAF523487414005F0884 /* PlaylistBuilder.swift */; };
 		7C51BAFB23487414005F0884 /* PlaylistManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C51BAF623487414005F0884 /* PlaylistManager.swift */; };
-		7C51BB052348747E005F0884 /* LibraryCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C51BAFE2348747D005F0884 /* LibraryCollectionView.swift */; };
+		7C51BB052348747E005F0884 /* SeriesCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C51BAFE2348747D005F0884 /* SeriesCollectionView.swift */; };
 		7C51BB062348747E005F0884 /* StationTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C51BAFF2348747D005F0884 /* StationTableViewCell.swift */; };
-		7C51BB072348747E005F0884 /* LibraryCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C51BB002348747D005F0884 /* LibraryCollectionViewCell.swift */; };
+		7C51BB072348747E005F0884 /* SeriesCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C51BB002348747D005F0884 /* SeriesCollectionViewCell.swift */; };
 		7C51BB082348747E005F0884 /* ControlsButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C51BB012348747D005F0884 /* ControlsButton.swift */; };
 		7C51BB092348747E005F0884 /* MarqueeLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C51BB022348747D005F0884 /* MarqueeLabel.swift */; };
 		7C51BB0A2348747E005F0884 /* HairlineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C51BB032348747D005F0884 /* HairlineView.swift */; };
@@ -82,9 +82,9 @@
 		7C51BAF423487414005F0884 /* NowPlayable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NowPlayable.swift; sourceTree = "<group>"; };
 		7C51BAF523487414005F0884 /* PlaylistBuilder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaylistBuilder.swift; sourceTree = "<group>"; };
 		7C51BAF623487414005F0884 /* PlaylistManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaylistManager.swift; sourceTree = "<group>"; };
-		7C51BAFE2348747D005F0884 /* LibraryCollectionView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LibraryCollectionView.swift; sourceTree = "<group>"; };
+		7C51BAFE2348747D005F0884 /* SeriesCollectionView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SeriesCollectionView.swift; sourceTree = "<group>"; };
 		7C51BAFF2348747D005F0884 /* StationTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StationTableViewCell.swift; sourceTree = "<group>"; };
-		7C51BB002348747D005F0884 /* LibraryCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LibraryCollectionViewCell.swift; sourceTree = "<group>"; };
+		7C51BB002348747D005F0884 /* SeriesCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SeriesCollectionViewCell.swift; sourceTree = "<group>"; };
 		7C51BB012348747D005F0884 /* ControlsButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ControlsButton.swift; sourceTree = "<group>"; };
 		7C51BB022348747D005F0884 /* MarqueeLabel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MarqueeLabel.swift; sourceTree = "<group>"; };
 		7C51BB032348747D005F0884 /* HairlineView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HairlineView.swift; sourceTree = "<group>"; };
@@ -198,8 +198,8 @@
 			children = (
 				7C51BB012348747D005F0884 /* ControlsButton.swift */,
 				7C51BB032348747D005F0884 /* HairlineView.swift */,
-				7C51BAFE2348747D005F0884 /* LibraryCollectionView.swift */,
-				7C51BB002348747D005F0884 /* LibraryCollectionViewCell.swift */,
+				7C51BAFE2348747D005F0884 /* SeriesCollectionView.swift */,
+				7C51BB002348747D005F0884 /* SeriesCollectionViewCell.swift */,
 				7C51BB022348747D005F0884 /* MarqueeLabel.swift */,
 				7C51BB042348747D005F0884 /* StationsHeaderTableViewCell.swift */,
 				7C51BAFF2348747D005F0884 /* StationTableViewCell.swift */,
@@ -481,7 +481,7 @@
 				7C51BB062348747E005F0884 /* StationTableViewCell.swift in Sources */,
 				7C834945237F3B8E00C7C355 /* DownloadError.swift in Sources */,
 				7C51BB12234874B8005F0884 /* Date.swift in Sources */,
-				7C51BB052348747E005F0884 /* LibraryCollectionView.swift in Sources */,
+				7C51BB052348747E005F0884 /* SeriesCollectionView.swift in Sources */,
 				7C51BB2423487587005F0884 /* CardDismissingAnimationController.swift in Sources */,
 				7C51BB382348760F005F0884 /* MiniPlayerViewController.swift in Sources */,
 				7CBD4258237F38AB008341CF /* DownloadTaskPersistence+CoreDataProperties.swift in Sources */,
@@ -501,7 +501,7 @@
 				7C83493F237F3B7F00C7C355 /* AudiofilesDownloadOperation.swift in Sources */,
 				7C51BAF823487414005F0884 /* Playlist.swift in Sources */,
 				7C834942237F3B7F00C7C355 /* StationModelDownloadOperation.swift in Sources */,
-				7C51BB072348747E005F0884 /* LibraryCollectionViewCell.swift in Sources */,
+				7C51BB072348747E005F0884 /* SeriesCollectionViewCell.swift in Sources */,
 				7C834959237FC44400C7C355 /* Synchronization.swift in Sources */,
 				7C51BB2323487587005F0884 /* CardPresentationController.swift in Sources */,
 				7C83494C237FC37A00C7C355 /* Series.swift in Sources */,

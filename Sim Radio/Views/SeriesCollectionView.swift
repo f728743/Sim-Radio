@@ -1,11 +1,11 @@
 //
-//  LibraryCollectionView.swift
+//  SeriesCollectionView.swift
 //  Sim Radio
 //
 
 import UIKit
 
-struct LibraryCollectionViewConstants {
+struct SeriesCollectionViewConstants {
     static let leftDistanceToView: CGFloat = 20
     static let rightDistanceToView: CGFloat = 20
     static let minimumLineSpacing: CGFloat = 20
@@ -14,13 +14,13 @@ struct LibraryCollectionViewConstants {
     static let itemHeight = itemWidth + 20
 }
 
-protocol LibraryCollectionViewDelegate: AnyObject {
-    func libraryCollectionView(_ libraryCollectionView: LibraryCollectionView, didSelectSeries series: Series)
+protocol SeriesCollectionViewDelegate: AnyObject {
+    func seriesCollectionView(_ seriesCollectionView: SeriesCollectionView, didSelectSeries series: Series)
 }
 
-class LibraryCollectionView: UICollectionView {
+class SeriesCollectionView: UICollectionView {
     var library: MediaLibrary!
-    weak var libraryDelegate: LibraryCollectionViewDelegate?
+    weak var libraryDelegate: SeriesCollectionViewDelegate?
 
     init() {
         let layout = UICollectionViewFlowLayout()
@@ -30,13 +30,13 @@ class LibraryCollectionView: UICollectionView {
         backgroundColor = .white
         delegate = self
         dataSource = self
-        register(LibraryCollectionViewCell.self, forCellWithReuseIdentifier: LibraryCollectionViewCell.reuseId)
+        register(SeriesCollectionViewCell.self, forCellWithReuseIdentifier: SeriesCollectionViewCell.reuseId)
         translatesAutoresizingMaskIntoConstraints = false
-        layout.minimumLineSpacing = LibraryCollectionViewConstants.minimumLineSpacing
+        layout.minimumLineSpacing = SeriesCollectionViewConstants.minimumLineSpacing
         contentInset = UIEdgeInsets(top: 0,
-                                    left: LibraryCollectionViewConstants.leftDistanceToView,
+                                    left: SeriesCollectionViewConstants.leftDistanceToView,
                                     bottom: 0,
-                                    right: LibraryCollectionViewConstants.rightDistanceToView)
+                                    right: SeriesCollectionViewConstants.rightDistanceToView)
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -44,7 +44,7 @@ class LibraryCollectionView: UICollectionView {
     }
 }
 
-extension LibraryCollectionView: UICollectionViewDelegateFlowLayout {
+extension SeriesCollectionView: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
                         referenceSizeForFooterInSection section: Int) -> CGSize {
@@ -52,7 +52,7 @@ extension LibraryCollectionView: UICollectionViewDelegateFlowLayout {
     }
 }
 
-extension LibraryCollectionView: UICollectionViewDelegate, UICollectionViewDataSource {
+extension SeriesCollectionView: UICollectionViewDelegate, UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return library.series.count
     }
@@ -60,8 +60,8 @@ extension LibraryCollectionView: UICollectionViewDelegate, UICollectionViewDataS
     func collectionView(_ collectionView: UICollectionView,
                         cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = dequeueReusableCell(
-            withReuseIdentifier: LibraryCollectionViewCell.reuseId, for: indexPath) as? LibraryCollectionViewCell ??
-            LibraryCollectionViewCell()
+            withReuseIdentifier: SeriesCollectionViewCell.reuseId, for: indexPath) as? SeriesCollectionViewCell ??
+            SeriesCollectionViewCell()
         let series = library.series[indexPath.row]
         cell.logoImageView.image = series.logo
         cell.titleLabel.text = series.model.info.title
@@ -70,13 +70,13 @@ extension LibraryCollectionView: UICollectionViewDelegate, UICollectionViewDataS
 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let series = library.series[indexPath.row]
-        libraryDelegate?.libraryCollectionView(self, didSelectSeries: series)
+        libraryDelegate?.seriesCollectionView(self, didSelectSeries: series)
     }
 
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
                         sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: LibraryCollectionViewConstants.itemWidth,
-                      height: LibraryCollectionViewConstants.itemHeight)
+        return CGSize(width: SeriesCollectionViewConstants.itemWidth,
+                      height: SeriesCollectionViewConstants.itemHeight)
     }
 }

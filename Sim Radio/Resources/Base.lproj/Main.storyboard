@@ -11,7 +11,7 @@
         <!--Library-->
         <scene sceneID="EJS-oO-g5j">
             <objects>
-                <viewController id="SRe-IY-1R5" customClass="LibraryViewController" customModule="Sim_Radio" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="SRe-IY-1R5" customClass="SeriesViewController" customModule="Sim_Radio" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="12Y-FY-DN8">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>

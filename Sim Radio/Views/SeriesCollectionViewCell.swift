@@ -1,12 +1,12 @@
 //
-//  LibraryCollectionViewCell.swift
+//  SeriesCollectionViewCell.swift
 //  Sim Radio
 //
 
 import UIKit
 
-class LibraryCollectionViewCell: UICollectionViewCell {
-    static let reuseId = "LibraryCollectionViewCell"
+class SeriesCollectionViewCell: UICollectionViewCell {
+    static let reuseId = "SeriesCollectionViewCell"
 
     let logoImageView: UIImageView = {
         let imageView = UIImageView()

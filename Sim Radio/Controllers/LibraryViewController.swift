@@ -1,26 +1,26 @@
 //
-//  LibraryViewController.swift
+//  SeriesViewController.swift
 //  Sim Radio
 //
 
 import UIKit
 
-class LibraryViewController: UIViewController, LibraryCollectionViewDelegate {
+class SeriesViewController: UIViewController, SeriesCollectionViewDelegate {
     weak var radio: Radio!
-    private var libraryCollectionView = LibraryCollectionView()
+    private var seriesCollectionView = SeriesCollectionView()
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        view.addSubview(libraryCollectionView)
+        view.addSubview(seriesCollectionView)
 
-        libraryCollectionView.library = radio.library
-        libraryCollectionView.libraryDelegate = self
+        seriesCollectionView.library = radio.library
+        seriesCollectionView.libraryDelegate = self
 
-        libraryCollectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
-        libraryCollectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
-        libraryCollectionView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
-        libraryCollectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+        seriesCollectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+        seriesCollectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
+        seriesCollectionView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
+        seriesCollectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
     }
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -34,12 +34,12 @@ class LibraryViewController: UIViewController, LibraryCollectionViewDelegate {
         }
     }
 
-    func libraryCollectionView(_ libraryCollectionView: LibraryCollectionView, didSelectSeries series: Series) {
+    func seriesCollectionView(_ seriesCollectionView: SeriesCollectionView, didSelectSeries series: Series) {
         performSegue(withIdentifier: "showStations", sender: series)
     }
 }
 
-extension LibraryViewController {
+extension SeriesViewController {
     @IBAction func add(_ sender: Any) {
         showURLInputDialog()
 //        self.radio.downloader.download(urlString:"")

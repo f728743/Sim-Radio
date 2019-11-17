@@ -9,8 +9,8 @@ class NavigationController: UINavigationController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        if let libraryViewController = viewControllers.first as? LibraryViewController {
-            libraryViewController.radio = radio
+        if let seriesViewController = viewControllers.first as? SeriesViewController {
+            seriesViewController.radio = radio
         }
         navigationBar.installBlurEffect()
     }
