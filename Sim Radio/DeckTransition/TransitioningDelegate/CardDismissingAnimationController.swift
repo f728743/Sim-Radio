@@ -17,7 +17,10 @@ final class CardDismissingAnimationController: NSObject, UIViewControllerAnimate
         let finalFrameForPresentedView = transitionContext.finalFrame(for: presentedViewController)
 
         let containerView = transitionContext.containerView
-        let offscreenFrame = CGRect(x: 0, y: containerView.bounds.height - endingHeight, width: finalFrameForPresentedView.width, height: finalFrameForPresentedView.height)
+        let offscreenFrame = CGRect(x: 0,
+                                    y: containerView.bounds.height - endingHeight,
+                                    width: finalFrameForPresentedView.width,
+                                    height: finalFrameForPresentedView.height)
 
         UIView.animate(
             withDuration: transitionDuration(using: transitionContext),

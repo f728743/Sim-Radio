@@ -33,8 +33,10 @@ import UIKit
 public enum ESTMusicIndicatorViewState: Int {
     /**
      Stopped state of an indicator view.
-     In this state, if an indicator's [hidesWhenStopped]([ESTMusicIndicatorView hidesWhenStopped]) is `YES`, the indicator becomes hidden.
-     Or if an indicator's [hidesWhenStopped]([ESTMusicIndicatorView hidesWhenStopped]) is `NO`, the indicator shows idle bars.
+     In this state, if an indicator's [hidesWhenStopped]([ESTMusicIndicatorView hidesWhenStopped]) is
+     `YES`, the indicator becomes hidden.
+     Or if an indicator's [hidesWhenStopped]([ESTMusicIndicatorView hidesWhenStopped]) is
+     `NO`, the indicator shows idle bars.
      */
     case stopped
 
@@ -124,8 +126,14 @@ open class ESTMusicIndicatorView: UIView {
         addSubview(contentView)
         prepareLayoutPriorities()
         setNeedsUpdateConstraints()
-        NotificationCenter.default.addObserver(self, selector: #selector(UIApplicationDelegate.applicationDidEnterBackground(_:)), name: UIApplication.didEnterBackgroundNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(UIApplicationDelegate.applicationWillEnterForeground(_:)), name: UIApplication.willEnterForegroundNotification, object: nil)
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(UIApplicationDelegate.applicationDidEnterBackground(_:)),
+            name: UIApplication.didEnterBackgroundNotification, object: nil)
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(UIApplicationDelegate.applicationWillEnterForeground(_:)),
+            name: UIApplication.willEnterForegroundNotification, object: nil)
     }
 
     private func prepareLayoutPriorities() {

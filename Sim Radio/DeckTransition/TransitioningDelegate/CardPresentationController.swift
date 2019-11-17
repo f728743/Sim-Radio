@@ -69,7 +69,9 @@ class CardPresentationController: UIPresentationController, UIGestureRecognizerD
             feedbackGenerator.prepare()
         }
 
-        guard let containerView = self.containerView, let presentedView = self.presentedView, let window = containerView.window else { return }
+        guard let containerView = self.containerView,
+            let presentedView = self.presentedView,
+            let window = containerView.window else { return }
 
         if showIndicator {
             indicatorView.color = indicatorColor
@@ -165,7 +167,7 @@ class CardPresentationController: UIPresentationController, UIGestureRecognizerD
         guard let containerView = containerView else { return }
         startDismissing = true
 
-        let initialFrame: CGRect = /* presentingViewController.isPresentedAsStork ? presentingViewController.view.frame : */ containerView.bounds
+        let initialFrame: CGRect = containerView.bounds
 
         let initialTransform = CGAffineTransform.identity
             .translatedBy(x: 0, y: -initialFrame.origin.y)
@@ -208,7 +210,10 @@ class CardPresentationController: UIPresentationController, UIGestureRecognizerD
         snapshotViewContainer.removeFromSuperview()
         indicatorView.removeFromSuperview()
 
-        let offscreenFrame = CGRect(x: 0, y: containerView.bounds.height, width: containerView.bounds.width, height: containerView.bounds.height)
+        let offscreenFrame = CGRect(x: 0,
+                                    y: containerView.bounds.height,
+                                    width: containerView.bounds.width,
+                                    height: containerView.bounds.height)
         presentedViewController.view.frame = offscreenFrame
         presentedViewController.view.transform = .identity
     }

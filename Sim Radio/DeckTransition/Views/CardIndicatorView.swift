@@ -57,14 +57,22 @@ open class CardIndicatorView: UIView {
         leftView.center.y = frame.height / 2
         leftView.layer.cornerRadius = min(leftView.frame.width, leftView.frame.height) / 2
 
-        rightView.frame = CGRect(x: frame.width / 2 - correction, y: 0, width: frame.width / 2 + correction, height: height)
+        rightView.frame = CGRect(x: frame.width / 2 - correction,
+                                 y: 0,
+                                 width: frame.width / 2 + correction,
+                                 height: height)
         rightView.center.y = frame.height / 2
         rightView.layer.cornerRadius = min(leftView.frame.width, leftView.frame.height) / 2
     }
 
     private func animate(animations: @escaping (() -> Void)) {
-        UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: [.beginFromCurrentState, .curveEaseOut], animations: {
-            animations()
+        UIView.animate(withDuration: 0.5,
+                       delay: 0,
+                       usingSpringWithDamping: 1,
+                       initialSpringVelocity: 1,
+                       options: [.beginFromCurrentState, .curveEaseOut],
+                       animations: {
+                        animations()
         })
     }
 

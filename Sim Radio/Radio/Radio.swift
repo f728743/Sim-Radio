@@ -146,7 +146,8 @@ class Radio {
 }
 
 extension Radio {
-    private func handleCommand(command: NowPlayableCommand, event _: MPRemoteCommandEvent) -> MPRemoteCommandHandlerStatus {
+    private func handleCommand(command: NowPlayableCommand,
+                               event _: MPRemoteCommandEvent) -> MPRemoteCommandHandlerStatus {
         switch command {
         case .pause:
             switch state {
@@ -333,8 +334,9 @@ private extension Radio {
         }
 
         let nowSec = currentSecondOfDay()
-        guard let playerItem = mode == .playingFirst ? try? playlist.getFirstPlayerItem(fromSecond: nowSec, minDuraton: 1 * 60) : playlist.nextPlayerItem else {
-            return
+        guard let playerItem = mode == .playingFirst ? try? playlist.getFirstPlayerItem(
+            fromSecond: nowSec, minDuraton: 1 * 60) : playlist.nextPlayerItem else {
+                return
         }
 
         let player = AVPlayer(playerItem: playerItem)
@@ -342,22 +344,29 @@ private extension Radio {
         self.player = player
         playerNum = playerCounter
         playerCounter += 1
-        // in order to prevent the frequent creating of a long playlist in cases of quick button presses before creating playlist we waiting a couple of seconds
+        // in order to prevent the frequent creating of a long playlist in cases of
+        // quick button presses before creating playlist we waiting a couple of seconds
         Timer.scheduledTimer(timeInterval: 2.0,
                              target: self,
                              selector: #selector(scheduleKeepPlaying),
-                             userInfo: (playerNum: playerNum, playlist: playlist, playerItem: playerItem, station: station),
+                             userInfo: (playerNum: playerNum,
+                                        playlist: playlist,
+                                        playerItem: playerItem,
+                                        station: station),
                              repeats: false)
     }
 
     @objc func scheduleKeepPlaying(timer: Timer) {
-        if let userInfo = timer.userInfo as? (playerNum: Int, playlist: Playlist, playerItem: AVPlayerItem, station: Station) {
+        if let userInfo = timer.userInfo as? (playerNum: Int,
+            playlist: Playlist,
+            playerItem: AVPlayerItem,
+            station: Station) {
             if userInfo.playerNum == self.playerNum {
                 NotificationCenter.default.addObserver(forName: .AVPlayerItemDidPlayToEndTime,
                                                        object: userInfo.playerItem,
                                                        queue: .main
-                ) {
-                    [weak self] _ in self?.play(station: userInfo.station, mode: .playingNext)
+                ) { [weak self] _ in
+                    self?.play(station: userInfo.station, mode: .playingNext)
                 }
                 DispatchQueue.global(qos: .userInitiated).async {
                     try? userInfo.playlist.prepareNextPlayerItem(minDuraton: 1 * 60 * 60)
