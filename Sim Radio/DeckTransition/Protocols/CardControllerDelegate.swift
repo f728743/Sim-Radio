@@ -5,8 +5,7 @@
 
 import UIKit
 
-@objc public protocol CardControllerDelegate: class {
+@objc public protocol CardControllerDelegate: AnyObject {
     @objc optional func didDismissCardBySwipe()
-
     @objc optional func didDismissCardByTap()
 }

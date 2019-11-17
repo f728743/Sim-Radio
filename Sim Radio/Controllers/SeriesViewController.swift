@@ -100,6 +100,7 @@ extension SeriesViewController: UITableViewDataSource {
             withIdentifier: SeriesTableViewCell.reuseId, for: indexPath) as? SeriesTableViewCell ??
             SeriesTableViewCell()
         let station = series!.stations[indexPath.row]
+        cell.station = station
         cell.logoImageView.image = station.logo
         cell.titleLabel.text = station.model.info.title
         cell.infoLabel.text = station.model.info.genre

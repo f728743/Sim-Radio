@@ -31,10 +31,11 @@ final class CardDismissingAnimationController: NSObject, UIViewControllerAnimate
             animations: {
                 presentedViewController.view.layer.cornerRadius = 0
                 presentedViewController.view.frame = offscreenFrame
-            }
-        ) { finished in
-            transitionContext.completeTransition(finished)
+        },
+            completion: { finished in
+                transitionContext.completeTransition(finished)
         }
+        )
     }
 
     func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {

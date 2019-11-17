@@ -204,7 +204,7 @@ extension MediaLibrary: SeriesDownloadDelegate {
 
 // MARK: Notification extension
 
-protocol MediaLibraryObserver: class {
+protocol MediaLibraryObserver: AnyObject {
     func mediaLibrary(_ mediaLibrary: MediaLibrary, didAddNewSeries series: Series)
 }
 

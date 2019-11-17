@@ -11,7 +11,7 @@ struct DownloadFile: Hashable {
     let destination: URL
 }
 
-protocol AudiofilesDownloadOperationDelegate: class {
+protocol AudiofilesDownloadOperationDelegate: AnyObject {
     func audiofilesDownloadOperation(_ operation: AudiofilesDownloadOperation,
                                      didUpdateTotalProgress progress: Progress)
     func audiofilesDownloadOperation(_ operation: AudiofilesDownloadOperation,

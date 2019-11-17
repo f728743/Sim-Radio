@@ -5,7 +5,7 @@
 
 import Foundation
 
-protocol FilesDownloadTaskDelegate: class {
+protocol FilesDownloadTaskDelegate: AnyObject {
     func filesDownloadTask(_ filesDownloadTask: FilesDownloadTask, didUpdateProgress progress: Progress)
     func filesDownloadTask(_ filesDownloadTask: FilesDownloadTask, didCompleteDownloadOf file: URL)
     func filesDownloadTask(didComplete filesDownloadTask: FilesDownloadTask)

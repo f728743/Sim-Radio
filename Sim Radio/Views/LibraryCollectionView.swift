@@ -14,13 +14,13 @@ struct LibraryCollectionViewConstants {
     static let itemHeight = itemWidth + 20
 }
 
-protocol LibraryCollectionViewDelegate {
+protocol LibraryCollectionViewDelegate: AnyObject {
     func libraryCollectionView(_ libraryCollectionView: LibraryCollectionView, didSelectSeries series: Series)
 }
 
 class LibraryCollectionView: UICollectionView {
     var library: MediaLibrary!
-    var libraryDelegate: LibraryCollectionViewDelegate?
+    weak var libraryDelegate: LibraryCollectionViewDelegate?
 
     init() {
         let layout = UICollectionViewFlowLayout()

@@ -5,7 +5,7 @@
 
 import UIKit
 
-protocol MiniPlayerDelegate: class {
+protocol MiniPlayerDelegate: AnyObject {
     func expand()
 }
 

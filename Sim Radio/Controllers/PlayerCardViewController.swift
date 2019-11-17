@@ -7,7 +7,7 @@ import AVKit
 import MediaPlayer
 import UIKit
 
-protocol PlayerCardSourceProtocol: class {
+protocol PlayerCardSourceProtocol: AnyObject {
     var artFrame: CGRect { get }
     func viewSnapshot(withArt: Bool) -> UIImage?
 }

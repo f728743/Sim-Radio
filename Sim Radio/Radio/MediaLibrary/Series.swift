@@ -6,7 +6,7 @@
 import UIKit
 import CoreData
 
-protocol SeriesDownloadDelegate: class {
+protocol SeriesDownloadDelegate: AnyObject {
     func series(didCompleteDownloadCommonFilesOf series: Series)
     func series(didCompleteDownloadOf series: Series)
     func series(series: Series, didCompleteDownloadOf station: Station)

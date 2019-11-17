@@ -142,11 +142,7 @@ class ESTMusicIndicatorContentView: UIView {
     }
 
     func isOscillating() -> Bool {
-        if let _ = barLayers.first?.animation(forKey: kOscillationAnimationKey) {
-            return true
-        } else {
-            return false
-        }
+        return barLayers.first?.animation(forKey: kOscillationAnimationKey) != nil
     }
 
     func stopDecay() {

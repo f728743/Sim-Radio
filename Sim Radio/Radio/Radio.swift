@@ -150,11 +150,8 @@ extension Radio {
                                event _: MPRemoteCommandEvent) -> MPRemoteCommandHandlerStatus {
         switch command {
         case .pause:
-            switch state {
-            case .playing:
+            if case .playing = state {
                 togglePausePlay()
-            default:
-                break
             }
 
         case .play:
@@ -166,11 +163,8 @@ extension Radio {
             }
 
         case .stop:
-            switch state {
-            case .playing:
+            if case .playing = state {
                 togglePausePlay()
-            default:
-                break
             }
 
         case .togglePausePlay:
@@ -182,7 +176,6 @@ extension Radio {
         case .previousTrack:
             previousStation()
         }
-
         return .success
     }
 
@@ -362,7 +355,7 @@ private extension Radio {
             playerItem: AVPlayerItem,
             station: Station) {
             if userInfo.playerNum == self.playerNum {
-                NotificationCenter.default.addObserver(
+                _ = NotificationCenter.default.addObserver(
                     forName: .AVPlayerItemDidPlayToEndTime,
                     object: userInfo.playerItem,
                     queue: .main
@@ -392,7 +385,7 @@ extension Radio {
     }
 }
 
-protocol RadioObserver: class {
+protocol RadioObserver: AnyObject {
     func radio(_ radio: Radio, didStartPlaying station: Station)
     func radio(_ radio: Radio, didPausePlaybackOf station: Station)
     func radioDidStop(_ radio: Radio)
