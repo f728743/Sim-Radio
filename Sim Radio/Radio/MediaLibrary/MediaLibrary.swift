@@ -11,6 +11,19 @@ struct LibraryConstants {
     static let stationJson = "station.json"
 }
 
+public protocol LibraryItemAppearance {
+    var title: String { get }
+    var logo: UIImage { get }
+}
+
+protocol LibraryItem: AnyObject {
+    var appearance: LibraryItemAppearance? { get }
+}
+
+class LibraryPlaceholder: LibraryItem {
+    var appearance: LibraryItemAppearance? { return nil }
+}
+
 class MediaLibrary {
     //    var delegate: DownloaderDelegate?
     private let operationQueue: OperationQueue = {
@@ -29,14 +42,15 @@ class MediaLibrary {
         return container
     }()
     private var observations = [ObjectIdentifier: Observation]()
-    private(set) var series: [Series] = []
+    private(set) var items: [LibraryItem] = []
 
     init() {
-        fetch()
+        let series = fetchSeries()
         series.forEach {
             $0.downloadDelegate = self
             $0.startFilesDownload()
         }
+        items = series
     }
 }
 
@@ -54,19 +68,19 @@ extension MediaLibrary {
         }
     }
 
-    private func fetch() {
+    private func fetchSeries() -> [Series] {
         let context = persistentContainer.viewContext
         do {
             let series = try context.fetch(SeriesPersistence.fetchRequest())
-            self.series = series.compactMap { seriesManagedObject in
+            return series.compactMap { seriesManagedObject in
                 guard let seriesManagedObject = seriesManagedObject as? SeriesPersistence else { return nil }
                 return Series(persistentContainer: persistentContainer,
                               managedObject: seriesManagedObject)
             }
-            print("Loaded")
         } catch let error as NSError {
             print("Could not fetch. \(error), \(error.userInfo)")
         }
+        return []
     }
 
     private func addDownloadFiles(from groups: [Model.FileGroup],
@@ -118,10 +132,9 @@ extension MediaLibrary {
         newSeries.startFilesDownload()
         saveContext()
         DispatchQueue.main.async {
-            self.series.append(newSeries)
-            self.notifyOfNewSeries(series: newSeries)
+            self.items.append(newSeries) // TODO: replace placeholder in items by newSeries
+            self.notifyLibraryUpdate()
         }
-
     }
 }
 
@@ -131,6 +144,9 @@ extension MediaLibrary {
     func download(url: URL) {
         var downloadedSeries: DownloadedSeriesModel?
         let downloadedStations = SynchronizedArray<DownloadedStationModel>()
+        let item = LibraryPlaceholder()
+        items.append(item)
+        notifyLibraryUpdate()
         let completion = BlockOperation {
             guard let series = downloadedSeries else { return }
             let stations = downloadedStations.elements
@@ -205,11 +221,11 @@ extension MediaLibrary: SeriesDownloadDelegate {
 // MARK: Notification extension
 
 protocol MediaLibraryObserver: AnyObject {
-    func mediaLibrary(_ mediaLibrary: MediaLibrary, didAddNewSeries series: Series)
+    func mediaLibrary(didUpdateItemsOfMediaLibrary: MediaLibrary)
 }
 
 extension MediaLibraryObserver {
-    func mediaLibrary(_ mediaLibrary: MediaLibrary, didAddNewSeries series: Series) {}
+    func mediaLibrary(didUpdateItemsOfMediaLibrary: MediaLibrary) {}
 }
 
 private extension MediaLibrary {
@@ -229,13 +245,13 @@ extension MediaLibrary {
         observations.removeValue(forKey: id)
     }
 
-    private func notifyOfNewSeries(series: Series) {
+    private func notifyLibraryUpdate() {
         for (id, observation) in observations {
             guard let observer = observation.observer else {
                 observations.removeValue(forKey: id)
                 continue
             }
-            observer.mediaLibrary(self, didAddNewSeries: series)
+            observer.mediaLibrary(didUpdateItemsOfMediaLibrary: self)
         }
     }
 }

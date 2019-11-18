@@ -248,7 +248,13 @@ extension Radio: RadioControl {
     func togglePausePlay() {
         switch state {
         case .idle:
-            let nonEmptySeries = library.series.filter { $0.stations.count > 0 }
+            print("ok")
+            let nonEmptySeries = library.items.compactMap { item -> Series? in
+                if let series = item as? Series {
+                    return series.stations.count > 0 ? series : nil
+                }
+                return nil
+            }
             guard !nonEmptySeries.isEmpty else { return }
             let series = nonEmptySeries[Int(drand48() * Double(nonEmptySeries.count))]
             let stations = series.stations

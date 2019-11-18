@@ -112,6 +112,22 @@ class Series {
     }
 }
 
+// MARK: adopt LibraryItem protocol for Series
+extension Series: LibraryItem {
+    struct Appearance: LibraryItemAppearance {
+        let series: Series
+        var title: String {
+            return series.title
+        }
+        var logo: UIImage {
+            return series.logo
+        }
+    }
+    var appearance: LibraryItemAppearance? {
+        return Appearance(series: self)
+    }
+}
+
 // MARK: Series download files extension
 
 extension Series {

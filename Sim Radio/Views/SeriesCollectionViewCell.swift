@@ -8,7 +8,19 @@ import UIKit
 class SeriesCollectionViewCell: UICollectionViewCell {
     static let reuseId = "SeriesCollectionViewCell"
 
-    let logoImageView: UIImageView = {
+    var appearance: LibraryItemAppearance? {
+        didSet {
+            if let appearance = appearance {
+                logoImageView.image = appearance.logo
+                titleLabel.text = appearance.title
+            } else {
+                logoImageView.image = UIImage(named: "Mini Play") // TODO: activity indicator
+                titleLabel.text = "???"
+            }
+        }
+    }
+
+    private let logoImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = .scaleAspectFit
@@ -19,7 +31,7 @@ class SeriesCollectionViewCell: UICollectionViewCell {
         return imageView
     }()
 
-    let titleLabel: UILabel = {
+    private let titleLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.preferredFont(forTextStyle: .subheadline)
         label.translatesAutoresizingMaskIntoConstraints = false

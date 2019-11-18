@@ -54,7 +54,7 @@ extension SeriesCollectionView: UICollectionViewDelegateFlowLayout {
 
 extension SeriesCollectionView: UICollectionViewDelegate, UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return library.series.count
+        return library.items.count
     }
 
     func collectionView(_ collectionView: UICollectionView,
@@ -62,14 +62,12 @@ extension SeriesCollectionView: UICollectionViewDelegate, UICollectionViewDataSo
         let cell = dequeueReusableCell(
             withReuseIdentifier: SeriesCollectionViewCell.reuseId, for: indexPath) as? SeriesCollectionViewCell ??
             SeriesCollectionViewCell()
-        let series = library.series[indexPath.row]
-        cell.logoImageView.image = series.logo
-        cell.titleLabel.text = series.model.info.title
+        cell.appearance = library.items[indexPath.row].appearance
         return cell
     }
 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let series = library.series[indexPath.row]
+        guard let series = library.items[indexPath.row] as? Series else { return }
         libraryDelegate?.seriesCollectionView(self, didSelectSeries: series)
     }
 

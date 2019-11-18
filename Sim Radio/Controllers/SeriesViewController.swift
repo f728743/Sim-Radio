@@ -11,7 +11,7 @@ class SeriesViewController: UIViewController, SeriesCollectionViewDelegate {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        radio.library.addObserver(self)
         view.addSubview(seriesCollectionView)
 
         seriesCollectionView.library = radio.library
@@ -54,14 +54,25 @@ extension SeriesViewController {
         }
         let confirmAction = UIAlertAction(title: "Enter", style: .default) { (_) in
             guard let url = URL(string: "https://raw.githubusercontent.com/tmp-acc/" +
-            "GTA-V-Radio-Stations/master/series.json") else {
+                "GTA-V-Radio-Stations-TestDownload/master/series.json") else {
                     return
             }
+
+//            guard let url = URL(string: "https://raw.githubusercontent.com/tmp-acc/" +
+//            "GTA-V-Radio-Stations/master/series.json") else {
+//                    return
+//            }
             self.radio.library.download(url: url)
         }
         let cancelAction = UIAlertAction(title: "Cancel", style: .cancel) { (_) in }
         alertController.addAction(confirmAction)
         alertController.addAction(cancelAction)
         self.present(alertController, animated: true, completion: nil)
+    }
+}
+
+extension SeriesViewController: MediaLibraryObserver {
+    func mediaLibrary(didUpdateItemsOfMediaLibrary: MediaLibrary) {
+        seriesCollectionView.reloadData()
     }
 }
