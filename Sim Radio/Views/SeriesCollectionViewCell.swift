@@ -13,9 +13,11 @@ class SeriesCollectionViewCell: UICollectionViewCell {
             if let appearance = appearance {
                 logoImageView.image = appearance.logo
                 titleLabel.text = appearance.title
+                activityIndicator.stopAnimating()
             } else {
-                logoImageView.image = UIImage(named: "Mini Play") // TODO: activity indicator
-                titleLabel.text = "???"
+                logoImageView.image = UIImage(named: "Cover Artwork")
+                titleLabel.text = ""
+                activityIndicator.startAnimating()
             }
         }
     }
@@ -38,10 +40,20 @@ class SeriesCollectionViewCell: UICollectionViewCell {
         return label
     }()
 
+    private let activityIndicator: UIActivityIndicatorView = {
+        let indicator = UIActivityIndicatorView()
+        indicator.translatesAutoresizingMaskIntoConstraints = false
+        indicator.hidesWhenStopped = true
+        indicator.style = .whiteLarge
+        return indicator
+    }()
+
     override init(frame: CGRect) {
         super.init(frame: frame)
         addSubview(logoImageView)
         addSubview(titleLabel)
+        addSubview(activityIndicator)
+        activityIndicator.layer.zPosition = 1
 
         // logoImageView constraints
         logoImageView.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
@@ -53,6 +65,12 @@ class SeriesCollectionViewCell: UICollectionViewCell {
         titleLabel.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
         titleLabel.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
         titleLabel.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
+
+        // activityIndicator constraints
+        activityIndicator.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
+        activityIndicator.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
+        activityIndicator.topAnchor.constraint(equalTo: topAnchor).isActive = true
+        activityIndicator.heightAnchor.constraint(equalTo: widthAnchor).isActive = true
     }
 
     required init?(coder aDecoder: NSCoder) {
