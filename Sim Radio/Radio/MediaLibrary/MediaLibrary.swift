@@ -101,7 +101,9 @@ extension MediaLibrary {
         }
     }
 
-    private func addSeries(downloadedSeries: DownloadedSeriesModel, downloadedStations: [DownloadedStationModel]) {
+    private func addSeries(downloadedSeries: DownloadedSeriesModel,
+                           downloadedStations: [DownloadedStationModel],
+                           to placeholder: LibraryPlaceholder) {
         let context = persistentContainer.viewContext
         let series = SeriesPersistence(entity: SeriesPersistence.entity(), insertInto: context)
         series.origin = downloadedSeries.origin
@@ -127,12 +129,22 @@ extension MediaLibrary {
                              baseURL: downloadedStation.origin.deletingLastPathComponent())
             stationDownload.station = station
         }
-        guard let newSeries = Series(persistentContainer: persistentContainer, managedObject: series) else { return }
+        guard let newSeries = Series(persistentContainer: persistentContainer, managedObject: series) else {
+            DispatchQueue.main.async {
+                self.items.removeAll { $0 === placeholder }
+                self.notifyLibraryUpdate()
+            }
+            return
+        }
         newSeries.downloadDelegate = self
         newSeries.startFilesDownload()
         saveContext()
         DispatchQueue.main.async {
-            self.items.append(newSeries) // TODO: replace placeholder in items by newSeries
+            if let index = self.items.firstIndex(where: { $0 === placeholder }) {
+                self.items[index] = newSeries
+            } else {
+                self.items.append(newSeries)
+            }
             self.notifyLibraryUpdate()
         }
     }
@@ -144,13 +156,19 @@ extension MediaLibrary {
     func download(url: URL) {
         var downloadedSeries: DownloadedSeriesModel?
         let downloadedStations = SynchronizedArray<DownloadedStationModel>()
-        let item = LibraryPlaceholder()
-        items.append(item)
+        let placeholder = LibraryPlaceholder()
+        items.append(placeholder)
         notifyLibraryUpdate()
         let completion = BlockOperation {
-            guard let series = downloadedSeries else { return }
+            guard let series = downloadedSeries else {
+                DispatchQueue.main.async {
+                    self.items.removeAll { $0 === placeholder }
+                    self.notifyLibraryUpdate()
+                }
+                return
+            }
             let stations = downloadedStations.elements
-            self.download(series: series, stations: stations)
+            self.download(series: series, stations: stations, to: placeholder)
         }
         let seriesDirectory = UUID().uuidString
         let seriesLoad = SeriesModelDownloadOperation(from: url, to: seriesDirectory) { series in
@@ -177,9 +195,13 @@ extension MediaLibrary {
         operationQueue.addOperation(seriesLoad)
     }
 
-    private func download(series: DownloadedSeriesModel, stations: [DownloadedStationModel]) {
+    private func download(series: DownloadedSeriesModel,
+                          stations: [DownloadedStationModel],
+                          to placeholder: LibraryPlaceholder) {
         let completion = BlockOperation {
-            self.addSeries(downloadedSeries: series, downloadedStations: stations)
+            self.addSeries(downloadedSeries: series,
+                           downloadedStations: stations,
+                           to: placeholder)
         }
         var logoLoadOperatios = stations.map {
             FileDownloadOperation(
