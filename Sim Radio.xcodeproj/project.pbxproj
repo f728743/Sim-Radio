@@ -23,9 +23,9 @@
 		7C51BB092348747E005F0884 /* MarqueeLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C51BB022348747D005F0884 /* MarqueeLabel.swift */; };
 		7C51BB0A2348747E005F0884 /* HairlineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C51BB032348747D005F0884 /* HairlineView.swift */; };
 		7C51BB0B2348747E005F0884 /* StationsHeaderTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C51BB042348747D005F0884 /* StationsHeaderTableViewCell.swift */; };
-		7C51BB10234874B8005F0884 /* UIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C51BB0D234874B8005F0884 /* UIView.swift */; };
-		7C51BB11234874B8005F0884 /* UINavigationBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C51BB0E234874B8005F0884 /* UINavigationBar.swift */; };
-		7C51BB12234874B8005F0884 /* Date.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C51BB0F234874B8005F0884 /* Date.swift */; };
+		7C51BB10234874B8005F0884 /* UIView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C51BB0D234874B8005F0884 /* UIView+Extension.swift */; };
+		7C51BB11234874B8005F0884 /* UINavigationBar+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C51BB0E234874B8005F0884 /* UINavigationBar+Extension.swift */; };
+		7C51BB12234874B8005F0884 /* Date+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C51BB0F234874B8005F0884 /* Date+Extension.swift */; };
 		7C51BB16234874E6005F0884 /* ESTMusicIndicatorContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C51BB14234874E6005F0884 /* ESTMusicIndicatorContentView.swift */; };
 		7C51BB17234874E6005F0884 /* ESTMusicIndicatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C51BB15234874E6005F0884 /* ESTMusicIndicatorView.swift */; };
 		7C51BB1D23487557005F0884 /* CardIndicatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C51BB1C23487557005F0884 /* CardIndicatorView.swift */; };
@@ -36,7 +36,7 @@
 		7C51BB29234875B7005F0884 /* CardControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C51BB28234875B7005F0884 /* CardControllerDelegate.swift */; };
 		7C51BB2C234875E7005F0884 /* CardHaptic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C51BB2B234875E7005F0884 /* CardHaptic.swift */; };
 		7C51BB342348760F005F0884 /* StationsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C51BB2E2348760F005F0884 /* StationsViewController.swift */; };
-		7C51BB352348760F005F0884 /* LibraryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C51BB2F2348760F005F0884 /* LibraryViewController.swift */; };
+		7C51BB352348760F005F0884 /* SeriesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C51BB2F2348760F005F0884 /* SeriesViewController.swift */; };
 		7C51BB362348760F005F0884 /* RootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C51BB302348760F005F0884 /* RootViewController.swift */; };
 		7C51BB372348760F005F0884 /* PlayerCardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C51BB312348760F005F0884 /* PlayerCardViewController.swift */; };
 		7C51BB382348760F005F0884 /* MiniPlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C51BB322348760F005F0884 /* MiniPlayerViewController.swift */; };
@@ -89,9 +89,9 @@
 		7C51BB022348747D005F0884 /* MarqueeLabel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MarqueeLabel.swift; sourceTree = "<group>"; };
 		7C51BB032348747D005F0884 /* HairlineView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HairlineView.swift; sourceTree = "<group>"; };
 		7C51BB042348747D005F0884 /* StationsHeaderTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StationsHeaderTableViewCell.swift; sourceTree = "<group>"; };
-		7C51BB0D234874B8005F0884 /* UIView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIView.swift; sourceTree = "<group>"; };
-		7C51BB0E234874B8005F0884 /* UINavigationBar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UINavigationBar.swift; sourceTree = "<group>"; };
-		7C51BB0F234874B8005F0884 /* Date.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Date.swift; sourceTree = "<group>"; };
+		7C51BB0D234874B8005F0884 /* UIView+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIView+Extension.swift"; sourceTree = "<group>"; };
+		7C51BB0E234874B8005F0884 /* UINavigationBar+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UINavigationBar+Extension.swift"; sourceTree = "<group>"; };
+		7C51BB0F234874B8005F0884 /* Date+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Date+Extension.swift"; sourceTree = "<group>"; };
 		7C51BB14234874E6005F0884 /* ESTMusicIndicatorContentView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ESTMusicIndicatorContentView.swift; sourceTree = "<group>"; };
 		7C51BB15234874E6005F0884 /* ESTMusicIndicatorView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ESTMusicIndicatorView.swift; sourceTree = "<group>"; };
 		7C51BB1C23487557005F0884 /* CardIndicatorView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CardIndicatorView.swift; sourceTree = "<group>"; };
@@ -102,7 +102,7 @@
 		7C51BB28234875B7005F0884 /* CardControllerDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CardControllerDelegate.swift; sourceTree = "<group>"; };
 		7C51BB2B234875E7005F0884 /* CardHaptic.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CardHaptic.swift; sourceTree = "<group>"; };
 		7C51BB2E2348760F005F0884 /* StationsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StationsViewController.swift; sourceTree = "<group>"; };
-		7C51BB2F2348760F005F0884 /* LibraryViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LibraryViewController.swift; sourceTree = "<group>"; };
+		7C51BB2F2348760F005F0884 /* SeriesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SeriesViewController.swift; sourceTree = "<group>"; };
 		7C51BB302348760F005F0884 /* RootViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RootViewController.swift; sourceTree = "<group>"; };
 		7C51BB312348760F005F0884 /* PlayerCardViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerCardViewController.swift; sourceTree = "<group>"; };
 		7C51BB322348760F005F0884 /* MiniPlayerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MiniPlayerViewController.swift; sourceTree = "<group>"; };
@@ -198,9 +198,9 @@
 			children = (
 				7C51BB012348747D005F0884 /* ControlsButton.swift */,
 				7C51BB032348747D005F0884 /* HairlineView.swift */,
+				7C51BB022348747D005F0884 /* MarqueeLabel.swift */,
 				7C51BAFE2348747D005F0884 /* SeriesCollectionView.swift */,
 				7C51BB002348747D005F0884 /* SeriesCollectionViewCell.swift */,
-				7C51BB022348747D005F0884 /* MarqueeLabel.swift */,
 				7C51BB042348747D005F0884 /* StationsHeaderTableViewCell.swift */,
 				7C51BAFF2348747D005F0884 /* StationTableViewCell.swift */,
 			);
@@ -213,9 +213,9 @@
 				7C83494F237FC3D500C7C355 /* Double+Extension.swift */,
 				7C834950237FC3D500C7C355 /* FileManager+Extension.swift */,
 				7C834951237FC3D500C7C355 /* String+Extension.swift */,
-				7C51BB0F234874B8005F0884 /* Date.swift */,
-				7C51BB0E234874B8005F0884 /* UINavigationBar.swift */,
-				7C51BB0D234874B8005F0884 /* UIView.swift */,
+				7C51BB0F234874B8005F0884 /* Date+Extension.swift */,
+				7C51BB0E234874B8005F0884 /* UINavigationBar+Extension.swift */,
+				7C51BB0D234874B8005F0884 /* UIView+Extension.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -278,12 +278,12 @@
 		7C51BB2D2348760F005F0884 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				7C51BB2E2348760F005F0884 /* StationsViewController.swift */,
-				7C51BB2F2348760F005F0884 /* LibraryViewController.swift */,
-				7C51BB302348760F005F0884 /* RootViewController.swift */,
-				7C51BB312348760F005F0884 /* PlayerCardViewController.swift */,
-				7C51BB322348760F005F0884 /* MiniPlayerViewController.swift */,
 				7C51BB332348760F005F0884 /* NavigationController.swift */,
+				7C51BB322348760F005F0884 /* MiniPlayerViewController.swift */,
+				7C51BB312348760F005F0884 /* PlayerCardViewController.swift */,
+				7C51BB302348760F005F0884 /* RootViewController.swift */,
+				7C51BB2F2348760F005F0884 /* SeriesViewController.swift */,
+				7C51BB2E2348760F005F0884 /* StationsViewController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -333,12 +333,12 @@
 		7CBD425F237F39E0008341CF /* MediaLibrary */ = {
 			isa = PBXGroup;
 			children = (
+				7C834937237F3B2C00C7C355 /* Download */,
+				7CBD4260237F39F5008341CF /* PersistData */,
 				7C834949237FC37A00C7C355 /* LibraryError.swift */,
 				7C834947237FC37A00C7C355 /* MediaLibrary.swift */,
 				7C83494A237FC37A00C7C355 /* Model.swift */,
 				7C834948237FC37A00C7C355 /* Series.swift */,
-				7C834937237F3B2C00C7C355 /* Download */,
-				7CBD4260237F39F5008341CF /* PersistData */,
 			);
 			path = MediaLibrary;
 			sourceTree = "<group>";
@@ -454,14 +454,14 @@
 			files = (
 				7CBD4257237F38AB008341CF /* DownloadTaskPersistence+CoreDataClass.swift in Sources */,
 				7C51BB2623487587005F0884 /* CardPresentingAnimationController.swift in Sources */,
-				7C51BB11234874B8005F0884 /* UINavigationBar.swift in Sources */,
+				7C51BB11234874B8005F0884 /* UINavigationBar+Extension.swift in Sources */,
 				7CBD4259237F38AB008341CF /* SeriesPersistence+CoreDataClass.swift in Sources */,
-				7C51BB10234874B8005F0884 /* UIView.swift in Sources */,
+				7C51BB10234874B8005F0884 /* UIView+Extension.swift in Sources */,
 				7C51BADB23487334005F0884 /* AppDelegate.swift in Sources */,
 				7CBD425D237F38AB008341CF /* DownloadFilePersistence+CoreDataClass.swift in Sources */,
 				7CBD425E237F38AB008341CF /* DownloadFilePersistence+CoreDataProperties.swift in Sources */,
 				7C834954237FC3D500C7C355 /* String+Extension.swift in Sources */,
-				7C51BB352348760F005F0884 /* LibraryViewController.swift in Sources */,
+				7C51BB352348760F005F0884 /* SeriesViewController.swift in Sources */,
 				7C51BB0A2348747E005F0884 /* HairlineView.swift in Sources */,
 				7C834946237F3B8E00C7C355 /* FilesDownloadTask.swift in Sources */,
 				7C834953237FC3D500C7C355 /* FileManager+Extension.swift in Sources */,
@@ -480,7 +480,7 @@
 				7C51BB2523487587005F0884 /* CardTransitioningDelegate.swift in Sources */,
 				7C51BB062348747E005F0884 /* StationTableViewCell.swift in Sources */,
 				7C834945237F3B8E00C7C355 /* DownloadError.swift in Sources */,
-				7C51BB12234874B8005F0884 /* Date.swift in Sources */,
+				7C51BB12234874B8005F0884 /* Date+Extension.swift in Sources */,
 				7C51BB052348747E005F0884 /* SeriesCollectionView.swift in Sources */,
 				7C51BB2423487587005F0884 /* CardDismissingAnimationController.swift in Sources */,
 				7C51BB382348760F005F0884 /* MiniPlayerViewController.swift in Sources */,
