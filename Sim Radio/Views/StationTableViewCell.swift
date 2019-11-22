@@ -61,6 +61,15 @@ class StationTableViewCell: UITableViewCell {
         return label
     }()
 
+    let progressView: ProgressIndicatorView = {
+        let indicator = ProgressIndicatorView()
+        indicator.opacity = 0.8
+        indicator.layer.cornerRadius = 3
+        indicator.tintColor = UIColor.lightGray
+        indicator.translatesAutoresizingMaskIntoConstraints = false
+        return indicator
+    }()
+
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
 
@@ -68,6 +77,7 @@ class StationTableViewCell: UITableViewCell {
 
         addSubview(logoImageView)
         addSubview(logoFadeView)
+        addSubview(progressView)
         addSubview(musicIndicator)
         addSubview(titleLabel)
         addSubview(infoLabel)
@@ -99,6 +109,12 @@ class StationTableViewCell: UITableViewCell {
         infoLabel.leadingAnchor.constraint(equalTo: logoImageView.trailingAnchor, constant: 16).isActive = true
         infoLabel.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
         infoLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -7).isActive = true
+
+        // progressView progressView
+        progressView.leadingAnchor.constraint(equalTo: logoImageView.leadingAnchor).isActive = true
+        progressView.trailingAnchor.constraint(equalTo: logoImageView.trailingAnchor).isActive = true
+        progressView.topAnchor.constraint(equalTo: logoImageView.topAnchor).isActive = true
+        progressView.bottomAnchor.constraint(equalTo: logoImageView.bottomAnchor).isActive = true
     }
 
     required init?(coder aDecoder: NSCoder) {

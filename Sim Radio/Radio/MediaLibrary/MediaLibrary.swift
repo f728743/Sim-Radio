@@ -25,7 +25,6 @@ class LibraryPlaceholder: LibraryItem {
 }
 
 class MediaLibrary {
-    //    var delegate: DownloaderDelegate?
     private let operationQueue: OperationQueue = {
         let queue = OperationQueue()
         queue.maxConcurrentOperationCount = 1
@@ -244,10 +243,15 @@ extension MediaLibrary: SeriesDownloadDelegate {
 
 protocol MediaLibraryObserver: AnyObject {
     func mediaLibrary(didUpdateItemsOfMediaLibrary: MediaLibrary)
+    func mediaLibrary(mediaLibrary: MediaLibrary, didUpdateDownloadProgressOf station: Station)
+    func mediaLibrary(mediaLibrary: MediaLibrary, didCompleteDownloadOf station: Station)
+
 }
 
 extension MediaLibraryObserver {
     func mediaLibrary(didUpdateItemsOfMediaLibrary: MediaLibrary) {}
+    func mediaLibrary(mediaLibrary: MediaLibrary, didUpdateDownloadProgressOf station: Station) {}
+    func mediaLibrary(mediaLibrary: MediaLibrary, didCompleteDownloadOf station: Station) {}
 }
 
 private extension MediaLibrary {

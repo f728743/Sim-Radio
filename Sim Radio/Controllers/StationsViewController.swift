@@ -43,6 +43,7 @@ extension StationsViewController: RadioObserver {
         tableView.visibleCells.forEach { cell in
             if let cell = cell as? StationTableViewCell {
                 cell.state = cell.station === station ? .playing : .stopped
+                cell.progressView.value = 0.3
             }
         }
     }
@@ -61,6 +62,18 @@ extension StationsViewController: RadioObserver {
                 cell.state = .stopped
             }
         }
+    }
+}
+
+extension StationsViewController: MediaLibraryObserver {
+    func mediaLibrary(mediaLibrary: MediaLibrary, didUpdateDownloadProgressOf station: Station) {
+//        tableView.visibleCells.forEach { cell in
+//        }
+    }
+
+    func mediaLibrary(mediaLibrary: MediaLibrary, didCompleteDownloadOf station: Station) {
+//        tableView.visibleCells.forEach { cell in
+//        }
     }
 }
 
