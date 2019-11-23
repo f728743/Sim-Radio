@@ -14,6 +14,7 @@ class StationsViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         radio.addObserver(self)
+        radio.library.addObserver(self)
 
         view.addSubview(tableView)
         tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
@@ -43,7 +44,6 @@ extension StationsViewController: RadioObserver {
         tableView.visibleCells.forEach { cell in
             if let cell = cell as? StationTableViewCell {
                 cell.state = cell.station === station ? .playing : .stopped
-                cell.progressView.value = 0.3
             }
         }
     }
@@ -66,14 +66,45 @@ extension StationsViewController: RadioObserver {
 }
 
 extension StationsViewController: MediaLibraryObserver {
-    func mediaLibrary(mediaLibrary: MediaLibrary, didUpdateDownloadProgressOf station: Station) {
-//        tableView.visibleCells.forEach { cell in
-//        }
+    func mediaLibrary(mediaLibrary: MediaLibrary,
+                      didUpdateDownloadProgress fractionCompleted: Double,
+                      of station: Station,
+                      of series: Series) {
+        guard series === self.series else { return }
+        tableView.visibleCells.forEach { cell in
+            if let cell = cell as? StationTableViewCell {
+                if cell.station === station {
+                    cell.progressView.isHidden = false
+                    cell.progressView.state = .progress(value: fractionCompleted)
+                }
+            }
+        }
     }
 
-    func mediaLibrary(mediaLibrary: MediaLibrary, didCompleteDownloadOf station: Station) {
-//        tableView.visibleCells.forEach { cell in
-//        }
+    func mediaLibrary(mediaLibrary: MediaLibrary, startDownloadOf station: Station, of series: Series) {
+        guard series === self.series else { return }
+        tableView.visibleCells.forEach { cell in
+            if let cell = cell as? StationTableViewCell {
+                if cell.station === station {
+                    cell.progressView.isHidden = false
+                    cell.progressView.state = .progress(value: 0)
+                    cell.progressView.animateAppearance()
+                }
+            }
+        }
+    }
+
+    func mediaLibrary(mediaLibrary: MediaLibrary, didCompleteDownloadOf station: Station, of series: Series) {
+        guard series === self.series else { return }
+        tableView.visibleCells.forEach { cell in
+            if let cell = cell as? StationTableViewCell {
+                if cell.station === station {
+                    cell.progressView.isHidden = false
+                    cell.progressView.state = .finished
+                    cell.progressView.animateDisappearance()
+                }
+            }
+        }
     }
 }
 
@@ -116,9 +147,21 @@ extension StationsViewController: UITableViewDataSource {
         let station = series!.stations[indexPath.row]
         cell.station = station
         cell.logoImageView.image = station.logo
-        cell.titleLabel.text = station.model.info.title
-        cell.infoLabel.text = station.model.info.genre
+        cell.titleLabel.text = station.title
+        cell.infoLabel.text = station.genre
         cell.state = .stopped
+        if let downloadProgress = station.downloadProgress {
+            cell.progressView.isHidden = false
+            if downloadProgress == 0 {
+                cell.progressView.state = .new
+            } else if downloadProgress == 1.0 {
+                cell.progressView.state = .finished
+            } else {
+                cell.progressView.state = .progress(value: downloadProgress)
+            }
+        } else {
+            cell.progressView.isHidden = true
+        }
 
         switch radio.state {
         case .idle:

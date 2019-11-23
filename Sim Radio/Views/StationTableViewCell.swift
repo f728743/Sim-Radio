@@ -63,9 +63,9 @@ class StationTableViewCell: UITableViewCell {
 
     let progressView: ProgressIndicatorView = {
         let indicator = ProgressIndicatorView()
-        indicator.opacity = 0.8
+        indicator.tintColor = UIColor.white
+        indicator.shadeColor = UIColor.black
         indicator.layer.cornerRadius = 3
-        indicator.tintColor = UIColor.lightGray
         indicator.translatesAutoresizingMaskIntoConstraints = false
         return indicator
     }()

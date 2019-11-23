@@ -71,7 +71,7 @@ class Series {
     }()
     fileprivate var activeDownloads = SynchronizedDictionary<URL, FilesDownloadTask>()
     weak var downloadDelegate: SeriesDownloadDelegate?
-    let totalProgress = Progress(totalUnitCount: -1)
+    private let totalProgress = Progress(totalUnitCount: -1)
 
     init?(persistentContainer: NSPersistentContainer, managedObject: SeriesPersistence) {
         do {
@@ -265,6 +265,7 @@ extension Series: FilesDownloadTaskDelegate {
 // MARK: Station
 class Station {
     unowned let series: Series
+    var downloadProgress: Double?
     let model: Model.Station
     var origin: URL {
         return managedObject.origin
@@ -278,7 +279,7 @@ class Station {
     var title: String {
         return model.info.title
     }
-    var host: String? {
+    var dj: String? {
         return model.info.dj
     }
     var genre: String {
@@ -299,6 +300,9 @@ class Station {
                 .appendingPathComponent(managedObject.directory)
                 .appendingPathComponent(model.info.logo)
             logo = Station.loadLogo(contentsOfFile: logoURL)
+            if managedObject.downloadTask != nil {
+                downloadProgress = 0
+            }
         } catch {
             print("Station.init():", error)
             return nil

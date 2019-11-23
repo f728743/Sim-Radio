@@ -27,7 +27,6 @@ extension AudiofilesDownloadOperationDelegate {
                                      didCompleteWithResult result: AudiofilesDownloadOperation.CompletionResult) {}
     func audiofilesDownloadOperation(_ operation: AudiofilesDownloadOperation,
                                      didCompleteDownloadOf file: URL) {}
-
 }
 
 struct AudiofilesDownloadOperationConstants {

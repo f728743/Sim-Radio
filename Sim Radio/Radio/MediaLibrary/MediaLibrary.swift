@@ -227,6 +227,10 @@ extension MediaLibrary: SeriesDownloadDelegate {
         print("Did complete download of series '\(series.title)'")
     }
     func series(series: Series, didCompleteDownloadOf station: Station) {
+        DispatchQueue.main.async {
+            station.downloadProgress = nil
+            self.notifyCompleteDownload(of: station, of: series)
+        }
         print("Station '\(station.title)' of series '\(series.title)' did complete download")
     }
     func series(series: Series, didUpdateTotalProgress fractionCompleted: Double) {
@@ -234,6 +238,13 @@ extension MediaLibrary: SeriesDownloadDelegate {
             "progress: \((fractionCompleted * 100).rounded(toPlaces: 2))%")
     }
     func series(series: Series, didUpdateProgress fractionCompleted: Double, of station: Station) {
+        DispatchQueue.main.async {
+            if station.downloadProgress == 0 {
+                self.notifyStartDownload(of: station, of: series)
+            }
+            station.downloadProgress = fractionCompleted
+            self.notifyUpdate(progress: fractionCompleted, of: station, of: series)
+        }
         print("Station '\(station.title)' of series '\(series.title)' did update " +
             "download progress: \((fractionCompleted * 100).rounded(toPlaces: 2))%")
     }
@@ -243,15 +254,22 @@ extension MediaLibrary: SeriesDownloadDelegate {
 
 protocol MediaLibraryObserver: AnyObject {
     func mediaLibrary(didUpdateItemsOfMediaLibrary: MediaLibrary)
-    func mediaLibrary(mediaLibrary: MediaLibrary, didUpdateDownloadProgressOf station: Station)
-    func mediaLibrary(mediaLibrary: MediaLibrary, didCompleteDownloadOf station: Station)
-
+    func mediaLibrary(mediaLibrary: MediaLibrary, startDownloadOf station: Station, of series: Series)
+    func mediaLibrary(mediaLibrary: MediaLibrary,
+                      didUpdateDownloadProgress fractionCompleted: Double,
+                      of station: Station,
+                      of series: Series)
+    func mediaLibrary(mediaLibrary: MediaLibrary, didCompleteDownloadOf station: Station, of series: Series)
 }
 
 extension MediaLibraryObserver {
     func mediaLibrary(didUpdateItemsOfMediaLibrary: MediaLibrary) {}
-    func mediaLibrary(mediaLibrary: MediaLibrary, didUpdateDownloadProgressOf station: Station) {}
-    func mediaLibrary(mediaLibrary: MediaLibrary, didCompleteDownloadOf station: Station) {}
+    func mediaLibrary(mediaLibrary: MediaLibrary, startDownloadOf station: Station, of series: Series) {}
+    func mediaLibrary(mediaLibrary: MediaLibrary,
+                      didUpdateDownloadProgress fractionCompleted: Double,
+                      of station: Station,
+                      of series: Series) {}
+    func mediaLibrary(mediaLibrary: MediaLibrary, didCompleteDownloadOf station: Station, of series: Series) {}
 }
 
 private extension MediaLibrary {
@@ -271,6 +289,42 @@ extension MediaLibrary {
         observations.removeValue(forKey: id)
     }
 
+    private func notifyStartDownload(of station: Station, of series: Series) {
+        for (id, observation) in observations {
+            guard let observer = observation.observer else {
+                observations.removeValue(forKey: id)
+                continue
+            }
+            observer.mediaLibrary(mediaLibrary: self, startDownloadOf: station, of: series)
+        }
+    }
+
+    private func notifyUpdate(progress fractionCompleted: Double, of station: Station, of series: Series) {
+        for (id, observation) in observations {
+            guard let observer = observation.observer else {
+                observations.removeValue(forKey: id)
+                continue
+            }
+            observer.mediaLibrary(mediaLibrary: self,
+                              didUpdateDownloadProgress: fractionCompleted,
+                              of: station,
+                              of: series)
+        }
+    }
+
+    private func notifyCompleteDownload(of station: Station, of series: Series) {
+        for (id, observation) in observations {
+            guard let observer = observation.observer else {
+                observations.removeValue(forKey: id)
+                continue
+            }
+            observer.mediaLibrary(mediaLibrary: self,
+                              didCompleteDownloadOf: station,
+                              of: series)
+        }
+
+    }
+
     private func notifyLibraryUpdate() {
         for (id, observation) in observations {
             guard let observer = observation.observer else {
@@ -280,4 +334,5 @@ extension MediaLibrary {
             observer.mediaLibrary(didUpdateItemsOfMediaLibrary: self)
         }
     }
+
 }
