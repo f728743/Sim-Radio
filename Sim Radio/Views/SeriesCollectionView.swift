@@ -78,3 +78,46 @@ extension SeriesCollectionView: UICollectionViewDelegate, UICollectionViewDataSo
                       height: SeriesCollectionViewConstants.itemHeight)
     }
 }
+
+extension SeriesCollectionView: MediaLibraryObserver {
+
+    private func forEachVisibleCellWithSeries(_ series: Series, _ body: ((SeriesCollectionViewCell) -> Void)) {
+        visibleCells.forEach { visibleCell in
+            if let cell = visibleCell as? SeriesCollectionViewCell {
+                if let seriesAppearance = cell.appearance as? Series.Appearance,
+                    seriesAppearance.series === series {
+                        body(cell)
+                }
+            }
+        }
+    }
+
+    func mediaLibrary(didUpdateItemsOfMediaLibrary: MediaLibrary) {
+        reloadData()
+    }
+
+    func mediaLibrary(mediaLibrary: MediaLibrary, didStartDownloadOf series: Series) {
+        forEachVisibleCellWithSeries(series) {
+            $0.progressView.isHidden = false
+            $0.progressView.animateAppearance()
+            $0.progressView.state = .progress(value: 0)
+        }
+    }
+
+    func mediaLibrary(mediaLibrary: MediaLibrary,
+                      didUpdateTotalDownloadProgress fractionCompleted: Double,
+                      of series: Series) {
+        forEachVisibleCellWithSeries(series) {
+            $0.progressView.isHidden = false
+            $0.progressView.state = .progress(value: fractionCompleted)
+        }
+    }
+
+    func mediaLibrary(mediaLibrary: MediaLibrary, didCompleteDownloadOf series: Series) {
+        forEachVisibleCellWithSeries(series) {
+            $0.progressView.isHidden = false
+            $0.progressView.animateDisappearance()
+            $0.progressView.state = .finished
+        }
+    }
+}

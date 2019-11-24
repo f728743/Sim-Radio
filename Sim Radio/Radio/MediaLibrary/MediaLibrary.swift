@@ -12,6 +12,7 @@ struct LibraryConstants {
 }
 
 public protocol LibraryItemAppearance {
+    var downloadProgress: Double? { get }
     var title: String { get }
     var logo: UIImage { get }
 }

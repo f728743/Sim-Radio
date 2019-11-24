@@ -121,6 +121,9 @@ class Series {
 extension Series: LibraryItem {
     struct Appearance: LibraryItemAppearance {
         let series: Series
+        var downloadProgress: Double? {
+            return series.downloadProgress
+        }
         var title: String {
             return series.title
         }

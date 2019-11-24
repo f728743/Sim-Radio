@@ -13,11 +13,24 @@ class SeriesCollectionViewCell: UICollectionViewCell {
             if let appearance = appearance {
                 logoImageView.image = appearance.logo
                 titleLabel.text = appearance.title
+                if let downloadProgress = appearance.downloadProgress {
+                    progressView.isHidden = false
+                    if downloadProgress == 0 {
+                        progressView.state = .new
+                    } else if downloadProgress == 1.0 {
+                        progressView.state = .finished
+                    } else {
+                        progressView.state = .progress(value: downloadProgress)
+                    }
+                } else {
+                    progressView.isHidden = true
+                }
                 activityIndicator.stopAnimating()
             } else {
                 logoImageView.image = UIImage(named: "Cover Artwork")
                 titleLabel.text = ""
                 activityIndicator.startAnimating()
+                progressView.isHidden = true
             }
         }
     }
@@ -48,9 +61,19 @@ class SeriesCollectionViewCell: UICollectionViewCell {
         return indicator
     }()
 
+    let progressView: ProgressIndicatorView = {
+        let indicator = ProgressIndicatorView()
+        indicator.tintColor = UIColor.white
+        indicator.shadeColor = UIColor.black
+        indicator.layer.cornerRadius = 4
+        indicator.translatesAutoresizingMaskIntoConstraints = false
+        return indicator
+    }()
+
     override init(frame: CGRect) {
         super.init(frame: frame)
         addSubview(logoImageView)
+        addSubview(progressView)
         addSubview(titleLabel)
         addSubview(activityIndicator)
         activityIndicator.layer.zPosition = 1
@@ -60,6 +83,12 @@ class SeriesCollectionViewCell: UICollectionViewCell {
         logoImageView.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
         logoImageView.topAnchor.constraint(equalTo: topAnchor).isActive = true
         logoImageView.heightAnchor.constraint(equalTo: widthAnchor).isActive = true
+
+        // progressView constraints
+        progressView.leadingAnchor.constraint(equalTo: logoImageView.leadingAnchor).isActive = true
+        progressView.trailingAnchor.constraint(equalTo: logoImageView.trailingAnchor).isActive = true
+        progressView.topAnchor.constraint(equalTo: logoImageView.topAnchor).isActive = true
+        progressView.bottomAnchor.constraint(equalTo: logoImageView.bottomAnchor).isActive = true
 
         // titleLabel constraints
         titleLabel.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
