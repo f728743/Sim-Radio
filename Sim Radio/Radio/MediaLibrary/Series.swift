@@ -47,6 +47,7 @@ extension SeriesDownloadDelegate {
 
 // MARK: Series
 class Series {
+    var downloadProgress: Double?
     var origin: URL {
         return managedObject.origin
     }
@@ -77,6 +78,10 @@ class Series {
         do {
             self.persistentContainer = persistentContainer
             self.managedObject = managedObject
+            if managedObject.downloadTask != nil {
+                downloadProgress = 0
+            }
+
 //            print("common files:")
 //            printDownload(downloadPersistence: managedObject.downloadTask)
 

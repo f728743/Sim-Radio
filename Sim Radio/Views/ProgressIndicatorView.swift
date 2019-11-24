@@ -39,13 +39,12 @@ class ProgressIndicatorView: UIView {
     }
 
     public var appearanceDuration: TimeInterval = 0.6
-    public var disappearanceDuration: TimeInterval = 0.6
+    public var disappearanceDuration: TimeInterval = 0.4
     public var opacity: Float = 0 {
         didSet {
             holeLayer.opacity = opacity
             pieLayer.opacity = opacity
             intactStateLayer.opacity = opacity
-
         }
     }
     private var size: CGFloat {
@@ -87,7 +86,6 @@ class ProgressIndicatorView: UIView {
         CATransaction.begin()
         CATransaction.setDisableActions(true)
         switch state {
-
         case .new:
             tintLayer.backgroundColor = tintColor.cgColor
             intactStateLayer.backgroundColor = shadeColor.cgColor
@@ -112,22 +110,22 @@ class ProgressIndicatorView: UIView {
     }
 
     private func setupLayers() {
+        holeLayer.path = holePath(radius: outerCircleRadius)
         holeLayer.fillRule = .evenOdd
         holeLayer.lineWidth = 0
-        holeLayer.path = holePath(radius: outerCircleRadius)
         layer.addSublayer(holeLayer)
 
-        pieLayer.fillColor = UIColor.clear.cgColor
-        pieLayer.position = CGPoint(x: layer.bounds.width / 2, y: layer.bounds.height / 2)
         pieLayer.path = piePath(radius: innerCircleRadius)
+        pieLayer.position = CGPoint(x: layer.bounds.width / 2, y: layer.bounds.height / 2)
         pieLayer.lineWidth = innerCircleRadius
+        pieLayer.fillColor = UIColor.clear.cgColor
         layer.addSublayer(pieLayer)
 
         tintLayer.frame = layer.bounds
         tintLayer.backgroundColor = UIColor.white.cgColor
-        tintLayer.opacity = 0.6
-        layer.addSublayer(tintLayer)
+        tintLayer.opacity = 0.4
         tintLayer.zPosition = -1
+        layer.addSublayer(tintLayer)
 
         intactStateLayer.frame = layer.bounds
         layer.addSublayer(intactStateLayer)

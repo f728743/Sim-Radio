@@ -37,6 +37,16 @@ class StationsViewController: UIViewController {
         customView.backgroundColor = UIColor.clear
         tableView.tableFooterView = customView
     }
+
+    private func forEachVisibleCellWithStation(_ station: Station, _ body: ((StationTableViewCell) -> Void)) {
+        tableView.visibleCells.forEach { cell in
+            if let cell = cell as? StationTableViewCell {
+                if cell.station === station {
+                    body(cell)
+                }
+            }
+        }
+    }
 }
 
 extension StationsViewController: RadioObserver {
@@ -66,44 +76,60 @@ extension StationsViewController: RadioObserver {
 }
 
 extension StationsViewController: MediaLibraryObserver {
+    func mediaLibrary(mediaLibrary: MediaLibrary, didStartDownloadOf series: Series) {
+        tableView.visibleCells.forEach { cell in
+            if let headerCell = cell as? StationsHeaderTableViewCell {
+                headerCell.progressView.isHidden = false
+                headerCell.progressView.animateAppearance()
+                headerCell.progressView.state = .progress(value: 0)
+            }
+        }
+    }
+
+    func mediaLibrary(mediaLibrary: MediaLibrary,
+                      didUpdateTotalDownloadProgress fractionCompleted: Double,
+                      of series: Series) {
+        tableView.visibleCells.forEach { cell in
+            if let headerCell = cell as? StationsHeaderTableViewCell {
+                headerCell.progressView.isHidden = false
+                headerCell.progressView.state = .progress(value: fractionCompleted)
+            }
+        }
+    }
+
+    func mediaLibrary(mediaLibrary: MediaLibrary, didCompleteDownloadOf series: Series) {
+        tableView.visibleCells.forEach { cell in
+            if let headerCell = cell as? StationsHeaderTableViewCell {
+                headerCell.progressView.isHidden = false
+                headerCell.progressView.animateDisappearance()
+                headerCell.progressView.state = .finished
+            }
+        }
+    }
+
     func mediaLibrary(mediaLibrary: MediaLibrary,
                       didUpdateDownloadProgress fractionCompleted: Double,
                       of station: Station,
                       of series: Series) {
-        guard series === self.series else { return }
-        tableView.visibleCells.forEach { cell in
-            if let cell = cell as? StationTableViewCell {
-                if cell.station === station {
-                    cell.progressView.isHidden = false
-                    cell.progressView.state = .progress(value: fractionCompleted)
-                }
-            }
+        forEachVisibleCellWithStation(station) {
+            $0.progressView.isHidden = false
+            $0.progressView.state = .progress(value: fractionCompleted)
         }
     }
 
-    func mediaLibrary(mediaLibrary: MediaLibrary, startDownloadOf station: Station, of series: Series) {
-        guard series === self.series else { return }
-        tableView.visibleCells.forEach { cell in
-            if let cell = cell as? StationTableViewCell {
-                if cell.station === station {
-                    cell.progressView.isHidden = false
-                    cell.progressView.state = .progress(value: 0)
-                    cell.progressView.animateAppearance()
-                }
-            }
+    func mediaLibrary(mediaLibrary: MediaLibrary, didStartDownloadOf station: Station, of series: Series) {
+        forEachVisibleCellWithStation(station) {
+            $0.progressView.isHidden = false
+            $0.progressView.animateAppearance()
+            $0.progressView.state = .progress(value: 0)
         }
     }
 
     func mediaLibrary(mediaLibrary: MediaLibrary, didCompleteDownloadOf station: Station, of series: Series) {
-        guard series === self.series else { return }
-        tableView.visibleCells.forEach { cell in
-            if let cell = cell as? StationTableViewCell {
-                if cell.station === station {
-                    cell.progressView.isHidden = false
-                    cell.progressView.state = .finished
-                    cell.progressView.animateDisappearance()
-                }
-            }
+        forEachVisibleCellWithStation(station) {
+            $0.progressView.isHidden = false
+            $0.progressView.animateDisappearance()
+            $0.progressView.state = .finished
         }
     }
 }
@@ -132,19 +158,24 @@ extension StationsViewController: UITableViewDataSource {
         return series?.stations.count ?? 0
     }
 
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        if indexPath.section == 0 {
-            let headerCell = tableView.dequeueReusableCell(
-                withIdentifier: StationsHeaderTableViewCell.reuseId) as? StationsHeaderTableViewCell ??
-                StationsHeaderTableViewCell()
-            headerCell.logoImageView.image = series?.logo
-            headerCell.titleLabel.text = series?.model.info.title
-            return headerCell
+    private func setHeaderCellContent(headerCell: StationsHeaderTableViewCell, series: Series) {
+        headerCell.logoImageView.image = series.logo
+        headerCell.titleLabel.text = series.model.info.title
+        if let downloadProgress = series.downloadProgress {
+            headerCell.progressView.isHidden = false
+            if downloadProgress == 0 {
+                headerCell.progressView.state = .new
+            } else if downloadProgress == 1.0 {
+                headerCell.progressView.state = .finished
+            } else {
+                headerCell.progressView.state = .progress(value: downloadProgress)
+            }
+        } else {
+            headerCell.progressView.isHidden = true
         }
-        let cell = tableView.dequeueReusableCell(
-            withIdentifier: StationTableViewCell.reuseId, for: indexPath) as? StationTableViewCell ??
-            StationTableViewCell()
-        let station = series!.stations[indexPath.row]
+    }
+
+    private func setCellContent(cell: StationTableViewCell, station: Station) {
         cell.station = station
         cell.logoImageView.image = station.logo
         cell.titleLabel.text = station.title
@@ -162,7 +193,23 @@ extension StationsViewController: UITableViewDataSource {
         } else {
             cell.progressView.isHidden = true
         }
+    }
 
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        if indexPath.section == 0 {
+            let headerCell = tableView.dequeueReusableCell(
+                withIdentifier: StationsHeaderTableViewCell.reuseId) as? StationsHeaderTableViewCell ??
+                StationsHeaderTableViewCell()
+            if let series = series {
+                setHeaderCellContent(headerCell: headerCell, series: series)
+            }
+            return headerCell
+        }
+        let cell = tableView.dequeueReusableCell(
+            withIdentifier: StationTableViewCell.reuseId, for: indexPath) as? StationTableViewCell ??
+            StationTableViewCell()
+        let station = series!.stations[indexPath.row]
+        setCellContent(cell: cell, station: station)
         switch radio.state {
         case .idle:
             cell.state = .stopped

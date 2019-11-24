@@ -222,21 +222,35 @@ extension MediaLibrary {
 }
 
 extension MediaLibrary: SeriesDownloadDelegate {
-    func series(didCompleteDownloadCommonFilesOf series: Series) {}
+//    func series(didCompleteDownloadCommonFilesOf series: Series) {}
     func series(didCompleteDownloadOf series: Series) {
-        print("Did complete download of series '\(series.title)'")
+//        print("Did complete download of series '\(series.title)'")
+        DispatchQueue.main.async {
+            series.downloadProgress = nil
+            self.notifyCompleteDownload(of: series)
+        }
     }
+
     func series(series: Series, didCompleteDownloadOf station: Station) {
         DispatchQueue.main.async {
             station.downloadProgress = nil
             self.notifyCompleteDownload(of: station, of: series)
         }
-        print("Station '\(station.title)' of series '\(series.title)' did complete download")
+//        print("Station '\(station.title)' of series '\(series.title)' did complete download")
     }
+
     func series(series: Series, didUpdateTotalProgress fractionCompleted: Double) {
-        print("Series '\(series.title)' did update total download " +
-            "progress: \((fractionCompleted * 100).rounded(toPlaces: 2))%")
+        DispatchQueue.main.async {
+            if series.downloadProgress == 0 {
+                self.notifyStartDownload(of: series)
+            }
+            series.downloadProgress = fractionCompleted
+            self.notifyUpdate(totalProgress: fractionCompleted, of: series)
+        }
+//        print("Series '\(series.title)' did update total download " +
+//            "progress: \((fractionCompleted * 100).rounded(toPlaces: 2))%")
     }
+
     func series(series: Series, didUpdateProgress fractionCompleted: Double, of station: Station) {
         DispatchQueue.main.async {
             if station.downloadProgress == 0 {
@@ -245,8 +259,8 @@ extension MediaLibrary: SeriesDownloadDelegate {
             station.downloadProgress = fractionCompleted
             self.notifyUpdate(progress: fractionCompleted, of: station, of: series)
         }
-        print("Station '\(station.title)' of series '\(series.title)' did update " +
-            "download progress: \((fractionCompleted * 100).rounded(toPlaces: 2))%")
+//        print("Station '\(station.title)' of series '\(series.title)' did update " +
+//            "download progress: \((fractionCompleted * 100).rounded(toPlaces: 2))%")
     }
 }
 
@@ -254,7 +268,13 @@ extension MediaLibrary: SeriesDownloadDelegate {
 
 protocol MediaLibraryObserver: AnyObject {
     func mediaLibrary(didUpdateItemsOfMediaLibrary: MediaLibrary)
-    func mediaLibrary(mediaLibrary: MediaLibrary, startDownloadOf station: Station, of series: Series)
+    func mediaLibrary(mediaLibrary: MediaLibrary, didStartDownloadOf series: Series)
+    func mediaLibrary(mediaLibrary: MediaLibrary,
+                      didUpdateTotalDownloadProgress fractionCompleted: Double,
+                      of series: Series)
+    func mediaLibrary(mediaLibrary: MediaLibrary, didCompleteDownloadOf series: Series)
+
+    func mediaLibrary(mediaLibrary: MediaLibrary, didStartDownloadOf station: Station, of series: Series)
     func mediaLibrary(mediaLibrary: MediaLibrary,
                       didUpdateDownloadProgress fractionCompleted: Double,
                       of station: Station,
@@ -264,7 +284,13 @@ protocol MediaLibraryObserver: AnyObject {
 
 extension MediaLibraryObserver {
     func mediaLibrary(didUpdateItemsOfMediaLibrary: MediaLibrary) {}
-    func mediaLibrary(mediaLibrary: MediaLibrary, startDownloadOf station: Station, of series: Series) {}
+    func mediaLibrary(mediaLibrary: MediaLibrary, didStartDownloadOf series: Series) {}
+    func mediaLibrary(mediaLibrary: MediaLibrary,
+                      didUpdateTotalDownloadProgress fractionCompleted: Double,
+                      of series: Series) {}
+    func mediaLibrary(mediaLibrary: MediaLibrary, didCompleteDownloadOf series: Series) {}
+
+    func mediaLibrary(mediaLibrary: MediaLibrary, didStartDownloadOf station: Station, of series: Series) {}
     func mediaLibrary(mediaLibrary: MediaLibrary,
                       didUpdateDownloadProgress fractionCompleted: Double,
                       of station: Station,
@@ -289,50 +315,46 @@ extension MediaLibrary {
         observations.removeValue(forKey: id)
     }
 
-    private func notifyStartDownload(of station: Station, of series: Series) {
+    private func forEachObserver(_ body: (MediaLibraryObserver) -> Void) {
         for (id, observation) in observations {
             guard let observer = observation.observer else {
                 observations.removeValue(forKey: id)
                 continue
             }
-            observer.mediaLibrary(mediaLibrary: self, startDownloadOf: station, of: series)
+            body(observer)
         }
+    }
+
+    private func notifyStartDownload(of series: Series) {
+        forEachObserver { $0.mediaLibrary(mediaLibrary: self, didStartDownloadOf: series) }
+    }
+
+    private func notifyUpdate(totalProgress fractionCompleted: Double, of series: Series) {
+        forEachObserver { $0.mediaLibrary(mediaLibrary: self,
+                                 didUpdateTotalDownloadProgress: fractionCompleted,
+                                 of: series) }
+    }
+
+    private func notifyCompleteDownload(of series: Series) {
+        forEachObserver { $0.mediaLibrary(mediaLibrary: self, didCompleteDownloadOf: series) }
+    }
+
+    private func notifyStartDownload(of station: Station, of series: Series) {
+        forEachObserver { $0.mediaLibrary(mediaLibrary: self, didStartDownloadOf: station, of: series) }
     }
 
     private func notifyUpdate(progress fractionCompleted: Double, of station: Station, of series: Series) {
-        for (id, observation) in observations {
-            guard let observer = observation.observer else {
-                observations.removeValue(forKey: id)
-                continue
-            }
-            observer.mediaLibrary(mediaLibrary: self,
-                              didUpdateDownloadProgress: fractionCompleted,
-                              of: station,
-                              of: series)
-        }
+        forEachObserver { $0.mediaLibrary(mediaLibrary: self,
+                                 didUpdateDownloadProgress: fractionCompleted,
+                                 of: station,
+                                 of: series) }
     }
 
     private func notifyCompleteDownload(of station: Station, of series: Series) {
-        for (id, observation) in observations {
-            guard let observer = observation.observer else {
-                observations.removeValue(forKey: id)
-                continue
-            }
-            observer.mediaLibrary(mediaLibrary: self,
-                              didCompleteDownloadOf: station,
-                              of: series)
-        }
-
+        forEachObserver { $0.mediaLibrary(mediaLibrary: self, didCompleteDownloadOf: station, of: series) }
     }
 
     private func notifyLibraryUpdate() {
-        for (id, observation) in observations {
-            guard let observer = observation.observer else {
-                observations.removeValue(forKey: id)
-                continue
-            }
-            observer.mediaLibrary(didUpdateItemsOfMediaLibrary: self)
-        }
+        forEachObserver { $0.mediaLibrary(didUpdateItemsOfMediaLibrary: self) }
     }
-
 }
