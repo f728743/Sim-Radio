@@ -48,7 +48,7 @@ class Radio {
     }
 
     var switchStarionEnabled: Bool {
-        return currentSeries?.stations.count ?? 0 > 1
+        return currentSeries?.readyToPlayStations.count ?? 0 > 1
     }
 
     private(set) var state = State.idle {
@@ -127,7 +127,8 @@ class Radio {
     }
 
     func nextStation(after station: Station) -> Station {
-        let stations = station.series.stations
+        let stations = station.series.readyToPlayStations
+
         guard let index = stations.firstIndex(where: { $0 === station }) else {
             return station
         }
@@ -136,7 +137,7 @@ class Radio {
     }
 
     func previousStation(before station: Station) -> Station {
-        let stations = station.series.stations
+        let stations = station.series.readyToPlayStations
         guard let index = stations.firstIndex(where: { $0 === station }) else {
             return station
         }
@@ -236,6 +237,7 @@ extension Radio {
 
 extension Radio: RadioControl {
     func play(station: Station) {
+        if !station.readyToPlay { return }
         if case let .playing(currentStation) = state {
             if currentStation === station {
                 return

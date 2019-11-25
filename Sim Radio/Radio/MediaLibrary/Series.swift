@@ -62,6 +62,9 @@ class Series {
     }
     let model: Model.Series
     let logo: UIImage
+    var readyToPlayStations: [Station] {
+        return stations.filter { $0.readyToPlay }
+    }
     private(set) var stations: [Station] = []
     private let managedObject: SeriesPersistence
     let persistentContainer: NSPersistentContainer
@@ -294,6 +297,23 @@ class Station {
         return model.info.genre
     }
     let logo: UIImage
+    var dependsOnCommonFiles: Bool {
+        let playlistFileGroups = model.playlist.fragments.compactMap {
+            $0.src.type == "group" ? $0.src.groupTag : nil
+        }
+        let commonFileGroups = series.model.common.fileGroups.map { $0.tag }
+        // convert array to Set if fileGroups.count > ~100 (actually we have 2 elements only)
+        return !playlistFileGroups.filter(commonFileGroups.contains).isEmpty
+    }
+    var readyToPlay: Bool {
+        let stationFilesReady = downloadProgress == nil || downloadProgress == 1.0
+        if !stationFilesReady { return false }
+        if dependsOnCommonFiles {
+            let commonFilesReady = series.downloadProgress == nil || series.downloadProgress == 1.0
+            return commonFilesReady
+        }
+        return true
+    }
     fileprivate let managedObject: StationPersistence
 
     init?(series: Series, managedObject: StationPersistence) {
