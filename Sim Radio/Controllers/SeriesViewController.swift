@@ -42,7 +42,7 @@ class SeriesViewController: UIViewController, SeriesCollectionViewDelegate {
 extension SeriesViewController {
     @IBAction func add(_ sender: Any) {
         showURLInputDialog()
-//        self.radio.downloader.download(urlString:"")
+        //        self.radio.downloader.download(urlString:"")
     }
 
     func showURLInputDialog() {
@@ -53,13 +53,13 @@ extension SeriesViewController {
             textField.placeholder = "URL"
         }
         let confirmAction = UIAlertAction(title: "Enter", style: .default) { (_) in
-//            guard let url = URL(string: "https://raw.githubusercontent.com/tmp-acc/" +
-//                "GTA-V-Radio-Stations-TestDownload/master/series.json") else {
-//                    return
-//            }
+            //            guard let url = URL(string: "https://raw.githubusercontent.com/tmp-acc/" +
+            //                "GTA-V-Radio-Stations-TestDownload/master/series.json") else {
+            //                    return
+            //            }
 
             guard let url = URL(string: "https://raw.githubusercontent.com/tmp-acc/" +
-            "GTA-V-Radio-Stations/master/series.json") else {
+                "GTA-V-Radio-Stations/master/series.json") else {
                     return
             }
             self.radio.library.download(url: url)

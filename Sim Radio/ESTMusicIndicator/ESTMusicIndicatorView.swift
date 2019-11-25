@@ -27,7 +27,7 @@ import UIKit
 
 /**
  Values for the [state]([ESTMusicIndicatorView state]) property.
-
+ 
  */
 
 public enum ESTMusicIndicatorViewState: Int {
@@ -57,12 +57,12 @@ open class ESTMusicIndicatorView: UIView {
     /**
      A boolean value that controls whether the receiver is hidden
      when the state is set to `ESTMusicIndicatorViewStateStopped`.
-
+     
      If the value of this property is `YES` (the default),
      the receiver sets its `hidden` property (`UIView`) to `YES`
      when receiver’s state is `ESTMusicIndicatorViewStateStopped`.
      If the value is `NO`, the receiver is shown even when it's stopped.
-
+     
      Note that by setting state `ESTMusicIndicatorViewStatePlaying` or `ESTMusicIndicatorViewStatePaused`
      the receiver will be shown automatically.
      */
@@ -77,15 +77,15 @@ open class ESTMusicIndicatorView: UIView {
 
     /**
      The current state of the receiver.
-
+     
      You can control the receiver's appearance and behavior by setting this property.
-
+     
      - `ESTMusicIndicatorViewStateStopped`:
      - If hidesWhenStopped is `YES`, the receiver becomes hidden.
      - If hidesWhenStopped is `NO`, the receiver shows idle bars (same as `ESTMusicIndicatorViewStatePaused`).
      - `ESTMusicIndicatorViewStatePlaying`: The receiver shows oscillatory animated bars.
      - `ESTMusicIndicatorViewStatePaused`: The receiver shows idle bars.
-
+     
      The initial value is `ESTMusicIndicatorViewStateStopped`.
      */
 

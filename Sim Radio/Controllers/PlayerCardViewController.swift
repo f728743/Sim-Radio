@@ -227,24 +227,24 @@ extension PlayerCardViewController {
     func animatePlayerCardIn() {
         UIView.animate(withDuration: transitionDuration / 2.0, delay: transitionDuration / 2.0,
                        options: [.curveEaseIn], animations: {
-                           self.controlsAlpha = 1
+                        self.controlsAlpha = 1
         })
 
         UIView.animate(withDuration: transitionDuration / 3.0, delay: 0,
                        usingSpringWithDamping: 1, initialSpringVelocity: 1,
                        options: [.curveEaseIn], animations: {
-                           self.miniPlayerImageView.alpha = 0
+                        self.miniPlayerImageView.alpha = 0
         })
 
         UIView.animate(withDuration: transitionDuration, delay: 0,
                        usingSpringWithDamping: 1, initialSpringVelocity: 1,
                        options: [.curveEaseIn], animations: {
-                           self.artViewLeadingInset.constant = 32
-                           self.artViewTopInset.constant = 32
-                           self.artViewTrailingInset.constant = 32
-                           self.artImageZoomedIn = self.radio.playPauseButtonState == .pause
-                           self.artImageHasShadow = self.radio.playPauseButtonState == .pause
-                           self.view.layoutIfNeeded()
+                        self.artViewLeadingInset.constant = 32
+                        self.artViewTopInset.constant = 32
+                        self.artViewTrailingInset.constant = 32
+                        self.artImageZoomedIn = self.radio.playPauseButtonState == .pause
+                        self.artImageHasShadow = self.radio.playPauseButtonState == .pause
+                        self.view.layoutIfNeeded()
         })
 
         artImageView.addCornerRadiusAnimation(cornerRadius: maxArtCornerRadius, duration: transitionDuration)
@@ -253,8 +253,8 @@ extension PlayerCardViewController {
         UIView.animate(withDuration: transitionDuration, delay: 0,
                        usingSpringWithDamping: 1, initialSpringVelocity: 1,
                        options: [.curveEaseIn], animations: {
-                           self.lightStatusBar = true
-                           self.setNeedsStatusBarAppearanceUpdate()
+                        self.lightStatusBar = true
+                        self.setNeedsStatusBarAppearanceUpdate()
         })
     }
 
@@ -262,20 +262,20 @@ extension PlayerCardViewController {
         UIView.animate(withDuration: transitionDuration / 2.0, delay: 0,
                        usingSpringWithDamping: 1, initialSpringVelocity: 1,
                        options: [.curveEaseOut], animations: {
-                           self.controlsAlpha = 0
+                        self.controlsAlpha = 0
         })
 
         UIView.animate(withDuration: transitionDuration, delay: 0,
                        options: [.curveEaseOut], animations: {
-                           self.miniPlayerImageView.alpha = 1
+                        self.miniPlayerImageView.alpha = 1
         })
 
         UIView.animate(withDuration: transitionDuration, delay: 0,
                        usingSpringWithDamping: 1, initialSpringVelocity: 1,
                        options: [.curveEaseOut], animations: {
-                           self.configurePlayerCardInStartPosition()
-                           self.artImageZoomedIn = true
-                           self.artImageHasShadow = false
+                        self.configurePlayerCardInStartPosition()
+                        self.artImageZoomedIn = true
+                        self.artImageHasShadow = false
         })
 
         artImageView.addCornerRadiusAnimation(cornerRadius: minArtCornerRadius, duration: transitionDuration)
@@ -284,8 +284,8 @@ extension PlayerCardViewController {
         UIView.animate(withDuration: transitionDuration, delay: 0,
                        usingSpringWithDamping: 1, initialSpringVelocity: 1,
                        options: [.curveEaseOut], animations: {
-                           self.lightStatusBar = false
-                           self.setNeedsStatusBarAppearanceUpdate()
+                        self.lightStatusBar = false
+                        self.setNeedsStatusBarAppearanceUpdate()
         })
     }
 
@@ -293,8 +293,8 @@ extension PlayerCardViewController {
         UIView.animate(withDuration: artZoomTransitionDuration, delay: 0,
                        usingSpringWithDamping: 0.7, initialSpringVelocity: 20,
                        options: [.curveEaseIn], animations: {
-                           self.artImageZoomedIn = true
-                           self.artImageHasShadow = true
+                        self.artImageZoomedIn = true
+                        self.artImageHasShadow = true
         })
     }
 
@@ -302,8 +302,8 @@ extension PlayerCardViewController {
         UIView.animate(withDuration: artZoomTransitionDuration, delay: 0,
                        usingSpringWithDamping: 1, initialSpringVelocity: 30,
                        options: [.curveEaseOut], animations: {
-                           self.artImageZoomedIn = false
-                           self.artImageHasShadow = false
+                        self.artImageZoomedIn = false
+                        self.artImageHasShadow = false
         })
     }
 }

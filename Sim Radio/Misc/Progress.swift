@@ -58,7 +58,7 @@ extension  Progress: CustomStringConvertible {
         let indent = self.indent
         return children.reduce("Fraction completed: \(fractionCompleted) / " +
             "Completed: \(completedUnitCount) of \(totalUnitCount)" + "\n") {
-            $0 + "\(indent)(portion: \($1.portion)) \($1.progress.description)"
+                $0 + "\(indent)(portion: \($1.portion)) \($1.progress.description)"
         }
     }
 }

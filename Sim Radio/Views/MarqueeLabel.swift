@@ -47,8 +47,8 @@ open class MarqueeLabel: UILabel, CAAnimationDelegate {
      - `LeftRight` and `Left` types are ONLY compatible with a label text alignment of `NSTextAlignment.left`.
      - `RightLeft` and `Right` types are ONLY compatible with a label text alignment of `NSTextAlignment.right`.
      - `Continuous` and `ContinuousReverse` allow the use of `NSTextAlignment.left`, `.right`, or `.center` alignments,
-        however the text alignment only has an effect when label text is short enough that scrolling is not required.
-        When scrolling, the labels are effectively center-aligned.
+     however the text alignment only has an effect when label text is short enough that scrolling is not required.
+     When scrolling, the labels are effectively center-aligned.
 
      Defaults to `Continuous`.
 
@@ -821,11 +821,11 @@ open class MarqueeLabel: UILabel, CAAnimationDelegate {
         var expectedLabelSize = sublabel.sizeThatFits(maximumLabelSize)
 
         #if os(tvOS)
-            // Sanitize width to 16384.0 (largest width a UILabel will draw on tvOS)
-            expectedLabelSize.width = min(expectedLabelSize.width, 16384.0)
+        // Sanitize width to 16384.0 (largest width a UILabel will draw on tvOS)
+        expectedLabelSize.width = min(expectedLabelSize.width, 16384.0)
         #else
-            // Sanitize width to 5461.0 (largest width a UILabel will draw on an iPhone 6S Plus)
-            expectedLabelSize.width = min(expectedLabelSize.width, 5461.0)
+        // Sanitize width to 5461.0 (largest width a UILabel will draw on an iPhone 6S Plus)
+        expectedLabelSize.width = min(expectedLabelSize.width, 5461.0)
         #endif
 
         // Adjust to own height (make text baseline match normal label)
@@ -922,29 +922,29 @@ open class MarqueeLabel: UILabel, CAAnimationDelegate {
         let gradientAnimation: CAKeyframeAnimation?
         // Check for IBDesignable
         #if !TARGET_INTERFACE_BUILDER
-            if fadeLength > 0.0 {
-                // Remove any setup animation, but apply final values
-                if let setupAnim = maskLayer?.animation(forKey: "setupFade") as? CABasicAnimation,
-                    let finalColors = setupAnim.toValue as? [CGColor] {
-                    maskLayer?.colors = finalColors
-                }
-                maskLayer?.removeAnimation(forKey: "setupFade")
-
-                // Generate animation if needed
-                if let previousAnimation = fader?.anim {
-                    gradientAnimation = previousAnimation
-                } else {
-                    gradientAnimation = nil
-                }
-
-                // Apply fade animation
-                maskLayer?.add(gradientAnimation!, forKey: "gradient")
-            } else {
-                // No animation needed
-                fader = nil
+        if fadeLength > 0.0 {
+            // Remove any setup animation, but apply final values
+            if let setupAnim = maskLayer?.animation(forKey: "setupFade") as? CABasicAnimation,
+                let finalColors = setupAnim.toValue as? [CGColor] {
+                maskLayer?.colors = finalColors
             }
-        #else
+            maskLayer?.removeAnimation(forKey: "setupFade")
+
+            // Generate animation if needed
+            if let previousAnimation = fader?.anim {
+                gradientAnimation = previousAnimation
+            } else {
+                gradientAnimation = nil
+            }
+
+            // Apply fade animation
+            maskLayer?.add(gradientAnimation!, forKey: "gradient")
+        } else {
+            // No animation needed
             fader = nil
+        }
+        #else
+        fader = nil
         #endif
 
         scrollCompletionBlock = { [weak self] (finished: Bool) -> Void in
@@ -1181,9 +1181,9 @@ open class MarqueeLabel: UILabel, CAAnimationDelegate {
 
         // Check for IBDesignable
         #if TARGET_INTERFACE_BUILDER
-            gradientMask.colors = adjustedColors
-            CATransaction.commit()
-            return
+        gradientMask.colors = adjustedColors
+        CATransaction.commit()
+        return
         #endif
 
         if animated {
@@ -1498,15 +1498,15 @@ open class MarqueeLabel: UILabel, CAAnimationDelegate {
     //
 
     #if os(iOS)
-        open override func forBaselineLayout() -> UIView {
-            // Use subLabel view for handling baseline layouts
-            return sublabel
-        }
+    open override func forBaselineLayout() -> UIView {
+        // Use subLabel view for handling baseline layouts
+        return sublabel
+    }
 
-        open override var forLastBaselineLayout: UIView {
-            // Use subLabel view for handling baseline layouts
-            return sublabel
-        }
+    open override var forLastBaselineLayout: UIView {
+        // Use subLabel view for handling baseline layouts
+        return sublabel
+    }
     #endif
 
     open override var text: String? {
@@ -1632,7 +1632,7 @@ open class MarqueeLabel: UILabel, CAAnimationDelegate {
         }
     }
 
-// swiftlint:disable unused_setter_value
+    // swiftlint:disable unused_setter_value
 
     open override var numberOfLines: Int {
         get {
@@ -1665,7 +1665,7 @@ open class MarqueeLabel: UILabel, CAAnimationDelegate {
             super.minimumScaleFactor = 0.0
         }
     }
-// swiftlint:enable unused_setter_value
+    // swiftlint:enable unused_setter_value
     open override var baselineAdjustment: UIBaselineAdjustment {
         get {
             return sublabel.baselineAdjustment
@@ -1762,7 +1762,7 @@ public struct ScrollStep: MarqueeStep {
 
      The `away` position depends on the MarqueeLabel `type` value.
      - For `left`, `leftRight`, `right`, and `rightLeft` types, the `away` position means the trailing edge of the label
-        is visible. For `leftRight` and `rightLeft` default types, the scroll animation reverses
+     is visible. For `leftRight` and `rightLeft` default types, the scroll animation reverses
      direction after reaching this point and returns to the `home` position.
      - For `continuous` and `continuousReverse` types, the `away` position is the location
      such that if the scroll is completed at this point (i.e. the animation is removed), there will be

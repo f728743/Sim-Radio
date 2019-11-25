@@ -86,7 +86,7 @@ extension SeriesCollectionView: MediaLibraryObserver {
             if let cell = visibleCell as? SeriesCollectionViewCell {
                 if let seriesAppearance = cell.appearance as? Series.Appearance,
                     seriesAppearance.series === series {
-                        body(cell)
+                    body(cell)
                 }
             }
         }

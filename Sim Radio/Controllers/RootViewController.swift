@@ -30,10 +30,10 @@ extension RootViewController: MiniPlayerDelegate {
     func expand() {
         guard let modal = storyboard?.instantiateViewController(
             withIdentifier: "PlayerCardViewController"
-        )
+            )
             as? PlayerCardViewController else {
-            assertionFailure("No view controller ID PlayerCardViewController in storyboard")
-            return
+                assertionFailure("No view controller ID PlayerCardViewController in storyboard")
+                return
         }
 
         let transitionDelegate = CardTransitioningDelegate()

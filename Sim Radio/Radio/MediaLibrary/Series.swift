@@ -47,6 +47,7 @@ extension SeriesDownloadDelegate {
 
 // MARK: Series
 class Series {
+    var commonFilesDownloaded: Bool?
     var downloadProgress: Double?
     var origin: URL {
         return managedObject.origin
@@ -83,10 +84,11 @@ class Series {
             self.managedObject = managedObject
             if managedObject.downloadTask != nil {
                 downloadProgress = 0
+                commonFilesDownloaded = false
             }
 
-//            print("common files:")
-//            printDownload(downloadPersistence: managedObject.downloadTask)
+            //            print("common files:")
+            //            printDownload(downloadPersistence: managedObject.downloadTask)
 
             let modelURL = FileManager.documents
                 .appendingPathComponent(managedObject.directory)
@@ -99,8 +101,8 @@ class Series {
 
             stations = managedObject.stations.allObjects.compactMap { stationsManagedObject in
                 guard let stationsManagedObject = stationsManagedObject as? StationPersistence else { return nil }
-//                print("station \(stationsManagedObject.origin)")
-//                printDownload(downloadPersistence: stationsManagedObject.downloadTask)
+                //                print("station \(stationsManagedObject.origin)")
+                //                printDownload(downloadPersistence: stationsManagedObject.downloadTask)
 
                 return Station(series: self, managedObject: stationsManagedObject)
             }
@@ -237,7 +239,6 @@ extension Series: FilesDownloadTaskDelegate {
     }
 
     func filesDownloadTask(_ filesDownloadTask: FilesDownloadTask, didCompleteDownloadOf file: URL) {
-        //        print(file)
         let context = persistentContainer.viewContext
         if case let .stationFiles(_, station) = filesDownloadTask.sourse {
             guard let downloadTask = station.managedObject.downloadTask else {
@@ -297,7 +298,7 @@ class Station {
         return model.info.genre
     }
     let logo: UIImage
-    var dependsOnCommonFiles: Bool {
+    var isDependsOnCommonFiles: Bool {
         let playlistFileGroups = model.playlist.fragments.compactMap {
             $0.src.type == "group" ? $0.src.groupTag : nil
         }
@@ -306,11 +307,10 @@ class Station {
         return !playlistFileGroups.filter(commonFileGroups.contains).isEmpty
     }
     var readyToPlay: Bool {
-        let stationFilesReady = downloadProgress == nil || downloadProgress == 1.0
-        if !stationFilesReady { return false }
-        if dependsOnCommonFiles {
-            let commonFilesReady = series.downloadProgress == nil || series.downloadProgress == 1.0
-            return commonFilesReady
+        let isStationFilesDownloaded = downloadProgress == nil || downloadProgress == 1.0
+        if !isStationFilesDownloaded { return false }
+        if isDependsOnCommonFiles {
+            return series.commonFilesDownloaded == nil || series.commonFilesDownloaded == true
         }
         return true
     }

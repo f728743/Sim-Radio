@@ -110,8 +110,8 @@ class Compositor {
         var depleted = true
         var lastRange = CMTimeRange()
         for item in playlist {
-//            print("item \(urlTail(item.url)) \(item.playing.start.seconds.rounded(toPlaces: 2))-" +
-//                "\(item.playing.end.seconds.rounded(toPlaces: 2))")
+            //            print("item \(urlTail(item.url)) \(item.playing.start.seconds.rounded(toPlaces: 2))-" +
+            //                "\(item.playing.end.seconds.rounded(toPlaces: 2))")
             if item.playing.start > to {
                 depleted = false
                 break

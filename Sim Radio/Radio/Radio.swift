@@ -253,13 +253,13 @@ extension Radio: RadioControl {
             print("ok")
             let nonEmptySeries = library.items.compactMap { item -> Series? in
                 if let series = item as? Series {
-                    return series.stations.count > 0 ? series : nil
+                    return series.readyToPlayStations.count > 0 ? series : nil
                 }
                 return nil
             }
             guard !nonEmptySeries.isEmpty else { return }
             let series = nonEmptySeries[Int(drand48() * Double(nonEmptySeries.count))]
-            let stations = series.stations
+            let stations = series.readyToPlayStations
             guard !stations.isEmpty else { return }
             let station = stations[Int(drand48() * Double(stations.count))]
             state = .playing(station: station)

@@ -20,7 +20,7 @@ struct AudioFile {
                           preferredTimescale: timescale)
         attaches = try model.attaches?.files.map {
             try AudioFile(baseUrl: baseUrl, model: $0, timescale: timescale)
-        } ?? []
+            } ?? []
     }
 }
 
@@ -199,7 +199,7 @@ class MixConditionTime: MixPlayngCondition {
     init(from: String?, to: String?) throws {
         guard let fromStr = from, let toStr = to,
             let from = secOfDay(hhmm: fromStr), let to = secOfDay(hhmm: toStr) else {
-            throw LibraryError.wrongCondition
+                throw LibraryError.wrongCondition
         }
         self.from = from
         self.to = to
@@ -304,7 +304,7 @@ class PlaylistScheme {
         firstFragmentTag = model.firstFragment.fragmentTag
         fragments = Dictionary(uniqueKeysWithValues: try model.fragments.map {
             ($0.tag, try Fragment(model: $0, fileGroups: fileGroups))
-        })
+            })
         self.fileGroups = fileGroups
     }
 }
@@ -320,7 +320,7 @@ class PlaylistBuilder {
         self.timescale = timescale
         stationFiles = Dictionary(uniqueKeysWithValues: try station.model.fileGroups.map {
             ($0.tag, try $0.files.map { try AudioFile(baseUrl: station.directoryURL, model: $0, timescale: timescale) })
-        })
+            })
         scheme = try PlaylistScheme(
             model: station.model.playlist,
             fileGroups: stationFiles.merging(commonFiles, uniquingKeysWith: { first, _ in first })

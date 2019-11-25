@@ -223,9 +223,11 @@ extension MediaLibrary {
 }
 
 extension MediaLibrary: SeriesDownloadDelegate {
-//    func series(didCompleteDownloadCommonFilesOf series: Series) {}
+    func series(didCompleteDownloadCommonFilesOf series: Series) {
+        series.commonFilesDownloaded = true
+    }
+
     func series(didCompleteDownloadOf series: Series) {
-//        print("Did complete download of series '\(series.title)'")
         DispatchQueue.main.async {
             series.downloadProgress = nil
             self.notifyCompleteDownload(of: series)
@@ -237,7 +239,6 @@ extension MediaLibrary: SeriesDownloadDelegate {
             station.downloadProgress = nil
             self.notifyCompleteDownload(of: station, of: series)
         }
-//        print("Station '\(station.title)' of series '\(series.title)' did complete download")
     }
 
     func series(series: Series, didUpdateTotalProgress fractionCompleted: Double) {
@@ -248,8 +249,6 @@ extension MediaLibrary: SeriesDownloadDelegate {
             series.downloadProgress = fractionCompleted
             self.notifyUpdate(totalProgress: fractionCompleted, of: series)
         }
-//        print("Series '\(series.title)' did update total download " +
-//            "progress: \((fractionCompleted * 100).rounded(toPlaces: 2))%")
     }
 
     func series(series: Series, didUpdateProgress fractionCompleted: Double, of station: Station) {
@@ -260,8 +259,6 @@ extension MediaLibrary: SeriesDownloadDelegate {
             station.downloadProgress = fractionCompleted
             self.notifyUpdate(progress: fractionCompleted, of: station, of: series)
         }
-//        print("Station '\(station.title)' of series '\(series.title)' did update " +
-//            "download progress: \((fractionCompleted * 100).rounded(toPlaces: 2))%")
     }
 }
 
@@ -332,8 +329,8 @@ extension MediaLibrary {
 
     private func notifyUpdate(totalProgress fractionCompleted: Double, of series: Series) {
         forEachObserver { $0.mediaLibrary(mediaLibrary: self,
-                                 didUpdateTotalDownloadProgress: fractionCompleted,
-                                 of: series) }
+                                          didUpdateTotalDownloadProgress: fractionCompleted,
+                                          of: series) }
     }
 
     private func notifyCompleteDownload(of series: Series) {
@@ -346,9 +343,9 @@ extension MediaLibrary {
 
     private func notifyUpdate(progress fractionCompleted: Double, of station: Station, of series: Series) {
         forEachObserver { $0.mediaLibrary(mediaLibrary: self,
-                                 didUpdateDownloadProgress: fractionCompleted,
-                                 of: station,
-                                 of: series) }
+                                          didUpdateDownloadProgress: fractionCompleted,
+                                          of: station,
+                                          of: series) }
     }
 
     private func notifyCompleteDownload(of station: Station, of series: Series) {

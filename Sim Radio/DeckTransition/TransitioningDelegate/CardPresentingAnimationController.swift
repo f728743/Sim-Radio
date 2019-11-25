@@ -29,9 +29,9 @@ final class CardPresentingAnimationController: NSObject, UIViewControllerAnimate
             animations: {
                 presentedViewController.view.layer.cornerRadius = self.cornerRadius
                 presentedViewController.view.frame = finalFrameForPresentedView
-            }, completion: { finished in
-                transitionContext.completeTransition(finished)
-            }
+        }, completion: { finished in
+            transitionContext.completeTransition(finished)
+        }
         )
     }
 
