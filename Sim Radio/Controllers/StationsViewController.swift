@@ -77,6 +77,7 @@ extension StationsViewController: RadioObserver {
 
 extension StationsViewController: MediaLibraryObserver {
     func mediaLibrary(mediaLibrary: MediaLibrary, didStartDownloadOf series: Series) {
+        if series !== self.series { return }
         tableView.visibleCells.forEach { cell in
             if let headerCell = cell as? StationsHeaderTableViewCell {
                 headerCell.progressView.isHidden = false
@@ -89,6 +90,7 @@ extension StationsViewController: MediaLibraryObserver {
     func mediaLibrary(mediaLibrary: MediaLibrary,
                       didUpdateTotalDownloadProgress fractionCompleted: Double,
                       of series: Series) {
+        if series !== self.series { return }
         tableView.visibleCells.forEach { cell in
             if let headerCell = cell as? StationsHeaderTableViewCell {
                 headerCell.progressView.isHidden = false
@@ -98,6 +100,7 @@ extension StationsViewController: MediaLibraryObserver {
     }
 
     func mediaLibrary(mediaLibrary: MediaLibrary, didCompleteDownloadOf series: Series) {
+        if series !== self.series { return }
         tableView.visibleCells.forEach { cell in
             if let headerCell = cell as? StationsHeaderTableViewCell {
                 headerCell.progressView.isHidden = false
@@ -176,10 +179,7 @@ extension StationsViewController: UITableViewDataSource {
     }
 
     private func setCellContent(cell: StationTableViewCell, station: Station) {
-        cell.station = station
-        cell.logoImageView.image = station.logo
-        cell.titleLabel.text = station.title
-        cell.infoLabel.text = station.genre
+        cell.configure(with: station)
         cell.state = .stopped
         if let downloadProgress = station.downloadProgress {
             cell.progressView.isHidden = false

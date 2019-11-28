@@ -16,9 +16,9 @@ class StationTableViewCell: UITableViewCell {
         }
     }
 
-    var station: Station?
+    private(set) var station: Station?
 
-    let logoImageView: UIImageView = {
+    private let logoImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = .scaleAspectFit
@@ -29,7 +29,7 @@ class StationTableViewCell: UITableViewCell {
         return imageView
     }()
 
-    let logoFadeView: UIView = {
+    private let logoFadeView: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
         view.layer.cornerRadius = 3
@@ -39,21 +39,21 @@ class StationTableViewCell: UITableViewCell {
         return view
     }()
 
-    let musicIndicator: ESTMusicIndicatorView = {
+    private let musicIndicator: ESTMusicIndicatorView = {
         let indicator = ESTMusicIndicatorView()
         indicator.translatesAutoresizingMaskIntoConstraints = false
         indicator.tintColor = .white
         return indicator
     }()
 
-    let titleLabel: UILabel = {
+    private let titleLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.preferredFont(forTextStyle: .body)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
 
-    let infoLabel: UILabel = {
+    private let infoLabel: UILabel = {
         let label = UILabel()
         label.textColor = .gray
         label.font = UIFont.preferredFont(forTextStyle: .footnote)
@@ -119,5 +119,12 @@ class StationTableViewCell: UITableViewCell {
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+
+    func configure(with station: Station) {
+        self.station = station
+        logoImageView.image = station.logo
+        titleLabel.text = station.title
+        infoLabel.text = station.genre
     }
 }

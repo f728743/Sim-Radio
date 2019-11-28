@@ -25,11 +25,11 @@ class SeriesCollectionViewCell: UICollectionViewCell {
                 } else {
                     progressView.isHidden = true
                 }
-                activityIndicator.stopAnimating()
+                spinner.stopAnimating()
             } else {
                 logoImageView.image = UIImage(named: "Cover Artwork")
                 titleLabel.text = ""
-                activityIndicator.startAnimating()
+                spinner.startAnimating()
                 progressView.isHidden = true
             }
         }
@@ -53,7 +53,7 @@ class SeriesCollectionViewCell: UICollectionViewCell {
         return label
     }()
 
-    private let activityIndicator: UIActivityIndicatorView = {
+    private let spinner: UIActivityIndicatorView = {
         let indicator = UIActivityIndicatorView()
         indicator.translatesAutoresizingMaskIntoConstraints = false
         indicator.hidesWhenStopped = true
@@ -75,8 +75,8 @@ class SeriesCollectionViewCell: UICollectionViewCell {
         addSubview(logoImageView)
         addSubview(progressView)
         addSubview(titleLabel)
-        addSubview(activityIndicator)
-        activityIndicator.layer.zPosition = 1
+        addSubview(spinner)
+        bringSubviewToFront(spinner)
 
         // logoImageView constraints
         logoImageView.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
@@ -95,11 +95,9 @@ class SeriesCollectionViewCell: UICollectionViewCell {
         titleLabel.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
         titleLabel.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
 
-        // activityIndicator constraints
-        activityIndicator.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
-        activityIndicator.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
-        activityIndicator.topAnchor.constraint(equalTo: topAnchor).isActive = true
-        activityIndicator.heightAnchor.constraint(equalTo: widthAnchor).isActive = true
+        // spinner constraints
+        spinner.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
+        spinner.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
     }
 
     required init?(coder aDecoder: NSCoder) {

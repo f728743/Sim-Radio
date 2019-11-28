@@ -104,6 +104,9 @@ extension MediaLibrary {
     private func addSeries(downloadedSeries: DownloadedSeriesModel,
                            downloadedStations: [DownloadedStationModel],
                            to placeholder: LibraryPlaceholder) {
+
+
+        // TODO let taskContext = persistentContainer.newBackgroundContext()
         let context = persistentContainer.viewContext
         let series = SeriesPersistence(entity: SeriesPersistence.entity(), insertInto: context)
         series.origin = downloadedSeries.origin
