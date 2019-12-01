@@ -41,32 +41,22 @@ class MediaLibrary {
         })
         return container
     }()
+    private lazy var audiofilesDownloadManager: AudiofilesDownloadManager = {
+        let manager = AudiofilesDownloadManager(persistentContainer: persistentContainer)
+        return manager
+    }()
     private var observations = [ObjectIdentifier: Observation]()
     private(set) var items: [LibraryItem] = []
 
     init() {
         let series = fetchSeries()
-        series.forEach {
-            $0.downloadDelegate = self
-            $0.startFilesDownload()
-        }
+        audiofilesDownloadManager.downloadSeriesAudiofiles(series: series, downloadDelegate: self)
         items = series
     }
 }
 
 // MARK: Persistence extension
 extension MediaLibrary {
-    private func saveContext() {
-        let context = persistentContainer.viewContext
-        if context.hasChanges {
-            do {
-                try context.save()
-            } catch {
-                let error = error as NSError
-                fatalError("Unresolved error \(error), \(error.userInfo)")
-            }
-        }
-    }
 
     private func fetchSeries() -> [Series] {
         let context = persistentContainer.viewContext
@@ -74,8 +64,7 @@ extension MediaLibrary {
             let series = try context.fetch(SeriesPersistence.fetchRequest())
             return series.compactMap { seriesManagedObject in
                 guard let seriesManagedObject = seriesManagedObject as? SeriesPersistence else { return nil }
-                return Series(persistentContainer: persistentContainer,
-                              managedObject: seriesManagedObject)
+                return Series(managedObject: seriesManagedObject)
             }
         } catch let error as NSError {
             print("Could not fetch. \(error), \(error.userInfo)")
@@ -83,10 +72,10 @@ extension MediaLibrary {
         return []
     }
 
-    private func addDownloadFiles(from groups: [Model.FileGroup],
+    private func addDownloadFiles(context: NSManagedObjectContext,
+                                  from groups: [Model.FileGroup],
                                   to managedObject: DownloadTaskPersistence,
                                   baseURL: URL) {
-        let context = persistentContainer.viewContext
         let files = groups.flatMap { $0.files }
         let attachedFiles = files.compactMap { $0.attaches }.flatMap {$0.files}
         let allFiles = files + attachedFiles
@@ -101,20 +90,17 @@ extension MediaLibrary {
         }
     }
 
-    private func addSeries(downloadedSeries: DownloadedSeriesModel,
-                           downloadedStations: [DownloadedStationModel],
-                           to placeholder: LibraryPlaceholder) {
+    private func addSeries(context: NSManagedObjectContext, downloadedSeries: DownloadedSeriesModel,
+                           downloadedStations: [DownloadedStationModel]) -> NSManagedObjectID {
 
-
-        // TODO let taskContext = persistentContainer.newBackgroundContext()
-        let context = persistentContainer.viewContext
         let series = SeriesPersistence(entity: SeriesPersistence.entity(), insertInto: context)
         series.origin = downloadedSeries.origin
         series.directory = downloadedSeries.directory
         let seriesDownload = DownloadTaskPersistence(
             entity: DownloadTaskPersistence.entity(),
             insertInto: context)
-        addDownloadFiles(from: downloadedSeries.model.common.fileGroups,
+        addDownloadFiles(context: context,
+                         from: downloadedSeries.model.common.fileGroups,
                          to: seriesDownload,
                          baseURL: downloadedSeries.origin.deletingLastPathComponent())
         seriesDownload.series = series
@@ -127,28 +113,33 @@ extension MediaLibrary {
             let stationDownload = DownloadTaskPersistence(
                 entity: DownloadTaskPersistence.entity(),
                 insertInto: context)
-            addDownloadFiles(from: downloadedStation.model.fileGroups,
+            addDownloadFiles(context: context,
+                             from: downloadedStation.model.fileGroups,
                              to: stationDownload,
                              baseURL: downloadedStation.origin.deletingLastPathComponent())
             stationDownload.station = station
         }
-        guard let newSeries = Series(persistentContainer: persistentContainer, managedObject: series) else {
-            DispatchQueue.main.async {
-                self.items.removeAll { $0 === placeholder }
-                self.notifyLibraryUpdate()
-            }
-            return
+        do {
+            try context.save()
+        } catch {
+            fatalError("Failure to save context: \(error)")
         }
-        newSeries.downloadDelegate = self
-        newSeries.startFilesDownload()
-        saveContext()
-        DispatchQueue.main.async {
-            if let index = self.items.firstIndex(where: { $0 === placeholder }) {
-                self.items[index] = newSeries
+        return series.objectID
+    }
+
+    func insertNewSeries(seriesID: NSManagedObjectID, instead placeholder: LibraryPlaceholder) {
+        print("insertNewSeries")
+        let place = items.firstIndex { $0 === placeholder }
+        if let seriesManagedObject = persistentContainer.viewContext.object(with: seriesID) as? SeriesPersistence,
+            let series = Series(managedObject: seriesManagedObject) {
+            if let place = place {
+                items[place] = series
             } else {
-                self.items.append(newSeries)
+                items.append(series)
             }
-            self.notifyLibraryUpdate()
+            audiofilesDownloadManager.downloadSeriesAudiofiles(series: [series], downloadDelegate: self)
+        } else if let place = place {
+            items.remove(at: place)
         }
     }
 }
@@ -171,7 +162,7 @@ extension MediaLibrary {
                 return
             }
             let stations = downloadedStations.elements
-            self.download(series: series, stations: stations, to: placeholder)
+            self.download(series: series, stations: stations, instead: placeholder)
         }
         let seriesDirectory = UUID().uuidString
         let seriesLoad = SeriesModelDownloadOperation(from: url, to: seriesDirectory) { series in
@@ -200,11 +191,17 @@ extension MediaLibrary {
 
     private func download(series: DownloadedSeriesModel,
                           stations: [DownloadedStationModel],
-                          to placeholder: LibraryPlaceholder) {
+                          instead placeholder: LibraryPlaceholder) {
         let completion = BlockOperation {
-            self.addSeries(downloadedSeries: series,
-                           downloadedStations: stations,
-                           to: placeholder)
+            self.persistentContainer.performBackgroundTask { context in
+                let seriesID = self.addSeries(context: context,
+                                              downloadedSeries: series,
+                                              downloadedStations: stations)
+                DispatchQueue.main.async {
+                    self.insertNewSeries(seriesID: seriesID, instead: placeholder)
+                    self.notifyLibraryUpdate()
+                }
+            }
         }
         var logoLoadOperatios = stations.map {
             FileDownloadOperation(
@@ -231,6 +228,7 @@ extension MediaLibrary: SeriesDownloadDelegate {
     }
 
     func series(didCompleteDownloadOf series: Series) {
+//        print("Did complete download of series '\(series.title)'")
         DispatchQueue.main.async {
             series.downloadProgress = nil
             self.notifyCompleteDownload(of: series)
@@ -238,6 +236,7 @@ extension MediaLibrary: SeriesDownloadDelegate {
     }
 
     func series(series: Series, didCompleteDownloadOf station: Station) {
+//        print("Station '\(station.title)' of series '\(series.title)' did complete download")
         DispatchQueue.main.async {
             station.downloadProgress = nil
             self.notifyCompleteDownload(of: station, of: series)
@@ -245,6 +244,8 @@ extension MediaLibrary: SeriesDownloadDelegate {
     }
 
     func series(series: Series, didUpdateTotalProgress fractionCompleted: Double) {
+//        print("Series '\(series.title)' did update total download " +
+//            "progress: \((fractionCompleted * 100).rounded(toPlaces: 2))%")
         DispatchQueue.main.async {
             if series.downloadProgress == 0 {
                 self.notifyStartDownload(of: series)
@@ -255,6 +256,8 @@ extension MediaLibrary: SeriesDownloadDelegate {
     }
 
     func series(series: Series, didUpdateProgress fractionCompleted: Double, of station: Station) {
+//        print("Station '\(station.title)' of series '\(series.title)' did update " +
+//            "download progress: \((fractionCompleted * 100).rounded(toPlaces: 2))%")
         DispatchQueue.main.async {
             if station.downloadProgress == 0 {
                 self.notifyStartDownload(of: station, of: series)

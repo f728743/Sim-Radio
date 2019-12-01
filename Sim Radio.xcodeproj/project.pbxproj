@@ -69,6 +69,7 @@
 		7CBD425C237F38AB008341CF /* StationPersistence+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CBD4252237F38AB008341CF /* StationPersistence+CoreDataProperties.swift */; };
 		7CBD425D237F38AB008341CF /* DownloadFilePersistence+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CBD4253237F38AB008341CF /* DownloadFilePersistence+CoreDataClass.swift */; };
 		7CBD425E237F38AB008341CF /* DownloadFilePersistence+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CBD4254237F38AB008341CF /* DownloadFilePersistence+CoreDataProperties.swift */; };
+		7CDB5039239436AA0086265B /* AudiofilesDownloadManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CDB5038239436AA0086265B /* AudiofilesDownloadManager.swift */; };
 		7CE0854A2386CBC600D449CE /* ProgressIndicatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CE085492386CBC600D449CE /* ProgressIndicatorView.swift */; };
 /* End PBXBuildFile section */
 
@@ -137,6 +138,7 @@
 		7CBD4252237F38AB008341CF /* StationPersistence+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "StationPersistence+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		7CBD4253237F38AB008341CF /* DownloadFilePersistence+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DownloadFilePersistence+CoreDataClass.swift"; sourceTree = "<group>"; };
 		7CBD4254237F38AB008341CF /* DownloadFilePersistence+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DownloadFilePersistence+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		7CDB5038239436AA0086265B /* AudiofilesDownloadManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudiofilesDownloadManager.swift; sourceTree = "<group>"; };
 		7CE085492386CBC600D449CE /* ProgressIndicatorView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProgressIndicatorView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -308,9 +310,10 @@
 		7C834937237F3B2C00C7C355 /* Download */ = {
 			isa = PBXGroup;
 			children = (
+				7C834938237F3B3F00C7C355 /* Operations */,
+				7CDB5038239436AA0086265B /* AudiofilesDownloadManager.swift */,
 				7C834943237F3B8E00C7C355 /* DownloadError.swift */,
 				7C834944237F3B8E00C7C355 /* FilesDownloadTask.swift */,
-				7C834938237F3B3F00C7C355 /* Operations */,
 			);
 			path = Download;
 			sourceTree = "<group>";
@@ -376,7 +379,7 @@
 				7C51BAD323487334005F0884 /* Sources */,
 				7C51BAD423487334005F0884 /* Frameworks */,
 				7C51BAD523487334005F0884 /* Resources */,
-				7C88C6932381798E00AB8788 /* ShellScript */,
+				7C88C6932381798E00AB8788 /* Run Script */,
 			);
 			buildRules = (
 			);
@@ -434,7 +437,7 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		7C88C6932381798E00AB8788 /* ShellScript */ = {
+		7C88C6932381798E00AB8788 /* Run Script */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -443,6 +446,7 @@
 			);
 			inputPaths = (
 			);
+			name = "Run Script";
 			outputFileListPaths = (
 			);
 			outputPaths = (
@@ -458,6 +462,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7CDB5039239436AA0086265B /* AudiofilesDownloadManager.swift in Sources */,
 				7CBD4257237F38AB008341CF /* DownloadTaskPersistence+CoreDataClass.swift in Sources */,
 				7C51BB2623487587005F0884 /* CardPresentingAnimationController.swift in Sources */,
 				7C51BB11234874B8005F0884 /* UINavigationBar+Extension.swift in Sources */,
