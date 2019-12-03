@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		7C0D3B6D23963CE000F7E041 /* UIFont+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C0D3B6C23963CE000F7E041 /* UIFont+Extension.swift */; };
 		7C4A6B502387E8B600CF4EDB /* Comparable+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C4A6B4F2387E8B600CF4EDB /* Comparable+Extension.swift */; };
 		7C51BADB23487334005F0884 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C51BADA23487334005F0884 /* AppDelegate.swift */; };
 		7C51BAE223487334005F0884 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7C51BAE023487334005F0884 /* Main.storyboard */; };
@@ -59,6 +60,8 @@
 		7C834958237FC44400C7C355 /* Progress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C834956237FC44400C7C355 /* Progress.swift */; };
 		7C834959237FC44400C7C355 /* Synchronization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C834957237FC44400C7C355 /* Synchronization.swift */; };
 		7C9C3EA3237F368A0063D235 /* SimRadio.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 7C9C3EA1237F368A0063D235 /* SimRadio.xcdatamodeld */; };
+		7CBA899C23954A4400020783 /* PopMenuItemViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CBA899B23954A4400020783 /* PopMenuItemViewController.swift */; };
+		7CBA899E2395A49B00020783 /* PopMenuHeaderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CBA899D2395A49B00020783 /* PopMenuHeaderViewController.swift */; };
 		7CBD4255237F38AB008341CF /* DownloadedPersistence+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CBD424B237F38AB008341CF /* DownloadedPersistence+CoreDataClass.swift */; };
 		7CBD4256237F38AB008341CF /* DownloadedPersistence+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CBD424C237F38AB008341CF /* DownloadedPersistence+CoreDataProperties.swift */; };
 		7CBD4257237F38AB008341CF /* DownloadTaskPersistence+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CBD424D237F38AB008341CF /* DownloadTaskPersistence+CoreDataClass.swift */; };
@@ -74,6 +77,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		7C0D3B6C23963CE000F7E041 /* UIFont+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "UIFont+Extension.swift"; path = "Sim Radio/Controllers/UIFont+Extension.swift"; sourceTree = SOURCE_ROOT; };
 		7C4A6B4F2387E8B600CF4EDB /* Comparable+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Comparable+Extension.swift"; sourceTree = "<group>"; };
 		7C51BAD723487334005F0884 /* Sim Radio.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Sim Radio.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		7C51BADA23487334005F0884 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -128,6 +132,8 @@
 		7C834956237FC44400C7C355 /* Progress.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Progress.swift; sourceTree = "<group>"; };
 		7C834957237FC44400C7C355 /* Synchronization.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Synchronization.swift; sourceTree = "<group>"; };
 		7C9C3EA2237F368A0063D235 /* SimRadio.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = SimRadio.xcdatamodel; sourceTree = "<group>"; };
+		7CBA899B23954A4400020783 /* PopMenuItemViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopMenuItemViewController.swift; sourceTree = "<group>"; };
+		7CBA899D2395A49B00020783 /* PopMenuHeaderViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopMenuHeaderViewController.swift; sourceTree = "<group>"; };
 		7CBD424B237F38AB008341CF /* DownloadedPersistence+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DownloadedPersistence+CoreDataClass.swift"; sourceTree = "<group>"; };
 		7CBD424C237F38AB008341CF /* DownloadedPersistence+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DownloadedPersistence+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		7CBD424D237F38AB008341CF /* DownloadTaskPersistence+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DownloadTaskPersistence+CoreDataClass.swift"; sourceTree = "<group>"; };
@@ -222,6 +228,7 @@
 				7C834950237FC3D500C7C355 /* FileManager+Extension.swift */,
 				7C834951237FC3D500C7C355 /* String+Extension.swift */,
 				7C51BB0F234874B8005F0884 /* Date+Extension.swift */,
+				7C0D3B6C23963CE000F7E041 /* UIFont+Extension.swift */,
 				7C51BB0E234874B8005F0884 /* UINavigationBar+Extension.swift */,
 				7C51BB0D234874B8005F0884 /* UIView+Extension.swift */,
 			);
@@ -291,6 +298,8 @@
 				7C51BB312348760F005F0884 /* PlayerCardViewController.swift */,
 				7C51BB302348760F005F0884 /* RootViewController.swift */,
 				7C51BB2F2348760F005F0884 /* SeriesViewController.swift */,
+				7CBA899B23954A4400020783 /* PopMenuItemViewController.swift */,
+				7CBA899D2395A49B00020783 /* PopMenuHeaderViewController.swift */,
 				7C51BB2E2348760F005F0884 /* StationsViewController.swift */,
 			);
 			path = Controllers;
@@ -453,7 +462,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "if which swiftlint >/dev/null; then\n  swiftlint\nelse\n  echo \"error: SwiftLint does not exist, please install it by command 'brew install swiftlint'\"\n  exit 1\nfi\n";
+			shellScript = "#if which swiftlint >/dev/null; then\n#  swiftlint\n#else\n#  echo \"error: SwiftLint does not exist, please install it by command 'brew install swiftlint'\"\n#  exit 1\n#fi\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -476,18 +485,21 @@
 				7C51BB0A2348747E005F0884 /* HairlineView.swift in Sources */,
 				7C834946237F3B8E00C7C355 /* FilesDownloadTask.swift in Sources */,
 				7C834953237FC3D500C7C355 /* FileManager+Extension.swift in Sources */,
+				7C0D3B6D23963CE000F7E041 /* UIFont+Extension.swift in Sources */,
 				7C834941237F3B7F00C7C355 /* SeriesModelDownloadOperation.swift in Sources */,
 				7C83494D237FC37A00C7C355 /* LibraryError.swift in Sources */,
 				7CBD425A237F38AB008341CF /* SeriesPersistence+CoreDataProperties.swift in Sources */,
 				7C51BB092348747E005F0884 /* MarqueeLabel.swift in Sources */,
 				7C51BB2C234875E7005F0884 /* CardHaptic.swift in Sources */,
 				7C51BB16234874E6005F0884 /* ESTMusicIndicatorContentView.swift in Sources */,
+				7CBA899C23954A4400020783 /* PopMenuItemViewController.swift in Sources */,
 				7C51BB29234875B7005F0884 /* CardControllerDelegate.swift in Sources */,
 				7C834940237F3B7F00C7C355 /* FileDownloadOperation.swift in Sources */,
 				7C51BB372348760F005F0884 /* PlayerCardViewController.swift in Sources */,
 				7C834952237FC3D500C7C355 /* Double+Extension.swift in Sources */,
 				7C51BB1D23487557005F0884 /* CardIndicatorView.swift in Sources */,
 				7CE0854A2386CBC600D449CE /* ProgressIndicatorView.swift in Sources */,
+				7CBA899E2395A49B00020783 /* PopMenuHeaderViewController.swift in Sources */,
 				7C834958237FC44400C7C355 /* Progress.swift in Sources */,
 				7C51BB2523487587005F0884 /* CardTransitioningDelegate.swift in Sources */,
 				7C51BB062348747E005F0884 /* StationTableViewCell.swift in Sources */,
