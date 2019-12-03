@@ -41,49 +41,44 @@ class SeriesViewController: UIViewController, SeriesCollectionViewDelegate {
 
 extension SeriesViewController {
     @IBAction func add(_ sender: Any) {
-//        showURLInputDialog()
-        showContextMenu(item: radio.library.items[0])
+        showAddSeiesDialog()
+//        showContextMenu(item: radio.library.items[0])
     }
 
     func showContextMenu(item: LibraryItem) {
-        let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        guard let appearance = item.appearance else { return }
 
+        let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
 
         let playAction = UIAlertAction(title: "", style: .default, handler: nil)
         let headerItem = PopMenuHeaderViewController()
-        headerItem.logoImageView.image = UIImage(named: "Cover Artwork")
-        headerItem.label.text = "Radiostation name"
+        headerItem.logoImageView.image = appearance.logo
+        headerItem.label.text = appearance.title
         playAction.setValue(headerItem, forKey: "contentViewController")
 
         let deleteAction = UIAlertAction(title: "", style: .default, handler: nil)
         let deleteItem = PopMenuItemViewController()
-        deleteItem.logoImageView.image = UIImage(named:"Trash")
+        deleteItem.logoImageView.image = UIImage(named: "Trash")
         deleteItem.label.text = "Delete from Library"
         deleteItem.label.textColor = .systemPink
         deleteAction.setValue(deleteItem, forKey: "contentViewController")
 
         let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
-        cancelAction.setValue(UIColor.systemPink, forKey: "titleTextColor")
 
         alertController.addAction(playAction)
         alertController.addAction(deleteAction)
         alertController.addAction(cancelAction)
 
+        let popPresenter = alertController.popoverPresentationController
+        popPresenter?.sourceView = view
         alertController.pruneNegativeWidthConstraints()
-
-
-//        let popPresenter = alertController.popoverPresentationController
-//        popPresenter?.sourceView = view
+        alertController.view.tintColor = .systemPink
         present(alertController, animated: true, completion: nil)
     }
 
-
-
-
-
-    func showURLInputDialog() {
+    func showAddSeiesDialog() {
         let alertController = UIAlertController(title: "Add radio station",
-                                                message: "Enter station or series URL",
+                                                message: "Enter URL of series.json file",
                                                 preferredStyle: .alert)
         alertController.addTextField { $0.placeholder = "URL" }
         alertController.addAction(UIAlertAction(title: "Enter", style: .default) { _ in
@@ -93,12 +88,12 @@ extension SeriesViewController {
             self.radio.library.download(url: url)
         })
         alertController.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+        alertController.view.tintColor = .systemPink
         self.present(alertController, animated: true, completion: nil)
     }
 }
 
-
-
+// suppress error message from UIAlertController layouts
 extension UIAlertController {
     func pruneNegativeWidthConstraints() {
         for subView in self.view.subviews {

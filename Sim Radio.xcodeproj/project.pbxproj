@@ -43,6 +43,7 @@
 		7C51BB372348760F005F0884 /* PlayerCardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C51BB312348760F005F0884 /* PlayerCardViewController.swift */; };
 		7C51BB382348760F005F0884 /* MiniPlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C51BB322348760F005F0884 /* MiniPlayerViewController.swift */; };
 		7C51BB392348760F005F0884 /* NavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C51BB332348760F005F0884 /* NavigationController.swift */; };
+		7C61219C23968B3700B4667E /* UIColor+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C61219B23968B3700B4667E /* UIColor+Extension.swift */; };
 		7C83493E237F3B7F00C7C355 /* AsyncOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C834939237F3B7E00C7C355 /* AsyncOperation.swift */; };
 		7C83493F237F3B7F00C7C355 /* AudiofilesDownloadOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C83493A237F3B7E00C7C355 /* AudiofilesDownloadOperation.swift */; };
 		7C834940237F3B7F00C7C355 /* FileDownloadOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C83493B237F3B7E00C7C355 /* FileDownloadOperation.swift */; };
@@ -115,6 +116,7 @@
 		7C51BB312348760F005F0884 /* PlayerCardViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerCardViewController.swift; sourceTree = "<group>"; };
 		7C51BB322348760F005F0884 /* MiniPlayerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MiniPlayerViewController.swift; sourceTree = "<group>"; };
 		7C51BB332348760F005F0884 /* NavigationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavigationController.swift; sourceTree = "<group>"; };
+		7C61219B23968B3700B4667E /* UIColor+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Extension.swift"; sourceTree = "<group>"; };
 		7C834939237F3B7E00C7C355 /* AsyncOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AsyncOperation.swift; sourceTree = "<group>"; };
 		7C83493A237F3B7E00C7C355 /* AudiofilesDownloadOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudiofilesDownloadOperation.swift; sourceTree = "<group>"; };
 		7C83493B237F3B7E00C7C355 /* FileDownloadOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileDownloadOperation.swift; sourceTree = "<group>"; };
@@ -162,6 +164,7 @@
 		7C51BACE23487334005F0884 = {
 			isa = PBXGroup;
 			children = (
+				7C61219B23968B3700B4667E /* UIColor+Extension.swift */,
 				7C51BAD923487334005F0884 /* Sim Radio */,
 				7C51BAD823487334005F0884 /* Products */,
 			);
@@ -462,7 +465,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "#if which swiftlint >/dev/null; then\n#  swiftlint\n#else\n#  echo \"error: SwiftLint does not exist, please install it by command 'brew install swiftlint'\"\n#  exit 1\n#fi\n";
+			shellScript = "if which swiftlint >/dev/null; then\n  swiftlint\nelse\n  echo \"error: SwiftLint does not exist, please install it by command 'brew install swiftlint'\"\n  exit 1\nfi\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -520,6 +523,7 @@
 				7C51BAFA23487414005F0884 /* PlaylistBuilder.swift in Sources */,
 				7C51BB082348747E005F0884 /* ControlsButton.swift in Sources */,
 				7C51BAFB23487414005F0884 /* PlaylistManager.swift in Sources */,
+				7C61219C23968B3700B4667E /* UIColor+Extension.swift in Sources */,
 				7C51BAF1234873DF005F0884 /* Radio.swift in Sources */,
 				7C51BB342348760F005F0884 /* StationsViewController.swift in Sources */,
 				7C83494E237FC37A00C7C355 /* Model.swift in Sources */,
