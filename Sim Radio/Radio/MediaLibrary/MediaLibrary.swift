@@ -128,7 +128,6 @@ extension MediaLibrary {
     }
 
     func insertNewSeries(seriesID: NSManagedObjectID, instead placeholder: LibraryPlaceholder) {
-        print("insertNewSeries")
         let place = items.firstIndex { $0 === placeholder }
         if let seriesManagedObject = persistentContainer.viewContext.object(with: seriesID) as? SeriesPersistence,
             let series = Series(managedObject: seriesManagedObject) {

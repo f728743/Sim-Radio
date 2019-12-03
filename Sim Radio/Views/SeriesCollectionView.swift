@@ -44,15 +44,32 @@ class SeriesCollectionView: UICollectionView {
     }
 }
 
+// MARK: UICollectionViewDelegateFlowLayout
 extension SeriesCollectionView: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
                         referenceSizeForFooterInSection section: Int) -> CGSize {
         return CGSize(width: frame.width, height: 65)
     }
+
+    func collectionView(_ collectionView: UICollectionView,
+                        layout collectionViewLayout: UICollectionViewLayout,
+                        sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return CGSize(width: SeriesCollectionViewConstants.itemWidth,
+                      height: SeriesCollectionViewConstants.itemHeight)
+    }
 }
 
-extension SeriesCollectionView: UICollectionViewDelegate, UICollectionViewDataSource {
+// MARK: UICollectionViewDelegate
+extension SeriesCollectionView: UICollectionViewDelegate {
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        guard let series = library.items[indexPath.row] as? Series else { return }
+        libraryDelegate?.seriesCollectionView(self, didSelectSeries: series)
+    }
+}
+
+// MARK: UICollectionViewDataSource
+extension SeriesCollectionView: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return library.items.count
     }
@@ -65,29 +82,17 @@ extension SeriesCollectionView: UICollectionViewDelegate, UICollectionViewDataSo
         cell.appearance = library.items[indexPath.row].appearance
         return cell
     }
-
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        guard let series = library.items[indexPath.row] as? Series else { return }
-        libraryDelegate?.seriesCollectionView(self, didSelectSeries: series)
-    }
-
-    func collectionView(_ collectionView: UICollectionView,
-                        layout collectionViewLayout: UICollectionViewLayout,
-                        sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: SeriesCollectionViewConstants.itemWidth,
-                      height: SeriesCollectionViewConstants.itemHeight)
-    }
 }
 
+// MARK: MediaLibraryObserver
 extension SeriesCollectionView: MediaLibraryObserver {
 
     private func forEachVisibleCellWithSeries(_ series: Series, _ body: ((SeriesCollectionViewCell) -> Void)) {
         visibleCells.forEach { visibleCell in
-            if let cell = visibleCell as? SeriesCollectionViewCell {
-                if let seriesAppearance = cell.appearance as? Series.Appearance,
-                    seriesAppearance.series === series {
-                    body(cell)
-                }
+            if let cell = visibleCell as? SeriesCollectionViewCell,
+                let seriesAppearance = cell.appearance as? Series.Appearance,
+                seriesAppearance.series === series {
+                body(cell)
             }
         }
     }

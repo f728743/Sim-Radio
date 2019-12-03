@@ -77,7 +77,7 @@ extension SeriesViewController {
     }
 
     func showAddSeiesDialog() {
-        let alertController = UIAlertController(title: "Add radio station",
+        let alertController = UIAlertController(title: "Add radio stations",
                                                 message: "Enter URL of series.json file",
                                                 preferredStyle: .alert)
         alertController.addTextField { $0.placeholder = "URL" }
