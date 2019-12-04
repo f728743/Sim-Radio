@@ -30,7 +30,7 @@ class MiniPlayerViewController: UIViewController {
         radio.addObserver(self)
 
         artImageView.layer.cornerRadius = artCornerRadius
-        artImageView.layer.borderWidth = 0.2
+        artImageView.layer.borderWidth = 1 / UIScreen.main.scale
         artImageView.layer.borderColor = UIColor(white: 0, alpha: 0.3).cgColor
         artImageView.clipsToBounds = true
 

@@ -56,13 +56,17 @@ extension SeriesViewController {
 
         let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
 
-        let playAction = UIAlertAction(title: "", style: .default, handler: nil)
+        let playAction = UIAlertAction(title: "", style: .default) { _ in
+            self.radio.playAnyStationOf(series: series)
+        }
         let headerItem = PopMenuHeaderViewController()
         headerItem.logoImageView.image = appearance.logo
         headerItem.label.text = appearance.title
         playAction.setValue(headerItem, forKey: "contentViewController")
 
-        let deleteAction = UIAlertAction(title: "", style: .default, handler: nil)
+        let deleteAction = UIAlertAction(title: "", style: .default) { _ in
+            self.radio.library.delete(series: series)
+        }
         let deleteItem = PopMenuItemViewController()
         deleteItem.logoImageView.image = UIImage(named: "Trash")
         deleteItem.label.text = "Delete from Library"
@@ -91,7 +95,7 @@ extension SeriesViewController {
             guard let url = URL(string: alertController.textFields![0].text ?? "") else {
                 return
             }
-            self.radio.library.download(url: url)
+            self.radio.library.downloadSeriesFrom(url: url)
         })
         alertController.addAction(UIAlertAction(title: "Cancel", style: .cancel))
         alertController.view.tintColor = .systemPink

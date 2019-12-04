@@ -40,7 +40,7 @@ class SeriesCollectionViewCell: UICollectionViewCell {
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = .scaleAspectFit
         imageView.layer.cornerRadius = 4
-        imageView.layer.borderWidth = 0.2
+        imageView.layer.borderWidth = 1 / UIScreen.main.scale
         imageView.layer.borderColor = UIColor(white: 0, alpha: 0.3).cgColor
         imageView.clipsToBounds = true
         return imageView

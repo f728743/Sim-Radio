@@ -25,6 +25,11 @@ class LibraryPlaceholder: LibraryItem {
     var appearance: LibraryItemAppearance? { return nil }
 }
 
+protocol LibraryControl {
+    func delete(series: Series)
+    func downloadSeriesFrom(url: URL)
+}
+
 class MediaLibrary {
     private let operationQueue: OperationQueue = {
         let queue = OperationQueue()
@@ -143,10 +148,13 @@ extension MediaLibrary {
     }
 }
 
-// MARK: Download extension
-extension MediaLibrary {
+// MARK: LibraryControl extension
+extension MediaLibrary: LibraryControl {
+    func delete(series: Series) {
+        print("deleting series \"\(series.title)\"")
+    }
 
-    func download(url: URL) {
+    func downloadSeriesFrom(url: URL) {
         var downloadedSeries: DownloadedSeriesModel?
         let downloadedStations = SynchronizedArray<DownloadedStationModel>()
         let placeholder = LibraryPlaceholder()

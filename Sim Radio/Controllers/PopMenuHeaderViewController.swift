@@ -14,15 +14,10 @@ class PopMenuHeaderViewController: UIViewController {
         return label
     }()
 
-    let logoImageView: UIImageView = {
-        let imageView = UIImageView()
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.contentMode = .scaleAspectFit
-        imageView.layer.borderWidth = 0.2
-        imageView.layer.cornerRadius = 4
-        imageView.layer.borderColor = UIColor(white: 0, alpha: 0.3).cgColor
-        imageView.clipsToBounds = true
-        return imageView
+    let logoImageView: ContextMenuLogoView = {
+        let view = ContextMenuLogoView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
     }()
 
     // fuck around with UIAlertController layouts
@@ -42,7 +37,6 @@ class PopMenuHeaderViewController: UIViewController {
         crutchImageView.topAnchor.constraint(equalTo: view.topAnchor, constant: 16).isActive = true
         crutchImageView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -16).isActive = true
         crutchImageView.widthAnchor.constraint(equalToConstant: 0).isActive = true
-
         crutchImageView.image = createClearImage(size: CGSize(width: 1, height: 80))
 
         view.addSubview(logoImageView)

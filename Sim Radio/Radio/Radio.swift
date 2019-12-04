@@ -15,6 +15,7 @@ struct RadioDisplay {
 
 protocol RadioControl {
     func play(station: Station)
+    func playAnyStationOf(series: Series)
     func togglePausePlay()
     func nextStation()
     func previousStation()
@@ -245,6 +246,10 @@ extension Radio: RadioControl {
         }
         state = .playing(station: station)
         startPlayback(station: station)
+    }
+
+    func playAnyStationOf(series: Series) {
+        print("Paying \(series.title)")
     }
 
     func togglePausePlay() {

@@ -63,6 +63,7 @@
 		7C9C3EA3237F368A0063D235 /* SimRadio.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 7C9C3EA1237F368A0063D235 /* SimRadio.xcdatamodeld */; };
 		7CBA899C23954A4400020783 /* PopMenuItemViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CBA899B23954A4400020783 /* PopMenuItemViewController.swift */; };
 		7CBA899E2395A49B00020783 /* PopMenuHeaderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CBA899D2395A49B00020783 /* PopMenuHeaderViewController.swift */; };
+		7CBCF427239804EF0062113C /* ContextMenuLogoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CBCF426239804EF0062113C /* ContextMenuLogoView.swift */; };
 		7CBD4255237F38AB008341CF /* DownloadedPersistence+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CBD424B237F38AB008341CF /* DownloadedPersistence+CoreDataClass.swift */; };
 		7CBD4256237F38AB008341CF /* DownloadedPersistence+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CBD424C237F38AB008341CF /* DownloadedPersistence+CoreDataProperties.swift */; };
 		7CBD4257237F38AB008341CF /* DownloadTaskPersistence+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CBD424D237F38AB008341CF /* DownloadTaskPersistence+CoreDataClass.swift */; };
@@ -136,6 +137,7 @@
 		7C9C3EA2237F368A0063D235 /* SimRadio.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = SimRadio.xcdatamodel; sourceTree = "<group>"; };
 		7CBA899B23954A4400020783 /* PopMenuItemViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopMenuItemViewController.swift; sourceTree = "<group>"; };
 		7CBA899D2395A49B00020783 /* PopMenuHeaderViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopMenuHeaderViewController.swift; sourceTree = "<group>"; };
+		7CBCF426239804EF0062113C /* ContextMenuLogoView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContextMenuLogoView.swift; sourceTree = "<group>"; };
 		7CBD424B237F38AB008341CF /* DownloadedPersistence+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DownloadedPersistence+CoreDataClass.swift"; sourceTree = "<group>"; };
 		7CBD424C237F38AB008341CF /* DownloadedPersistence+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DownloadedPersistence+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		7CBD424D237F38AB008341CF /* DownloadTaskPersistence+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DownloadTaskPersistence+CoreDataClass.swift"; sourceTree = "<group>"; };
@@ -210,6 +212,7 @@
 		7C51BAFD2348745E005F0884 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				7CBCF426239804EF0062113C /* ContextMenuLogoView.swift */,
 				7C51BB012348747D005F0884 /* ControlsButton.swift */,
 				7C51BB032348747D005F0884 /* HairlineView.swift */,
 				7C51BB022348747D005F0884 /* MarqueeLabel.swift */,
@@ -532,6 +535,7 @@
 				7C834942237F3B7F00C7C355 /* StationModelDownloadOperation.swift in Sources */,
 				7C51BB072348747E005F0884 /* SeriesCollectionViewCell.swift in Sources */,
 				7C834959237FC44400C7C355 /* Synchronization.swift in Sources */,
+				7CBCF427239804EF0062113C /* ContextMenuLogoView.swift in Sources */,
 				7C51BB2323487587005F0884 /* CardPresentationController.swift in Sources */,
 				7C83494C237FC37A00C7C355 /* Series.swift in Sources */,
 				7CBD425C237F38AB008341CF /* StationPersistence+CoreDataProperties.swift in Sources */,
