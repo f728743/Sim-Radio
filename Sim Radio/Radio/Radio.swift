@@ -247,9 +247,6 @@ extension Radio: RadioControl {
 
     func playAnyStationOf(series: Series) {
         let stations = series.readyToPlayStations
-        for s in stations {
-            print(s.title)
-        }
         guard !stations.isEmpty else { return }
         srand48(Int(Date().timeIntervalSince1970))
         let station = stations[Int(drand48() * Double(stations.count))]
