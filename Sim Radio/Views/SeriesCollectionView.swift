@@ -16,6 +16,14 @@ struct SeriesCollectionViewConstants {
 
 protocol SeriesCollectionViewDelegate: AnyObject {
     func seriesCollectionView(_ seriesCollectionView: SeriesCollectionView, didSelectSeries series: Series)
+    func seriesCollectionView(_ seriesCollectionView: SeriesCollectionView,
+                              didSelectSeriesWithLongPress series: Series)
+}
+
+extension SeriesCollectionViewDelegate {
+    func seriesCollectionView(_ seriesCollectionView: SeriesCollectionView, didSelectSeries series: Series) {}
+    func seriesCollectionView(_ seriesCollectionView: SeriesCollectionView,
+                              didSelectSeriesWithLongPress series: Series) {}
 }
 
 class SeriesCollectionView: UICollectionView {
@@ -37,10 +45,25 @@ class SeriesCollectionView: UICollectionView {
                                     left: SeriesCollectionViewConstants.leftDistanceToView,
                                     bottom: 0,
                                     right: SeriesCollectionViewConstants.rightDistanceToView)
+
+        let longPressGestureRecognizer = UILongPressGestureRecognizer(
+            target: self,
+            action: #selector(longPressHappened))
+        longPressGestureRecognizer.delaysTouchesBegan = true
+        addGestureRecognizer(longPressGestureRecognizer)
     }
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+
+    @objc func longPressHappened(gestureRecognizer: UILongPressGestureRecognizer) {
+        if gestureRecognizer.state != .began {
+            return
+        }
+        guard let indexPath = indexPathForItem(at: gestureRecognizer.location(in: self)),
+            let series = library.items[indexPath.row] as? Series else { return }
+        libraryDelegate?.seriesCollectionView(self, didSelectSeriesWithLongPress: series)
     }
 }
 

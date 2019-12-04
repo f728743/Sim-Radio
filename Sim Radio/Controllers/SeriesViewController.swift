@@ -5,7 +5,7 @@
 
 import UIKit
 
-class SeriesViewController: UIViewController, SeriesCollectionViewDelegate {
+class SeriesViewController: UIViewController {
     weak var radio: Radio!
     private var seriesCollectionView = SeriesCollectionView()
 
@@ -33,20 +33,26 @@ class SeriesViewController: UIViewController, SeriesCollectionViewDelegate {
             }
         }
     }
+}
 
+extension SeriesViewController: SeriesCollectionViewDelegate {
     func seriesCollectionView(_ seriesCollectionView: SeriesCollectionView, didSelectSeries series: Series) {
         performSegue(withIdentifier: "showStations", sender: series)
+    }
+
+    func seriesCollectionView(_ seriesCollectionView: SeriesCollectionView,
+                              didSelectSeriesWithLongPress series: Series) {
+        showContextMenu(series: series)
     }
 }
 
 extension SeriesViewController {
     @IBAction func add(_ sender: Any) {
         showAddSeiesDialog()
-//        showContextMenu(item: radio.library.items[0])
     }
 
-    func showContextMenu(item: LibraryItem) {
-        guard let appearance = item.appearance else { return }
+    func showContextMenu(series: Series) {
+        guard let appearance = series.appearance else { return }
 
         let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
 
