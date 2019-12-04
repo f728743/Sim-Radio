@@ -184,12 +184,9 @@ extension Radio {
     private func handleInterrupt(with interruption: NowPlayableInterruption) {
         switch interruption {
         case .began:
-            print("interrupted began")
             isInterrupted = true
 
         case let .ended(shouldPlay):
-            print("interrupted ended, shouldPlay = ", shouldPlay)
-
             isInterrupted = false
             if case .playing(let station) = state {
                 if shouldPlay {
@@ -249,13 +246,21 @@ extension Radio: RadioControl {
     }
 
     func playAnyStationOf(series: Series) {
-        print("Paying \(series.title)")
+        let stations = series.readyToPlayStations
+        for s in stations {
+            print(s.title)
+        }
+        guard !stations.isEmpty else { return }
+        srand48(Int(Date().timeIntervalSince1970))
+        let station = stations[Int(drand48() * Double(stations.count))]
+        state = .playing(station: station)
+        startPlayback(station: station)
     }
 
     func togglePausePlay() {
         switch state {
         case .idle:
-            print("ok")
+
             let nonEmptySeries = library.items.compactMap { item -> Series? in
                 if let series = item as? Series {
                     return series.readyToPlayStations.count > 0 ? series : nil
@@ -263,6 +268,7 @@ extension Radio: RadioControl {
                 return nil
             }
             guard !nonEmptySeries.isEmpty else { return }
+            srand48(Int(Date().timeIntervalSince1970))
             let series = nonEmptySeries[Int(drand48() * Double(nonEmptySeries.count))]
             let stations = series.readyToPlayStations
             guard !stations.isEmpty else { return }
@@ -397,6 +403,8 @@ extension Radio {
         case paused(station: Station)
     }
 }
+
+// MARK: RadioObserver
 
 protocol RadioObserver: AnyObject {
     func radio(_ radio: Radio, didStartPlaying station: Station)
