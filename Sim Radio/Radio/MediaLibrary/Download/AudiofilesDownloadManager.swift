@@ -20,6 +20,10 @@ class AudiofilesDownloadManager {
         self.persistentContainer = persistentContainer
     }
 
+    func abortDownloading(_ series: Series) {
+        print("TODO: abort downloading of \(series.title)")
+    }
+
     func downloadSeriesAudiofiles(series: [Series], downloadDelegate: SeriesDownloadDelegate) {
         series.forEach {
             let seriesDownload = SeriesDownload(persistentContainer: persistentContainer,

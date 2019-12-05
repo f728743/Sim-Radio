@@ -54,27 +54,41 @@ class MediaLibrary {
     private(set) var items: [LibraryItem] = []
 
     init() {
-        let series = fetchSeries()
-        audiofilesDownloadManager.downloadSeriesAudiofiles(series: series, downloadDelegate: self)
-        items = series
+        let fetchResult = fetchSeries()
+        audiofilesDownloadManager.downloadSeriesAudiofiles(series: fetchResult.series, downloadDelegate: self)
+        items = fetchResult.series
+        DispatchQueue.global(qos: .userInitiated).async { [weak self] in
+            guard let self = self else {
+                return
+            }
+            self.deleteAllData(seriesManagedObjects: fetchResult.beingDeletedSeries)
+        }
     }
 }
 
 // MARK: Persistence extension
 extension MediaLibrary {
 
-    private func fetchSeries() -> [Series] {
+    private func fetchSeries() -> (series: [Series], beingDeletedSeries: [SeriesPersistence]) {
         let context = persistentContainer.viewContext
         do {
-            let series = try context.fetch(SeriesPersistence.fetchRequest())
-            return series.compactMap { seriesManagedObject in
-                guard let seriesManagedObject = seriesManagedObject as? SeriesPersistence else { return nil }
+            let seriesSeriesManagedObjects = try context.fetch(SeriesPersistence.fetchRequest())
+            let series: [Series] = seriesSeriesManagedObjects.compactMap { seriesManagedObject in
+                guard let seriesManagedObject = seriesManagedObject as? SeriesPersistence,
+                    !seriesManagedObject.isBeingDeleted  else { return nil }
                 return Series(managedObject: seriesManagedObject)
             }
+            let beingDeletedSeries: [SeriesPersistence] = seriesSeriesManagedObjects.compactMap { seriesManagedObject in
+                guard let seriesManagedObject = seriesManagedObject as? SeriesPersistence,
+                    seriesManagedObject.isBeingDeleted  else { return nil }
+                return seriesManagedObject
+            }
+            return (series, beingDeletedSeries)
+
         } catch let error as NSError {
             print("Could not fetch. \(error), \(error.userInfo)")
         }
-        return []
+        return ([], [])
     }
 
     private func addDownloadFiles(context: NSManagedObjectContext,
@@ -158,19 +172,46 @@ extension MediaLibrary {
             fatalError("Failure to save context: \(error)")
         }
     }
+
+    func deleteAllData(seriesManagedObjects: [SeriesPersistence]) {
+        persistentContainer.performBackgroundTask { context in
+            for series in seriesManagedObjects {
+                let seriesURL = FileManager.documents.appendingPathComponent(series.directory)
+                try? FileManager.default.removeItem(at: seriesURL)
+                guard let backgroundSeries = context.object(with: series.objectID) as? SeriesPersistence  else {
+                    print("Internal error: can't obtain series ManagedObject")
+                    continue
+                }
+                context.delete(backgroundSeries)
+            }
+            if context.hasChanges {
+                do {
+                    try context.save()
+                } catch {
+                    fatalError("Failure to save context: \(error)")
+                }
+            }
+        }
+    }
 }
 
 // MARK: LibraryControl extension
+
 extension MediaLibrary: LibraryControl {
+
     func delete(series: Series) {
         print("deleting series \"\(series.title)\"")
-        // 1. mark as deleting in managed object
         setBeingDeleted(series: series)
-        // 2. stop playing if station in series, go to idle
         notify(willDelete: series)
-        // 3. call 'mediaLibrary(didUpdateItemsOfMediaLibrary)'
-        // 4. in background stop downloading, delete files and managed objects, free memory
-        // 5. perform (4) on start
+        items.removeAll { $0 === series }
+        notifyLibraryUpdate()
+        DispatchQueue.global(qos: .userInitiated).async { [weak self] in
+            guard let self = self else {
+                return
+            }
+            self.audiofilesDownloadManager.abortDownloading(series)
+            self.deleteAllData(seriesManagedObjects: [series.managedObject])
+        }
     }
 
     func downloadSeriesFrom(url: URL) {
@@ -256,7 +297,7 @@ extension MediaLibrary: SeriesDownloadDelegate {
     }
 
     func series(didCompleteDownloadOf series: Series) {
-//        print("Did complete download of series '\(series.title)'")
+        //        print("Did complete download of series '\(series.title)'")
         DispatchQueue.main.async {
             series.downloadProgress = nil
             series.managedObject.downloadTask = nil
@@ -265,7 +306,7 @@ extension MediaLibrary: SeriesDownloadDelegate {
     }
 
     func series(series: Series, didCompleteDownloadOf station: Station) {
-//        print("Station '\(station.title)' of series '\(series.title)' did complete download")
+        //        print("Station '\(station.title)' of series '\(series.title)' did complete download")
         DispatchQueue.main.async {
             station.downloadProgress = nil
             station.managedObject.downloadTask = nil
@@ -274,8 +315,8 @@ extension MediaLibrary: SeriesDownloadDelegate {
     }
 
     func series(series: Series, didUpdateTotalProgress fractionCompleted: Double) {
-//        print("Series '\(series.title)' did update total download " +
-//            "progress: \((fractionCompleted * 100).rounded(toPlaces: 2))%")
+        //        print("Series '\(series.title)' did update total download " +
+        //            "progress: \((fractionCompleted * 100).rounded(toPlaces: 2))%")
         DispatchQueue.main.async {
             if series.downloadProgress == 0 {
                 self.notifyStartDownload(of: series)
@@ -286,8 +327,8 @@ extension MediaLibrary: SeriesDownloadDelegate {
     }
 
     func series(series: Series, didUpdateProgress fractionCompleted: Double, of station: Station) {
-//        print("Station '\(station.title)' of series '\(series.title)' did update " +
-//            "download progress: \((fractionCompleted * 100).rounded(toPlaces: 2))%")
+        //        print("Station '\(station.title)' of series '\(series.title)' did update " +
+        //            "download progress: \((fractionCompleted * 100).rounded(toPlaces: 2))%")
         DispatchQueue.main.async {
             if station.downloadProgress == 0 {
                 self.notifyStartDownload(of: station, of: series)
