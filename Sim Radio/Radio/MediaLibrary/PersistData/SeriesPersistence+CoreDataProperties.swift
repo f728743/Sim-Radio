@@ -14,6 +14,7 @@ extension SeriesPersistence {
 
     @NSManaged public var directory: String
     @NSManaged public var origin: URL
+    @NSManaged public var isBeingDeleted: Bool
     @NSManaged public var downloadTask: DownloadTaskPersistence?
     @NSManaged public var stations: NSSet
 

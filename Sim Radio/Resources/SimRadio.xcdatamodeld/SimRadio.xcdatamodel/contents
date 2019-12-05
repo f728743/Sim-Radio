@@ -18,6 +18,7 @@
     </entity>
     <entity name="Series" representedClassName=".SeriesPersistence" syncable="YES">
         <attribute name="directory" optional="YES" attributeType="String"/>
+        <attribute name="isBeingDeleted" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="origin" optional="YES" attributeType="URI"/>
         <relationship name="downloadTask" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="DownloadTask" inverseName="series" inverseEntity="DownloadTask"/>
         <relationship name="stations" toMany="YES" deletionRule="Cascade" destinationEntity="Station" inverseName="series" inverseEntity="Station"/>
@@ -32,7 +33,7 @@
         <element name="Downloaded" positionX="-45" positionY="54" width="128" height="73"/>
         <element name="DownloadFile" positionX="-54" positionY="18" width="128" height="103"/>
         <element name="DownloadTask" positionX="-36" positionY="45" width="128" height="103"/>
-        <element name="Series" positionX="-63" positionY="-18" width="128" height="103"/>
+        <element name="Series" positionX="-63" positionY="-18" width="128" height="118"/>
         <element name="Station" positionX="-63" positionY="0" width="128" height="103"/>
     </elements>
 </model>

@@ -152,6 +152,11 @@ extension MediaLibrary {
 extension MediaLibrary: LibraryControl {
     func delete(series: Series) {
         print("deleting series \"\(series.title)\"")
+        // 1. mark as deleting in managed object
+        // 2. stop playing if station in series, go to idle
+        // 3. call 'mediaLibrary(didUpdateItemsOfMediaLibrary)'
+        // 4. in background stop downloading, delete files and managed objects, free memory
+        // 5. perform (4) on start
     }
 
     func downloadSeriesFrom(url: URL) {
@@ -228,6 +233,8 @@ extension MediaLibrary: LibraryControl {
         operationQueue.addOperation(completion)
     }
 }
+
+// MARK: SeriesDownloadDelegate extension
 
 extension MediaLibrary: SeriesDownloadDelegate {
     func series(didCompleteDownloadCommonFilesOf series: Series) {
