@@ -167,8 +167,8 @@ extension SeriesDownload: FilesDownloadTaskDelegate {
 
                 guard let downloadTaskID = station.managedObject.downloadTask?.objectID,
                     let downloadTask = context.object(with: downloadTaskID) as? DownloadTaskPersistence  else {
-                    print("Internal error: can't obtain downloadTask ManagedObject")
-                    return
+                        print("Internal error: can't obtain downloadTask ManagedObject")
+                        return
                 }
                 context.delete(downloadTask)
             } else if case let .commonSeriesFiles(seriesOrigin) = filesDownloadTask.sourse {
@@ -176,8 +176,8 @@ extension SeriesDownload: FilesDownloadTaskDelegate {
                 self.downloadDelegate?.series(didCompleteDownloadCommonFilesOf: series)
                 guard let downloadTaskID = series.managedObject.downloadTask?.objectID,
                     let downloadTask = context.object(with: downloadTaskID) as? DownloadTaskPersistence  else {
-                    print("Internal error: can't obtain downloadTask ManagedObject")
-                    return
+                        print("Internal error: can't obtain downloadTask ManagedObject")
+                        return
                 }
                 context.delete(downloadTask)
             }
@@ -202,8 +202,8 @@ extension SeriesDownload: FilesDownloadTaskDelegate {
             if case let .stationFiles(_, station) = filesDownloadTask.sourse {
                 guard let downloadTaskID = station.managedObject.downloadTask?.objectID,
                     let downloadTask = context.object(with: downloadTaskID) as? DownloadTaskPersistence  else {
-                    print("Internal error: can't obtain downloadTask ManagedObject")
-                    return
+                        print("Internal error: can't obtain downloadTask ManagedObject")
+                        return
                 }
                 let downloadFile = DownloadedPersistence(
                     entity: DownloadedPersistence.entity(),
@@ -214,8 +214,8 @@ extension SeriesDownload: FilesDownloadTaskDelegate {
             } else if case .commonSeriesFiles(_) = filesDownloadTask.sourse {
                 guard let downloadTaskID = series.managedObject.downloadTask?.objectID,
                     let downloadTask = context.object(with: downloadTaskID) as? DownloadTaskPersistence  else {
-                    print("Internal error: can't obtain downloadTask ManagedObject")
-                    return
+                        print("Internal error: can't obtain downloadTask ManagedObject")
+                        return
                 }
                 let downloadFile = DownloadedPersistence(
                     entity: DownloadedPersistence.entity(),

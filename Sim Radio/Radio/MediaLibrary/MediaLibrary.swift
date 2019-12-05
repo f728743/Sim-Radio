@@ -101,6 +101,7 @@ extension MediaLibrary {
         let series = SeriesPersistence(entity: SeriesPersistence.entity(), insertInto: context)
         series.origin = downloadedSeries.origin
         series.directory = downloadedSeries.directory
+        series.isBeingDeleted = false
         let seriesDownload = DownloadTaskPersistence(
             entity: DownloadTaskPersistence.entity(),
             insertInto: context)
@@ -146,6 +147,17 @@ extension MediaLibrary {
             items.remove(at: place)
         }
     }
+
+    private func setBeingDeleted(series: Series) {
+        let context = persistentContainer.viewContext
+        context.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
+        series.managedObject.isBeingDeleted = true
+        do {
+            try context.save()
+        } catch {
+            fatalError("Failure to save context: \(error)")
+        }
+    }
 }
 
 // MARK: LibraryControl extension
@@ -153,7 +165,9 @@ extension MediaLibrary: LibraryControl {
     func delete(series: Series) {
         print("deleting series \"\(series.title)\"")
         // 1. mark as deleting in managed object
+        setBeingDeleted(series: series)
         // 2. stop playing if station in series, go to idle
+        notify(willDelete: series)
         // 3. call 'mediaLibrary(didUpdateItemsOfMediaLibrary)'
         // 4. in background stop downloading, delete files and managed objects, free memory
         // 5. perform (4) on start
@@ -245,6 +259,7 @@ extension MediaLibrary: SeriesDownloadDelegate {
 //        print("Did complete download of series '\(series.title)'")
         DispatchQueue.main.async {
             series.downloadProgress = nil
+            series.managedObject.downloadTask = nil
             self.notifyCompleteDownload(of: series)
         }
     }
@@ -253,6 +268,7 @@ extension MediaLibrary: SeriesDownloadDelegate {
 //        print("Station '\(station.title)' of series '\(series.title)' did complete download")
         DispatchQueue.main.async {
             station.downloadProgress = nil
+            station.managedObject.downloadTask = nil
             self.notifyCompleteDownload(of: station, of: series)
         }
     }
@@ -286,6 +302,7 @@ extension MediaLibrary: SeriesDownloadDelegate {
 
 protocol MediaLibraryObserver: AnyObject {
     func mediaLibrary(didUpdateItemsOfMediaLibrary: MediaLibrary)
+    func mediaLibrary(mediaLibrary: MediaLibrary, willDelete series: Series)
     func mediaLibrary(mediaLibrary: MediaLibrary, didStartDownloadOf series: Series)
     func mediaLibrary(mediaLibrary: MediaLibrary,
                       didUpdateTotalDownloadProgress fractionCompleted: Double,
@@ -302,6 +319,7 @@ protocol MediaLibraryObserver: AnyObject {
 
 extension MediaLibraryObserver {
     func mediaLibrary(didUpdateItemsOfMediaLibrary: MediaLibrary) {}
+    func mediaLibrary(mediaLibrary: MediaLibrary, willDelete series: Series) {}
     func mediaLibrary(mediaLibrary: MediaLibrary, didStartDownloadOf series: Series) {}
     func mediaLibrary(mediaLibrary: MediaLibrary,
                       didUpdateTotalDownloadProgress fractionCompleted: Double,
@@ -374,5 +392,9 @@ extension MediaLibrary {
 
     private func notifyLibraryUpdate() {
         forEachObserver { $0.mediaLibrary(didUpdateItemsOfMediaLibrary: self) }
+    }
+
+    private func notify(willDelete series: Series) {
+        forEachObserver { $0.mediaLibrary(mediaLibrary: self, willDelete: series) }
     }
 }

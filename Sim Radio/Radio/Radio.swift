@@ -101,6 +101,7 @@ class Radio {
         } catch {
             print("Failed to handleNowPlayableConfiguration, error: \(error)")
         }
+        library.addObserver(self)
     }
 
     func stateDidChange() {
@@ -146,6 +147,8 @@ class Radio {
         return stations[previousStationIndex]
     }
 }
+
+// MARK: NowPlayableConfiguration handler
 
 extension Radio {
     private func handleCommand(command: NowPlayableCommand,
@@ -228,6 +231,18 @@ extension Radio {
             trackCount: trackCount
         )
         nowPlayableBehavior.setNowPlayingMetadata(meta)
+    }
+}
+
+// MARK: MediaLibraryObserver extension
+
+extension Radio: MediaLibraryObserver {
+    func mediaLibrary(mediaLibrary: MediaLibrary, willDelete series: Series) {
+        if case let .playing(station) = state {
+            if station.series === series {
+                turnOff()
+            }
+        }
     }
 }
 

@@ -25,6 +25,7 @@ class Series {
     let model: Model.Series
     let logo: UIImage
     var readyToPlayStations: [Station] {
+        if managedObject.isBeingDeleted { return [] }
         return stations.filter { $0.readyToPlay }
     }
     private(set) var stations: [Station] = []
@@ -113,6 +114,7 @@ class Station {
         return !playlistFileGroups.filter(commonFileGroups.contains).isEmpty
     }
     var readyToPlay: Bool {
+        if series.managedObject.isBeingDeleted { return false }
         let isStationFilesDownloaded = downloadProgress == nil || downloadProgress == 1.0
         if !isStationFilesDownloaded { return false }
         if isDependsOnCommonFiles {
