@@ -175,6 +175,7 @@ extension MediaLibrary {
 
     func deleteAllData(seriesManagedObjects: [SeriesPersistence]) {
         persistentContainer.performBackgroundTask { context in
+            context.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
             for series in seriesManagedObjects {
                 let seriesURL = FileManager.documents.appendingPathComponent(series.directory)
                 try? FileManager.default.removeItem(at: seriesURL)

@@ -21,7 +21,12 @@ class AudiofilesDownloadManager {
     }
 
     func abortDownloading(_ series: Series) {
-        print("TODO: abort downloading of \(series.title)")
+        let downloads = seriesDownloads.elements
+        downloads.forEach {
+            if $0.series === series {
+                $0.cancel()
+            }
+        }
     }
 
     func downloadSeriesAudiofiles(series: [Series], downloadDelegate: SeriesDownloadDelegate) {
@@ -57,9 +62,9 @@ extension SeriesDownloadDelegate {
 // MARK: SeriesDownload
 
 class SeriesDownload {
-    private weak var series: Series?
+    weak var series: Series?
     private let totalProgress = Progress(totalUnitCount: -1)
-    private let activeDownloads = SynchronizedDictionary<URL, FilesDownloadTask>()
+    private let activeDownloads = SynchronizedDictionary<UUID, FilesDownloadTask>()
     private weak var downloadDelegate: SeriesDownloadDelegate?
     private let persistentContainer: NSPersistentContainer
 
@@ -67,6 +72,11 @@ class SeriesDownload {
         self.series = series
         self.persistentContainer = persistentContainer
         self.downloadDelegate = downloadDelegate
+    }
+
+    func cancel() {
+        let downloads = activeDownloads.values
+        downloads.forEach { $0.cancel() }
     }
 
     func startDownload(queue: OperationQueue) -> Bool {
@@ -79,7 +89,7 @@ class SeriesDownload {
             result = true
             addFilesDownloadTask(queue: queue,
                                  managedObject: downloadObject,
-                                 source: .commonSeriesFiles(seriesOrigin: series.origin),
+                                 source: .commonSeriesFiles,
                                  destinationDirectory: seriesDirectoryURL)
         }
         for station in series.stations {
@@ -89,7 +99,7 @@ class SeriesDownload {
             addFilesDownloadTask(
                 queue: queue,
                 managedObject: stationDownloadObject,
-                source: .stationFiles(stationOrigin: station.origin, station: station),
+                source: .stationFiles(station: station),
                 destinationDirectory: stationDirectoryURL)
         }
         return result
@@ -116,7 +126,7 @@ class SeriesDownload {
         let unitCount = allFiles.reduce(0) { $0 + $1.units }
         totalProgress.totalUnitCount += unitCount
         totalProgress.addChild(task.progress, withPendingUnitCount: unitCount)
-        activeDownloads[task.origin] = task
+        activeDownloads[task.id] = task
         task.delegate = self
         task.start()
     }
@@ -127,7 +137,7 @@ class SeriesDownload {
 extension SeriesDownload: FilesDownloadTaskDelegate {
     func filesDownloadTask(_ filesDownloadTask: FilesDownloadTask, didUpdateProgress progress: Progress) {
         guard let series = series else { return }
-        if case let .stationFiles(_, station) = filesDownloadTask.sourse {
+        if case let .stationFiles(station) = filesDownloadTask.sourse {
             downloadDelegate?.series(series: series,
                                      didUpdateProgress: progress.fractionCompleted,
                                      of: station)
@@ -141,24 +151,26 @@ extension SeriesDownload: FilesDownloadTaskDelegate {
         guard let series = series else { return }
         persistentContainer.performBackgroundTask { context in
             context.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
-            if case let .stationFiles(stationOrigin, station) = filesDownloadTask.sourse {
-                self.activeDownloads[stationOrigin] = nil
+            if case let .stationFiles(station) = filesDownloadTask.sourse {
+                self.activeDownloads[filesDownloadTask.id] = nil
                 self.downloadDelegate?.series(
                     series: series,
                     didCompleteDownloadOf: station)
 
                 guard let downloadTaskID = station.managedObject.downloadTask?.objectID,
                     let downloadTask = context.object(with: downloadTaskID) as? DownloadTaskPersistence  else {
-                        print("Internal error: can't obtain downloadTask ManagedObject")
+                        print("Internal error: can't obtain downloadTask ManagedObject of station" +
+                            " while complete filesDownloadTask")
                         return
                 }
                 context.delete(downloadTask)
-            } else if case let .commonSeriesFiles(seriesOrigin) = filesDownloadTask.sourse {
-                self.activeDownloads[seriesOrigin] = nil
+            } else if case .commonSeriesFiles = filesDownloadTask.sourse {
+                self.activeDownloads[filesDownloadTask.id] = nil
                 self.downloadDelegate?.series(didCompleteDownloadCommonFilesOf: series)
                 guard let downloadTaskID = series.managedObject.downloadTask?.objectID,
                     let downloadTask = context.object(with: downloadTaskID) as? DownloadTaskPersistence  else {
-                        print("Internal error: can't obtain downloadTask ManagedObject")
+                        print("Internal error: can't obtain downloadTask ManagedObject of common files of series" +
+                            " while complete filesDownloadTask")
                         return
                 }
                 context.delete(downloadTask)
@@ -181,10 +193,11 @@ extension SeriesDownload: FilesDownloadTaskDelegate {
         guard let series = series else { return }
         persistentContainer.performBackgroundTask { context in
             context.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
-            if case let .stationFiles(_, station) = filesDownloadTask.sourse {
+            if case let .stationFiles(station) = filesDownloadTask.sourse {
                 guard let downloadTaskID = station.managedObject.downloadTask?.objectID,
                     let downloadTask = context.object(with: downloadTaskID) as? DownloadTaskPersistence  else {
-                        print("Internal error: can't obtain downloadTask ManagedObject")
+                        print("Internal error: can't obtain downloadTask ManagedObject of station" +
+                            " while complete file download")
                         return
                 }
                 let downloadFile = DownloadedPersistence(
@@ -193,10 +206,11 @@ extension SeriesDownload: FilesDownloadTaskDelegate {
                 downloadFile.source = file
                 downloadFile.task = downloadTask
 
-            } else if case .commonSeriesFiles(_) = filesDownloadTask.sourse {
+            } else if case .commonSeriesFiles = filesDownloadTask.sourse {
                 guard let downloadTaskID = series.managedObject.downloadTask?.objectID,
                     let downloadTask = context.object(with: downloadTaskID) as? DownloadTaskPersistence  else {
-                        print("Internal error: can't obtain downloadTask ManagedObject")
+                        print("Internal error: can't obtain downloadTask ManagedObject of common files of series" +
+                            " while complete file download")
                         return
                 }
                 let downloadFile = DownloadedPersistence(

@@ -73,7 +73,7 @@ class AudiofilesDownloadOperation: AsyncOperation {
     }
 
     override func main() {
-        if isCancelled { return }
+        if isAtomicCancelled.val == true { return }
         if files.isEmpty {
             doneOperation()
         }
@@ -102,9 +102,10 @@ class AudiofilesDownloadOperation: AsyncOperation {
 
     override func cancel() {
         isAtomicCancelled.val = true
+        downloadsSession.invalidateAndCancel()
         doneOperation()
         // to aviod "BUG IN CLIENT OF LIBDISPATCH: Semaphore object deallocated while in use"
-        for _ in 0..<AudiofilesDownloadOperationConstants.maximumParallelDownloads {
+        for _ in 0 ..< AudiofilesDownloadOperationConstants.maximumParallelDownloads {
             semaphore.signal()
         }
     }
@@ -148,6 +149,7 @@ extension AudiofilesDownloadOperation: URLSessionDownloadDelegate, URLSessionTas
                 let download = activeDownloads[sourceURL] else {
                     throw DownloadError.internalError
             }
+            if isAtomicCancelled.val == true { return }
             try moveFile(from: location, to: download.destination)
             delegate?.audiofilesDownloadOperation(self, didCompleteDownloadOf: download.downloadFile.source)
         } catch {

@@ -238,7 +238,10 @@ extension Radio {
 
 extension Radio: MediaLibraryObserver {
     func mediaLibrary(mediaLibrary: MediaLibrary, willDelete series: Series) {
-        if case let .playing(station) = state {
+        switch state {
+        case .idle:
+            return
+        case let .playing(station), let .paused(station):
             if station.series === series {
                 turnOff()
             }

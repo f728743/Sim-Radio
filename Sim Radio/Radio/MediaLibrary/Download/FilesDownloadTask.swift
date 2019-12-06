@@ -21,9 +21,11 @@ extension FilesDownloadTaskDelegate {
 /// keep track of successfully downladed files and repeat AudiofilesDownloadOperation for failed to
 /// download files until everething become nice
 class FilesDownloadTask {
+    let id = UUID()
+
     enum Source {
-        case commonSeriesFiles(seriesOrigin: URL)
-        case stationFiles(stationOrigin: URL, station: Station)
+        case commonSeriesFiles
+        case stationFiles(station: Station)
     }
 
     let progress: Progress
@@ -34,20 +36,14 @@ class FilesDownloadTask {
         case ready, executing, finished
     }
     private var state: State = .ready
+    fileprivate var isAtomicCancelled = AtomicBoolean()
     private let files: [DownloadFile]
     private var downloadedFiles: [URL]
     private weak var queue: OperationQueue?
-
-    var origin: URL {
-        switch sourse {
-        case .commonSeriesFiles(let seriesOrigin):
-            return seriesOrigin
-        case .stationFiles(let stationOrigin, _):
-            return stationOrigin
-        }
-    }
+    private var operation: AudiofilesDownloadOperation?
 
     init(queue: OperationQueue, files: [DownloadFile], downloadedFiles: [URL], source: Source) {
+        isAtomicCancelled.val = false
         self.sourse = source
         self.queue = queue
         self.files = files
@@ -56,17 +52,24 @@ class FilesDownloadTask {
     }
 
     func start() {
-        guard state != .executing else {
+        if isAtomicCancelled.val == true { return }
+        guard state == .ready else {
             return
         }
         startOperation()
     }
 
     func cancel() {
+        isAtomicCancelled.val = true
+        if state == .finished {
+            return
+        }
+        operation?.cancel()
         state = .finished
     }
 
     private func startOperation() {
+        if isAtomicCancelled.val == true { return }
         guard state != .finished else {
             return
         }
@@ -79,6 +82,7 @@ class FilesDownloadTask {
         let unitsToDownload = progress.totalUnitCount - progress.completedUnitCount
         progress.addChild(downloadOperation.totalProgress, withPendingUnitCount: unitsToDownload)
         downloadOperation.delegate = self
+        operation = downloadOperation
         queue?.addOperation(downloadOperation)
     }
 }
