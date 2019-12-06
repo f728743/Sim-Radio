@@ -35,28 +35,6 @@ class AudiofilesDownloadManager {
         }
     }
 }
-//func printDownload(downloadPersistence: DownloadTaskPersistence?) {
-//    guard let downloadPersistence = downloadPersistence else {
-//        print("no DownloadTaskPersistence")
-//        return
-//    }
-//    print("files")
-//    downloadPersistence.files.allObjects.forEach { file in
-//        guard let file = file as? DownloadFilePersistence else {
-//            print("???")
-//            return
-//        }
-//        print(file.source)
-//    }
-//    print("downloaded")
-//    downloadPersistence.downloaded.allObjects.forEach { file in
-//        guard let file = file as? DownloadedPersistence else {
-//            print("???")
-//            return
-//        }
-//        print(file.source)
-//    }
-//}
 
 // MARK: SeriesDownloadDelegate
 

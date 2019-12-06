@@ -19,20 +19,20 @@ class PlaylistManager {
     }
 
     func getPlaylist(of station: Station) throws -> Playlist {
-        if let playlist = playlists[station.origin] {
+        if let playlist = playlists[station.directoryURL] {
             return playlist
         }
         let playlist = try createPlaylist(of: station)
-        playlists[station.origin] = playlist
+        playlists[station.directoryURL] = playlist
         return playlist
     }
 
     func getCommonFileGroups(of series: Series) throws -> AudioFileGroups {
-        if let fileGroups = commonFileGroups[series.origin] {
+        if let fileGroups = commonFileGroups[series.directoryURL] {
             return fileGroups
         }
         let fileGroups = try createCommonFileGroups(of: series)
-        commonFileGroups[series.origin] = fileGroups
+        commonFileGroups[series.directoryURL] = fileGroups
         return fileGroups
     }
 

@@ -25,12 +25,10 @@ class SeriesViewController: UIViewController {
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "showStations" {
-            if let vc = segue.destination as? StationsViewController {
-                if let series = sender as? Series {
-                    vc.radio = radio
-                    vc.series = series
-                }
-            }
+            guard let vc = segue.destination as? StationsViewController,
+                let series = sender as? Series else { return }
+            vc.radio = radio
+            vc.series = series
         }
     }
 }

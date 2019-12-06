@@ -200,7 +200,6 @@ extension MediaLibrary {
 extension MediaLibrary: LibraryControl {
 
     func delete(series: Series) {
-        print("deleting series \"\(series.title)\"")
         setBeingDeleted(series: series)
         notify(willDelete: series)
         items.removeAll { $0 === series }
