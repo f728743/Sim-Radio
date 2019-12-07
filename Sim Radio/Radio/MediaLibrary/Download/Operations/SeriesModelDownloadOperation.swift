@@ -16,13 +16,14 @@ protocol DownloadedSeriesProvider {
 }
 
 class SeriesModelDownloadOperation: AsyncOperation {
+    typealias Handler = (Result<DownloadedSeriesModel, DownloadError>) -> Void
     var result: DownloadedSeriesModel?
 
     private let url: URL // it is possible that url ≠ origin
-    private let completion: ((DownloadedSeriesModel) -> Void)?
+    private let completion: Handler?
     private let directory: String
 
-    init(from url: URL, to directory: String, completion: ((DownloadedSeriesModel) -> Void)? = nil) {
+    init(from url: URL, to directory: String, completion: Handler? = nil) {
         self.url = url
         self.directory = directory
         self.completion = completion
@@ -36,6 +37,9 @@ class SeriesModelDownloadOperation: AsyncOperation {
             do {
                 guard let localTempFileURL = localTempFileURL,
                     let remoteFileURL = response?.url  else {
+                        let error = DownloadError.failedToDownloadSeries(url: self.url)
+                        self.state = .finished
+                        self.completion?(.failure(error))
                         return
                 }
                 if self.isCancelled { return }
@@ -51,10 +55,11 @@ class SeriesModelDownloadOperation: AsyncOperation {
                     directory: self.directory)
                 self.result = result
                 self.state = .finished
-                self.completion?(result)
+                self.completion?(.success(result))
             } catch {
+                let error = DownloadError.failedToDownloadSeries(url: self.url)
                 self.state = .finished
-                print(error)
+                self.completion?(.failure(error))
             }
         }.resume()
     }

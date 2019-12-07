@@ -238,26 +238,38 @@ extension MediaLibrary: LibraryControl {
             self.download(series: series, stations: stations, instead: placeholder)
         }
         let seriesDirectory = UUID().uuidString
-        let seriesLoad = SeriesModelDownloadOperation(from: url, to: seriesDirectory) { series in
-            downloadedSeries = series
-            var stationLoadOperatios: [Operation] = []
-            for station in series.model.stations {
-                let stationURL = series.origin
-                    .deletingLastPathComponent()
-                    .appendingPathComponent(station.path)
-                    .appendingPathComponent(LibraryConstants.stationJson)
-                let stationDirectory = seriesDirectory
-                    .appendingPathComponent(station.path)
-                let stationLoad = StationModelDownloadOperation(
-                    from: stationURL,
-                    to: stationDirectory) { downloadStation in
-                        downloadedStations.append(newElement: downloadStation)
+        let seriesLoad = SeriesModelDownloadOperation(from: url, to: seriesDirectory) { [weak self] downloadResult in
+            guard let self = self else { return }
+            switch downloadResult {
+            case .success(let series):
+
+                downloadedSeries = series
+                var stationLoadOperatios: [Operation] = []
+                for station in series.model.stations {
+                    let stationURL = series.origin
+                        .deletingLastPathComponent()
+                        .appendingPathComponent(station.path)
+                        .appendingPathComponent(LibraryConstants.stationJson)
+                    let stationDirectory = seriesDirectory
+                        .appendingPathComponent(station.path)
+                    let stationLoad = StationModelDownloadOperation(
+                        from: stationURL,
+                        to: stationDirectory) { downloadStation in
+                            downloadedStations.append(newElement: downloadStation)
+                    }
+                    stationLoadOperatios.append(stationLoad)
+                    completion.addDependency(stationLoad)
                 }
-                stationLoadOperatios.append(stationLoad)
-                completion.addDependency(stationLoad)
+                self.operationQueue.addOperations(stationLoadOperatios, waitUntilFinished: false)
+                self.operationQueue.addOperation(completion)
+
+            case .failure(let error):
+                DispatchQueue.main.async {
+                    self.items.removeAll { $0 === placeholder }
+                    self.notifyLibraryUpdate()
+                }
+                print(error)
             }
-            self.operationQueue.addOperations(stationLoadOperatios, waitUntilFinished: false)
-            self.operationQueue.addOperation(completion)
         }
         operationQueue.addOperation(seriesLoad)
     }
