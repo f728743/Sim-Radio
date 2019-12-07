@@ -35,7 +35,7 @@ class FileDownloadOperation: AsyncOperation {
                 self.completion?()
             } catch {
                 self.state = .finished
-                print(error) // TODO:
+                print(error)
             }
         }.resume()
     }

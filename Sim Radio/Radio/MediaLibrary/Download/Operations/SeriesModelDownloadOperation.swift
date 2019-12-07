@@ -54,7 +54,7 @@ class SeriesModelDownloadOperation: AsyncOperation {
                 self.completion?(result)
             } catch {
                 self.state = .finished
-                print(error) // TODO:
+                print(error)
             }
         }.resume()
     }
