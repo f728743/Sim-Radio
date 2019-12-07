@@ -52,7 +52,7 @@ extension SeriesViewController {
     func showContextMenu(series: Series) {
         guard let appearance = series.appearance else { return }
 
-        let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        let contextMenu = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
 
         let playAction = UIAlertAction(title: "", style: .default) { _ in
             self.radio.playAnyStationOf(series: series)
@@ -73,31 +73,40 @@ extension SeriesViewController {
 
         let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
 
-        alertController.addAction(playAction)
-        alertController.addAction(deleteAction)
-        alertController.addAction(cancelAction)
+        contextMenu.addAction(playAction)
+        contextMenu.addAction(deleteAction)
+        contextMenu.addAction(cancelAction)
 
-        let popPresenter = alertController.popoverPresentationController
+        let popPresenter = contextMenu.popoverPresentationController
         popPresenter?.sourceView = view
-        alertController.pruneNegativeWidthConstraints()
-        alertController.view.tintColor = .systemPink
-        present(alertController, animated: true, completion: nil)
+        contextMenu.pruneNegativeWidthConstraints()
+        contextMenu.view.tintColor = .systemPink
+        present(contextMenu, animated: true, completion: nil)
     }
 
     func showAddSeiesDialog() {
-        let alertController = UIAlertController(title: "Add radio stations",
+        let urlInput = UIAlertController(title: "Add radio stations",
                                                 message: "Enter URL of series.json file",
                                                 preferredStyle: .alert)
-        alertController.addTextField { $0.placeholder = "URL" }
-        alertController.addAction(UIAlertAction(title: "Enter", style: .default) { _ in
-            guard let url = URL(string: alertController.textFields![0].text ?? "") else {
+        urlInput.addTextField { $0.placeholder = "URL" }
+        urlInput.addAction(UIAlertAction(title: "Enter", style: .default) { _ in
+            guard let url = URL(string: urlInput.textFields![0].text ?? "") else {
                 return
             }
-            self.radio.library.downloadSeriesFrom(url: url)
+            self.radio.library.downloadSeriesFrom(url: url, errorHandler: { [weak self] _ in
+                guard let self = self else { return }
+                let errorMessge = UIAlertController(title: "Error",
+                                                    message: "Failed to download series.json",
+                                                    preferredStyle: .alert)
+                errorMessge.addAction(UIAlertAction(title: "OK", style: .cancel))
+                errorMessge.view.tintColor = .systemPink
+                self.present(errorMessge, animated: true, completion: nil)
+
+            })
         })
-        alertController.addAction(UIAlertAction(title: "Cancel", style: .cancel))
-        alertController.view.tintColor = .systemPink
-        self.present(alertController, animated: true, completion: nil)
+        urlInput.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+        urlInput.view.tintColor = .systemPink
+        self.present(urlInput, animated: true, completion: nil)
     }
 }
 

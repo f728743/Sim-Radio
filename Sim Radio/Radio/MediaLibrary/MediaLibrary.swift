@@ -27,7 +27,7 @@ class LibraryPlaceholder: LibraryItem {
 
 protocol LibraryControl {
     func delete(series: Series)
-    func downloadSeriesFrom(url: URL)
+    func downloadSeriesFrom(url: URL, errorHandler: ((Error) -> Void)?)
 }
 
 class MediaLibrary {
@@ -212,15 +212,13 @@ extension MediaLibrary: LibraryControl {
         items.removeAll { $0 === series }
         notifyLibraryUpdate()
         DispatchQueue.global(qos: .userInitiated).async { [weak self] in
-            guard let self = self else {
-                return
-            }
+            guard let self = self else { return }
             self.audiofilesDownloadManager.abortDownloading(series)
             self.deleteAllData(seriesManagedObjects: [series.managedObject])
         }
     }
 
-    func downloadSeriesFrom(url: URL) {
+    func downloadSeriesFrom(url: URL, errorHandler: ((Error) -> Void)? = nil) {
         var downloadedSeries: DownloadedSeriesModel?
         let downloadedStations = SynchronizedArray<DownloadedStationModel>()
         let placeholder = LibraryPlaceholder()
@@ -228,7 +226,8 @@ extension MediaLibrary: LibraryControl {
         notifyLibraryUpdate()
         let completion = BlockOperation {
             guard let series = downloadedSeries else {
-                DispatchQueue.main.async {
+                DispatchQueue.main.async { [weak self] in
+                    guard let self = self else { return }
                     self.items.removeAll { $0 === placeholder }
                     self.notifyLibraryUpdate()
                 }
@@ -264,11 +263,12 @@ extension MediaLibrary: LibraryControl {
                 self.operationQueue.addOperation(completion)
 
             case .failure(let error):
-                DispatchQueue.main.async {
+                DispatchQueue.main.async { [weak self] in
+                    guard let self = self else { return }
                     self.items.removeAll { $0 === placeholder }
                     self.notifyLibraryUpdate()
+                    errorHandler?(error)
                 }
-                print(error)
             }
         }
         operationQueue.addOperation(seriesLoad)
