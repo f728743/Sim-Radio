@@ -147,6 +147,14 @@ extension SeriesDownload: FilesDownloadTaskDelegate {
             didUpdateTotalProgress: totalProgress.fractionCompleted)
     }
 
+    private func deleteDownloadTask(_ downloadTask: DownloadTaskPersistence,
+                                    from context: NSManagedObjectContext) {
+        guard let downloadTask = context.object(with: downloadTask.objectID) as? DownloadTaskPersistence  else {
+            fatalError("Internal error: can't obtain managed object")
+        }
+        context.delete(downloadTask)
+    }
+
     func filesDownloadTask(didComplete filesDownloadTask: FilesDownloadTask) {
         guard let series = series else { return }
         persistentContainer.performBackgroundTask { context in
@@ -156,24 +164,17 @@ extension SeriesDownload: FilesDownloadTaskDelegate {
                 self.downloadDelegate?.series(
                     series: series,
                     didCompleteDownloadOf: station)
-
-                guard let downloadTaskID = station.managedObject.downloadTask?.objectID,
-                    let downloadTask = context.object(with: downloadTaskID) as? DownloadTaskPersistence  else {
-                        print("Internal error: can't obtain downloadTask ManagedObject of station" +
-                            " while complete filesDownloadTask")
-                        return
+                guard let downloadTask = station.managedObject.downloadTask else {
+                    fatalError("downloadTask ManagedObject of station \(station.title) is nil")
                 }
-                context.delete(downloadTask)
+                self.deleteDownloadTask(downloadTask, from: context)
             } else if case .commonSeriesFiles = filesDownloadTask.sourse {
                 self.activeDownloads[filesDownloadTask.id] = nil
                 self.downloadDelegate?.series(didCompleteDownloadCommonFilesOf: series)
-                guard let downloadTaskID = series.managedObject.downloadTask?.objectID,
-                    let downloadTask = context.object(with: downloadTaskID) as? DownloadTaskPersistence  else {
-                        print("Internal error: can't obtain downloadTask ManagedObject of common files of series" +
-                            " while complete filesDownloadTask")
-                        return
+                guard let downloadTask = series.managedObject.downloadTask else {
+                    fatalError("downloadTask ManagedObject of series \(series.title) is nil")
                 }
-                context.delete(downloadTask)
+                self.deleteDownloadTask(downloadTask, from: context)
             }
             if self.activeDownloads.count == 0 {
                 self.downloadDelegate?.series(didCompleteDownloadOf: series)

@@ -44,6 +44,11 @@ class MediaLibrary {
                 fatalError("Unresolved error \(error), \(error.userInfo)")
             }
         })
+        //         Merge the changes from other contexts automatically.
+        container.viewContext.automaticallyMergesChangesFromParent = true
+        container.viewContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
+        container.viewContext.undoManager = nil
+        container.viewContext.shouldDeleteInaccessibleFaults = true
         return container
     }()
     private lazy var audiofilesDownloadManager: AudiofilesDownloadManager = {
@@ -109,8 +114,9 @@ extension MediaLibrary {
         }
     }
 
-    private func addSeries(context: NSManagedObjectContext, downloadedSeries: DownloadedSeriesModel,
-                           downloadedStations: [DownloadedStationModel]) -> NSManagedObjectID {
+    private func addSeries(downloadedSeries: DownloadedSeriesModel,
+                           downloadedStations: [DownloadedStationModel],
+                           into context: NSManagedObjectContext) -> NSManagedObjectID {
 
         let series = SeriesPersistence(entity: SeriesPersistence.entity(), insertInto: context)
         series.origin = downloadedSeries.origin
@@ -261,9 +267,10 @@ extension MediaLibrary: LibraryControl {
                           instead placeholder: LibraryPlaceholder) {
         let completion = BlockOperation {
             self.persistentContainer.performBackgroundTask { context in
-                let seriesID = self.addSeries(context: context,
-                                              downloadedSeries: series,
-                                              downloadedStations: stations)
+                context.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
+                let seriesID = self.addSeries(downloadedSeries: series,
+                                              downloadedStations: stations,
+                                              into: context)
                 DispatchQueue.main.async {
                     self.insertNewSeries(seriesID: seriesID, instead: placeholder)
                     self.notifyLibraryUpdate()
@@ -300,7 +307,6 @@ extension MediaLibrary: SeriesDownloadDelegate {
         //        print("Did complete download of series '\(series.title)'")
         DispatchQueue.main.async {
             series.downloadProgress = nil
-            series.managedObject.downloadTask = nil
             self.notifyCompleteDownload(of: series)
         }
     }
@@ -309,7 +315,6 @@ extension MediaLibrary: SeriesDownloadDelegate {
         //        print("Station '\(station.title)' of series '\(series.title)' did complete download")
         DispatchQueue.main.async {
             station.downloadProgress = nil
-            station.managedObject.downloadTask = nil
             self.notifyCompleteDownload(of: station, of: series)
         }
     }
