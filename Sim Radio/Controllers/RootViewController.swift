@@ -5,9 +5,28 @@
 
 import UIKit
 
+struct MiniPlayerConstants {
+    static fileprivate var safeAreaBottomInsets: CGFloat = 0
+    static let height: CGFloat = 64
+    static var fullHeight: CGFloat {
+        return height + safeAreaBottomInsets
+    }
+}
+
 class RootViewController: UIViewController {
     weak var radio: Radio!
     var miniPlayer: MiniPlayerViewController?
+    @IBOutlet weak var miniPlayerHeight: NSLayoutConstraint!
+
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        if #available(iOS 11.0, *) {
+            if let bottomPadding = UIApplication.shared.keyWindow?.safeAreaInsets.bottom {
+                MiniPlayerConstants.safeAreaBottomInsets = bottomPadding
+            }
+        }
+        miniPlayerHeight.constant = MiniPlayerConstants.fullHeight
+    }
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "navigationController" {
@@ -39,9 +58,8 @@ extension RootViewController: MiniPlayerDelegate {
         let transitionDelegate = CardTransitioningDelegate()
         transitionDelegate.transitionDuration = 0.6
         if let miniPlayer = self.miniPlayer {
-            let height = miniPlayer.view.frame.height
-            transitionDelegate.presentInitialHeight = height
-            transitionDelegate.dismissEndingHeight = height
+            transitionDelegate.presentInitialHeight = MiniPlayerConstants.fullHeight
+            transitionDelegate.dismissEndingHeight = MiniPlayerConstants.fullHeight
             modal.sourceView = miniPlayer
         }
         modal.transitionDuration = transitionDelegate.transitionDuration

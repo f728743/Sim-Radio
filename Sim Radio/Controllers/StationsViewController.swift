@@ -13,6 +13,7 @@ class StationsViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        navigationItem.largeTitleDisplayMode = .never
         radio.addObserver(self)
         radio.library.addObserver(self)
 

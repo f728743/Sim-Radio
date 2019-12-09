@@ -52,6 +52,7 @@ class PlayerCardViewController: UIViewController {
 
     @IBOutlet weak var miniPlayerImageView: UIImageView!
 
+    @IBOutlet weak var miniPlayerHeight: NSLayoutConstraint!
     weak var sourceView: PlayerCardSourceProtocol!
     var backingImage: UIImage?
     var miniPlayerImage: UIImage?
@@ -108,6 +109,7 @@ class PlayerCardViewController: UIViewController {
         miniPlayerImageView.image = miniPlayerImage
         configureArtImage()
 
+        miniPlayerHeight.constant = MiniPlayerConstants.fullHeight
         volumeSlider.tintColor = .gray
         volumeSlider.showsRouteButton = false
     }

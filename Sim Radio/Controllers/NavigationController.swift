@@ -13,5 +13,6 @@ class NavigationController: UINavigationController {
             seriesViewController.radio = radio
         }
         navigationBar.installBlurEffect()
+        navigationBar.prefersLargeTitles = true
     }
 }
