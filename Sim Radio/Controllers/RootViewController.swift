@@ -6,7 +6,7 @@
 import UIKit
 
 struct MiniPlayerConstants {
-    static fileprivate var safeAreaBottomInsets: CGFloat = 0
+    static fileprivate(set) var safeAreaBottomInsets: CGFloat = 0
     static let height: CGFloat = 64
     static var fullHeight: CGFloat {
         return height + safeAreaBottomInsets

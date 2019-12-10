@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15505" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="qRN-Dn-tzl">
-    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <device id="retina5_5" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15510"/>
@@ -13,7 +13,7 @@
             <objects>
                 <viewController id="SRe-IY-1R5" customClass="SeriesViewController" customModule="Sim_Radio" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="12Y-FY-DN8">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <viewLayoutGuide key="safeArea" id="gdZ-eJ-Trj"/>
@@ -38,7 +38,7 @@
             <objects>
                 <viewController id="31E-8m-6Ho" customClass="StationsViewController" customModule="Sim_Radio" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="7kF-3E-k1P">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <viewLayoutGuide key="safeArea" id="ODy-uC-jtd"/>
@@ -54,17 +54,17 @@
             <objects>
                 <viewController id="qRN-Dn-tzl" userLabel="Root View Controller" customClass="RootViewController" customModule="Sim_Radio" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="O3a-Yz-K3N">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="2WV-8B-8qZ" userLabel="Root Container View">
-                                <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                                 <connections>
                                     <segue destination="awK-CQ-dwJ" kind="embed" identifier="navigationController" id="4zm-DC-2K4"/>
                                 </connections>
                             </containerView>
                             <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="iah-jM-Rg6" userLabel="Mini Player Container View">
-                                <rect key="frame" x="0.0" y="832" width="414" height="64"/>
+                                <rect key="frame" x="0.0" y="672" width="414" height="64"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="64" id="4f8-7K-tDY"/>
                                 </constraints>
@@ -125,7 +125,7 @@
                                                     </constraints>
                                                 </imageView>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Not Playng" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ek2-EI-qlK" userLabel="Station Title">
-                                                    <rect key="frame" x="84" y="21.5" width="83.5" height="21"/>
+                                                    <rect key="frame" x="84" y="21.666666666666671" width="83.666666666666686" height="21"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
@@ -222,7 +222,7 @@
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="awK-CQ-dwJ" customClass="NavigationController" customModule="Sim_Radio" customModuleProvider="target" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="lu0-Fa-Wh3">
-                        <rect key="frame" x="0.0" y="44" width="414" height="44"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <color key="tintColor" red="0.99916261429999997" green="0.17425110939999999" blue="0.3347000182" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     </navigationBar>
@@ -240,49 +240,49 @@
             <objects>
                 <viewController storyboardIdentifier="PlayerCardViewController" id="POK-A3-xE5" userLabel="Player Card View Controller" customClass="PlayerCardViewController" customModule="Sim_Radio" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="DJW-jx-HXQ">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" alpha="0.60000002384185791" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="zCz-yE-I91" userLabel="Art Colorful Shadow Image View">
-                                <rect key="frame" x="32" y="76" width="350" height="350"/>
+                                <rect key="frame" x="32" y="32" width="350" height="350"/>
                             </imageView>
                             <view alpha="0.25" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="9Gq-ge-yd4" userLabel="Art Shadow View">
-                                <rect key="frame" x="32" y="76" width="350" height="350"/>
+                                <rect key="frame" x="32" y="32" width="350" height="350"/>
                                 <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </view>
                             <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="CHU-YJ-Hit">
-                                <rect key="frame" x="0.0" y="44" width="414" height="818"/>
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="9h2-S9-wJX">
-                                    <rect key="frame" x="0.0" y="0.0" width="414" height="818"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 </view>
                                 <blurEffect style="light"/>
                             </visualEffectView>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="NU7-99-5pE" userLabel="Mini Player Image View">
-                                <rect key="frame" x="0.0" y="44" width="414" height="64"/>
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="64"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="64" id="nDN-Hl-WJS"/>
                                 </constraints>
                             </imageView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="RBE-jt-HKV" userLabel="Art Background View">
-                                <rect key="frame" x="32" y="76" width="350" height="350"/>
+                                <rect key="frame" x="32" y="32" width="350" height="350"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="0ny-Ic-6ZB" userLabel="Art View">
-                                <rect key="frame" x="32" y="76" width="350" height="350"/>
+                                <rect key="frame" x="32" y="32" width="350" height="350"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="0ny-Ic-6ZB" secondAttribute="height" multiplier="1:1" id="tbH-yh-wbq"/>
                                 </constraints>
                             </view>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="tMT-dY-ion">
-                                <rect key="frame" x="32" y="76" width="350" height="350"/>
+                                <rect key="frame" x="32" y="32" width="350" height="350"/>
                             </imageView>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="DOq-oc-ZVX" userLabel="Title Stack">
-                                <rect key="frame" x="4" y="446" width="406" height="57"/>
+                                <rect key="frame" x="4" y="402" width="406" height="56.666666666666686"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Station title" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="EjY-3b-Xkp" userLabel="Station Title" customClass="MarqueeLabel" customModule="Sim_Radio" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="0.0" width="406" height="26.5"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="406" height="26.333333333333332"/>
                                         <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="22"/>
                                         <nil key="highlightedColor"/>
                                         <userDefinedRuntimeAttributes>
@@ -304,7 +304,7 @@
                                         </userDefinedRuntimeAttributes>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Station info" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Kim-PV-dBF" userLabel="Station Info" customClass="MarqueeLabel" customModule="Sim_Radio" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="30.5" width="406" height="26.5"/>
+                                        <rect key="frame" x="0.0" y="30.333333333333314" width="406" height="26.333333333333329"/>
                                         <color key="tintColor" red="1" green="0.25007479399999999" blue="0.084036610580000004" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="22"/>
                                         <color key="textColor" red="0.99916261429999997" green="0.17425110939999999" blue="0.3347000182" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -329,17 +329,17 @@
                                     </label>
                                 </subviews>
                             </stackView>
-                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="30" translatesAutoresizingMaskIntoConstraints="NO" id="Aej-cZ-ph8" userLabel="Controls Stack">
-                                <rect key="frame" x="0.0" y="543" width="414" height="192"/>
+                            <stackView opaque="NO" contentMode="scaleAspectFit" axis="vertical" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="Aej-cZ-ph8" userLabel="Controls Stack">
+                                <rect key="frame" x="0.0" y="538.66666666666663" width="414" height="115.33333333333337"/>
                                 <subviews>
-                                    <stackView opaque="NO" contentMode="scaleToFill" spacing="44" translatesAutoresizingMaskIntoConstraints="NO" id="qrm-PV-WxJ" userLabel="Control Buttons Stack">
-                                        <rect key="frame" x="61" y="0.0" width="292" height="68"/>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="9HR-Hi-lCF" userLabel="Control Buttons">
+                                        <rect key="frame" x="0.0" y="0.0" width="414" height="60"/>
                                         <subviews>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="YTt-J4-QJA" userLabel="Rewind" customClass="ControlsButton" customModule="Sim_Radio" customModuleProvider="target">
-                                                <rect key="frame" x="0.0" y="0.0" width="68" height="68"/>
+                                                <rect key="frame" x="46" y="0.0" width="60" height="60"/>
                                                 <constraints>
-                                                    <constraint firstAttribute="width" constant="68" id="HQC-N4-Ype"/>
-                                                    <constraint firstAttribute="height" constant="68" id="Reu-Hf-Ldp"/>
+                                                    <constraint firstAttribute="width" constant="60" id="HQC-N4-Ype"/>
+                                                    <constraint firstAttribute="height" constant="60" id="Reu-Hf-Ldp"/>
                                                 </constraints>
                                                 <state key="normal" image="Rewind"/>
                                                 <connections>
@@ -347,10 +347,10 @@
                                                 </connections>
                                             </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bDI-bl-x0I" userLabel="Play-Pause" customClass="ControlsButton" customModule="Sim_Radio" customModuleProvider="target">
-                                                <rect key="frame" x="112" y="0.0" width="68" height="68"/>
+                                                <rect key="frame" x="177" y="0.0" width="60" height="60"/>
                                                 <constraints>
-                                                    <constraint firstAttribute="width" constant="68" id="hyn-5X-eMv"/>
-                                                    <constraint firstAttribute="height" constant="68" id="orS-9K-OrR"/>
+                                                    <constraint firstAttribute="width" constant="60" id="hyn-5X-eMv"/>
+                                                    <constraint firstAttribute="height" constant="60" id="orS-9K-OrR"/>
                                                 </constraints>
                                                 <state key="normal" image="Play"/>
                                                 <connections>
@@ -358,10 +358,10 @@
                                                 </connections>
                                             </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="GlH-3c-RhH" userLabel="FastForward" customClass="ControlsButton" customModule="Sim_Radio" customModuleProvider="target">
-                                                <rect key="frame" x="224" y="0.0" width="68" height="68"/>
+                                                <rect key="frame" x="308" y="0.0" width="60" height="60"/>
                                                 <constraints>
-                                                    <constraint firstAttribute="width" constant="68" id="ekg-JB-VkD"/>
-                                                    <constraint firstAttribute="height" constant="68" id="sZb-J4-8fh"/>
+                                                    <constraint firstAttribute="width" constant="60" id="ekg-JB-VkD"/>
+                                                    <constraint firstAttribute="height" constant="60" id="sZb-J4-8fh"/>
                                                 </constraints>
                                                 <state key="normal" image="FastForward"/>
                                                 <connections>
@@ -369,19 +369,30 @@
                                                 </connections>
                                             </button>
                                         </subviews>
-                                    </stackView>
+                                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                        <constraints>
+                                            <constraint firstItem="bDI-bl-x0I" firstAttribute="centerX" secondItem="9HR-Hi-lCF" secondAttribute="centerX" id="2BJ-St-GMr"/>
+                                            <constraint firstItem="bDI-bl-x0I" firstAttribute="centerY" secondItem="9HR-Hi-lCF" secondAttribute="centerY" id="I4y-3g-Uod"/>
+                                            <constraint firstAttribute="bottom" secondItem="bDI-bl-x0I" secondAttribute="bottom" id="OX5-Jv-OPR"/>
+                                            <constraint firstAttribute="trailing" secondItem="GlH-3c-RhH" secondAttribute="trailing" constant="46" id="guK-J2-z6f"/>
+                                            <constraint firstItem="YTt-J4-QJA" firstAttribute="centerY" secondItem="9HR-Hi-lCF" secondAttribute="centerY" id="kDR-iC-NFm"/>
+                                            <constraint firstItem="YTt-J4-QJA" firstAttribute="leading" secondItem="9HR-Hi-lCF" secondAttribute="leading" constant="46" id="l0l-NP-Av3"/>
+                                            <constraint firstItem="bDI-bl-x0I" firstAttribute="top" secondItem="9HR-Hi-lCF" secondAttribute="top" id="lZz-xS-FsU"/>
+                                            <constraint firstItem="GlH-3c-RhH" firstAttribute="centerY" secondItem="9HR-Hi-lCF" secondAttribute="centerY" id="oTe-2F-F1g"/>
+                                        </constraints>
+                                    </view>
                                     <stackView opaque="NO" contentMode="scaleToFill" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="nJH-0J-8u7" userLabel="Volume Stack View">
-                                        <rect key="frame" x="30" y="98" width="354" height="40"/>
+                                        <rect key="frame" x="30" y="68" width="354" height="47.333333333333343"/>
                                         <subviews>
                                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Min Volume" translatesAutoresizingMaskIntoConstraints="NO" id="OQ5-Zd-YdD">
-                                                <rect key="frame" x="0.0" y="10" width="20" height="20"/>
+                                                <rect key="frame" x="0.0" y="13.666666666666742" width="20" height="20"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" constant="20" id="9hS-VZ-tKV"/>
                                                     <constraint firstAttribute="height" constant="20" id="o60-qK-VOQ"/>
                                                 </constraints>
                                             </imageView>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="e0Q-M3-VAA">
-                                                <rect key="frame" x="20" y="0.0" width="314" height="40"/>
+                                                <rect key="frame" x="20" y="3.6666666666667425" width="314" height="40"/>
                                                 <subviews>
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="o3J-b0-pl7" userLabel="Fake Slider View">
                                                         <rect key="frame" x="8" y="19" width="294" height="2"/>
@@ -410,7 +421,7 @@
                                                 </constraints>
                                             </view>
                                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Max Volume" translatesAutoresizingMaskIntoConstraints="NO" id="8pz-Nb-eBz">
-                                                <rect key="frame" x="334" y="10" width="20" height="20"/>
+                                                <rect key="frame" x="334" y="13.666666666666742" width="20" height="20"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="20" id="cSr-0G-Iw6"/>
                                                     <constraint firstAttribute="width" constant="20" id="cna-V4-ETk"/>
@@ -418,28 +429,35 @@
                                             </imageView>
                                         </subviews>
                                     </stackView>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="led-gT-G1a" userLabel="Airplay">
-                                        <rect key="frame" x="195" y="168" width="24" height="24"/>
-                                        <state key="normal" image="Airplay"/>
-                                        <connections>
-                                            <action selector="pickPlaybackRoute:" destination="POK-A3-xE5" eventType="touchUpInside" id="hYy-Va-nUJ"/>
-                                        </connections>
-                                    </button>
                                 </subviews>
                                 <constraints>
+                                    <constraint firstItem="9HR-Hi-lCF" firstAttribute="leading" secondItem="Aej-cZ-ph8" secondAttribute="leading" id="10O-Se-wBq"/>
                                     <constraint firstAttribute="trailing" secondItem="nJH-0J-8u7" secondAttribute="trailing" constant="30" id="XRv-rH-pjx"/>
                                     <constraint firstItem="nJH-0J-8u7" firstAttribute="leading" secondItem="Aej-cZ-ph8" secondAttribute="leading" constant="30" id="dW2-sx-cTe"/>
+                                    <constraint firstAttribute="trailing" secondItem="9HR-Hi-lCF" secondAttribute="trailing" id="tsE-Le-CL1"/>
                                 </constraints>
                             </stackView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="led-gT-G1a" userLabel="Airplay">
+                                <rect key="frame" x="195" y="658" width="24" height="24"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="24" id="3YH-4C-ghe"/>
+                                    <constraint firstAttribute="width" constant="24" id="Tde-cZ-YsG"/>
+                                </constraints>
+                                <state key="normal" image="Airplay"/>
+                                <connections>
+                                    <action selector="pickPlaybackRoute:" destination="POK-A3-xE5" eventType="touchUpInside" id="hYy-Va-nUJ"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="NU7-99-5pE" firstAttribute="trailing" secondItem="fpv-Nw-SBU" secondAttribute="trailing" id="21D-dp-aOl"/>
                             <constraint firstItem="DOq-oc-ZVX" firstAttribute="top" secondItem="0ny-Ic-6ZB" secondAttribute="bottom" constant="20" id="2sa-to-de6"/>
                             <constraint firstItem="0ny-Ic-6ZB" firstAttribute="trailing" secondItem="tMT-dY-ion" secondAttribute="trailing" id="30s-9l-6jz"/>
-                            <constraint firstItem="Aej-cZ-ph8" firstAttribute="top" secondItem="DOq-oc-ZVX" secondAttribute="bottom" constant="40" id="5wM-IT-wxy"/>
+                            <constraint firstItem="Aej-cZ-ph8" firstAttribute="top" relation="lessThanOrEqual" secondItem="DOq-oc-ZVX" secondAttribute="bottom" constant="80" id="5wM-IT-wxy"/>
                             <constraint firstItem="RBE-jt-HKV" firstAttribute="leading" secondItem="zCz-yE-I91" secondAttribute="leading" id="6og-Hc-g5H"/>
                             <constraint firstItem="RBE-jt-HKV" firstAttribute="trailing" secondItem="zCz-yE-I91" secondAttribute="trailing" id="7eH-GL-iH8"/>
+                            <constraint firstItem="led-gT-G1a" firstAttribute="top" relation="lessThanOrEqual" secondItem="Aej-cZ-ph8" secondAttribute="bottom" constant="4" id="8Fb-hr-dUM"/>
                             <constraint firstItem="fpv-Nw-SBU" firstAttribute="trailing" secondItem="0ny-Ic-6ZB" secondAttribute="trailing" constant="32" id="8Z0-Ep-Nlj"/>
                             <constraint firstAttribute="trailing" secondItem="Aej-cZ-ph8" secondAttribute="trailing" id="AgH-c5-Vsx"/>
                             <constraint firstItem="tMT-dY-ion" firstAttribute="top" secondItem="zCz-yE-I91" secondAttribute="top" id="Ki8-rc-xoa"/>
@@ -459,6 +477,7 @@
                             <constraint firstItem="CHU-YJ-Hit" firstAttribute="leading" secondItem="fpv-Nw-SBU" secondAttribute="leading" id="m4c-HV-4NI"/>
                             <constraint firstItem="RBE-jt-HKV" firstAttribute="top" secondItem="zCz-yE-I91" secondAttribute="top" id="mGG-An-jt7"/>
                             <constraint firstItem="fpv-Nw-SBU" firstAttribute="bottom" secondItem="CHU-YJ-Hit" secondAttribute="bottom" id="o1t-2O-Q2x"/>
+                            <constraint firstItem="led-gT-G1a" firstAttribute="bottom" secondItem="0ny-Ic-6ZB" secondAttribute="bottom" constant="300" id="obH-bJ-OLn"/>
                             <constraint firstItem="NU7-99-5pE" firstAttribute="leading" secondItem="fpv-Nw-SBU" secondAttribute="leading" id="p8Q-LY-Vtd"/>
                             <constraint firstItem="tMT-dY-ion" firstAttribute="leading" secondItem="zCz-yE-I91" secondAttribute="leading" id="pVq-91-TE4"/>
                             <constraint firstItem="NU7-99-5pE" firstAttribute="top" secondItem="fpv-Nw-SBU" secondAttribute="top" id="pu0-KV-yZN"/>
@@ -466,6 +485,7 @@
                             <constraint firstItem="0ny-Ic-6ZB" firstAttribute="bottom" secondItem="tMT-dY-ion" secondAttribute="bottom" id="qnX-7M-Nrx"/>
                             <constraint firstItem="RBE-jt-HKV" firstAttribute="bottom" secondItem="zCz-yE-I91" secondAttribute="bottom" id="r7c-ir-W2c"/>
                             <constraint firstItem="9Gq-ge-yd4" firstAttribute="leading" secondItem="zCz-yE-I91" secondAttribute="leading" id="tWv-we-Eem"/>
+                            <constraint firstItem="led-gT-G1a" firstAttribute="centerX" secondItem="DJW-jx-HXQ" secondAttribute="centerX" id="wBt-uZ-A6g"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="fpv-Nw-SBU"/>
                     </view>
@@ -481,6 +501,7 @@
                         <outlet property="artViewLeadingInset" destination="Rf4-4F-2rf" id="a0E-11-Zpn"/>
                         <outlet property="artViewTopInset" destination="dKL-yV-qLc" id="FfX-Yr-klg"/>
                         <outlet property="artViewTrailingInset" destination="8Z0-Ep-Nlj" id="VdY-kk-BeT"/>
+                        <outlet property="cardCanvasHeight" destination="obH-bJ-OLn" id="6PQ-ms-yeR"/>
                         <outlet property="fastForwardButton" destination="GlH-3c-RhH" id="kTT-9J-Ydy"/>
                         <outlet property="miniPlayerHeight" destination="nDN-Hl-WJS" id="wdu-9P-iRa"/>
                         <outlet property="miniPlayerImageView" destination="NU7-99-5pE" id="Yho-v8-9x8"/>

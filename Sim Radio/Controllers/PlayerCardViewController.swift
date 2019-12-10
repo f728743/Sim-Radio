@@ -53,6 +53,7 @@ class PlayerCardViewController: UIViewController {
     @IBOutlet weak var miniPlayerImageView: UIImageView!
 
     @IBOutlet weak var miniPlayerHeight: NSLayoutConstraint!
+    @IBOutlet weak var cardCanvasHeight: NSLayoutConstraint!
     weak var sourceView: PlayerCardSourceProtocol!
     var backingImage: UIImage?
     var miniPlayerImage: UIImage?
@@ -97,7 +98,6 @@ class PlayerCardViewController: UIViewController {
 
     override func awakeFromNib() {
         super.awakeFromNib()
-
         modalPresentationCapturesStatusBarAppearance = true
         modalPresentationStyle = .overFullScreen // dont dismiss the presenting view controller when presented
     }
@@ -112,6 +112,10 @@ class PlayerCardViewController: UIViewController {
         miniPlayerHeight.constant = MiniPlayerConstants.fullHeight
         volumeSlider.tintColor = .gray
         volumeSlider.showsRouteButton = false
+
+        let topInsets = UIApplication.shared.statusBarFrame.height + 13 + 32 + (UIScreen.main.bounds.width - 32 * 2)
+        let bottomInsets = MiniPlayerConstants.safeAreaBottomInsets + 20
+        cardCanvasHeight.constant = UIScreen.main.bounds.height - (topInsets + bottomInsets)
     }
 
     func configureArtImage() {
