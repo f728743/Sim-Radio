@@ -25,7 +25,7 @@ class PlayerCardViewController: UIViewController {
     let shadowAlphaZommedIn: CGFloat = 0.3
     let shadowAlphaZommedOut: CGFloat = 0.1
     var transitionDuration: TimeInterval = 0.6
-    let artZoomTransitionDuration: TimeInterval = 0.8
+    let artZoomTransitionDuration: TimeInterval = 2
 
     @IBOutlet weak var artViewLeadingInset: NSLayoutConstraint!
     @IBOutlet weak var artViewTrailingInset: NSLayoutConstraint!
@@ -297,7 +297,7 @@ extension PlayerCardViewController {
 
     func animateArtZoomIn() {
         UIView.animate(withDuration: artZoomTransitionDuration, delay: 0,
-                       usingSpringWithDamping: 0.7, initialSpringVelocity: 20,
+                       usingSpringWithDamping: 0.7, initialSpringVelocity: 5,
                        options: [.curveEaseIn], animations: {
                         self.artImageZoomedIn = true
                         self.artImageHasShadow = true
@@ -306,7 +306,7 @@ extension PlayerCardViewController {
 
     func animateArtZoomOut() {
         UIView.animate(withDuration: artZoomTransitionDuration, delay: 0,
-                       usingSpringWithDamping: 1, initialSpringVelocity: 30,
+                       usingSpringWithDamping: 0.7, initialSpringVelocity: 5,
                        options: [.curveEaseOut], animations: {
                         self.artImageZoomedIn = false
                         self.artImageHasShadow = false

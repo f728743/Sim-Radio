@@ -79,7 +79,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		7C0D3B6C23963CE000F7E041 /* UIFont+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "UIFont+Extension.swift"; path = "Sim Radio/Controllers/UIFont+Extension.swift"; sourceTree = SOURCE_ROOT; };
+		7C0D3B6C23963CE000F7E041 /* UIFont+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "UIFont+Extension.swift"; path = "Sim Radio/Extensions/UIFont+Extension.swift"; sourceTree = SOURCE_ROOT; };
 		7C4A6B4F2387E8B600CF4EDB /* Comparable+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Comparable+Extension.swift"; sourceTree = "<group>"; };
 		7C51BAD723487334005F0884 /* Sim Radio.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Sim Radio.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		7C51BADA23487334005F0884 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
