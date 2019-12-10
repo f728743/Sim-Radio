@@ -27,7 +27,10 @@ class LibraryPlaceholder: LibraryItem {
 
 protocol LibraryControl {
     func delete(series: Series)
-    func downloadSeriesFrom(url: URL, errorHandler: ((Error) -> Void)?)
+    typealias Confirmation = (Bool) -> Void
+    func downloadSeriesFrom(url: URL,
+                            confirmDownloading: @escaping ((String, Int64, @escaping Confirmation) -> Void),
+                            errorHandler: ((Error) -> Void)?)
 }
 
 class MediaLibrary {
@@ -218,7 +221,23 @@ extension MediaLibrary: LibraryControl {
         }
     }
 
-    func downloadSeriesFrom(url: URL, errorHandler: ((Error) -> Void)? = nil) {
+    func weighRoughly(series: Model.Series, stations: [Model.Station]) -> Int64 {
+        let files = stations.flatMap { $0.fileGroups }.flatMap { $0.files } +
+            series.common.fileGroups.flatMap { $0.files }
+        let attachedFiles = files.compactMap { $0.attaches }.flatMap {$0.files}
+        let totallDuration = (files + attachedFiles).reduce(0.0) { $0 + $1.duration }
+        let hitOrMissHardcodedBitrate = 16000.0
+        return Int64(totallDuration * hitOrMissHardcodedBitrate)
+    }
+
+    func removePlaceholder(_ placeholder: LibraryPlaceholder) {
+        items.removeAll { $0 === placeholder }
+        notifyLibraryUpdate()
+    }
+
+    func downloadSeriesFrom(url: URL,
+                            confirmDownloading: @escaping ((String, Int64, @escaping Confirmation) -> Void),
+                            errorHandler: ((Error) -> Void)? = nil) {
         var downloadedSeries: DownloadedSeriesModel?
         let downloadedStations = SynchronizedArray<DownloadedStationModel>()
         let placeholder = LibraryPlaceholder()
@@ -226,22 +245,33 @@ extension MediaLibrary: LibraryControl {
         notifyLibraryUpdate()
         let completion = BlockOperation {
             guard let series = downloadedSeries else {
-                DispatchQueue.main.async { [weak self] in
-                    guard let self = self else { return }
-                    self.items.removeAll { $0 === placeholder }
-                    self.notifyLibraryUpdate()
+                DispatchQueue.main.async {
+                    self.removePlaceholder(placeholder)
                 }
                 return
             }
             let stations = downloadedStations.elements
-            self.download(series: series, stations: stations, instead: placeholder)
+            let stationModels = stations.map { $0.model }
+            let weigh = self.weighRoughly(series: series.model, stations: stationModels)
+            DispatchQueue.main.async {
+                confirmDownloading(series.model.info.title, weigh) { userApproved in
+                    if userApproved {
+                        DispatchQueue.global(qos: .userInitiated).async {
+                            self.download(series: series, stations: stations, putInstead: placeholder)
+                        }
+                    } else {
+                        let seriesURL = FileManager.documents.appendingPathComponent(series.directory)
+                        try? FileManager.default.removeItem(at: seriesURL)
+                        self.removePlaceholder(placeholder)
+                    }
+                }
+            }
         }
         let seriesDirectory = UUID().uuidString
         let seriesLoad = SeriesModelDownloadOperation(from: url, to: seriesDirectory) { [weak self] downloadResult in
             guard let self = self else { return }
             switch downloadResult {
             case .success(let series):
-
                 downloadedSeries = series
                 var stationLoadOperatios: [Operation] = []
                 for station in series.model.stations {
@@ -261,12 +291,10 @@ extension MediaLibrary: LibraryControl {
                 }
                 self.operationQueue.addOperations(stationLoadOperatios, waitUntilFinished: false)
                 self.operationQueue.addOperation(completion)
-
             case .failure(let error):
                 DispatchQueue.main.async { [weak self] in
                     guard let self = self else { return }
-                    self.items.removeAll { $0 === placeholder }
-                    self.notifyLibraryUpdate()
+                    self.removePlaceholder(placeholder)
                     errorHandler?(error)
                 }
             }
@@ -276,7 +304,7 @@ extension MediaLibrary: LibraryControl {
 
     private func download(series: DownloadedSeriesModel,
                           stations: [DownloadedStationModel],
-                          instead placeholder: LibraryPlaceholder) {
+                          putInstead placeholder: LibraryPlaceholder) {
         let completion = BlockOperation {
             self.persistentContainer.performBackgroundTask { context in
                 context.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy

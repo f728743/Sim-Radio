@@ -63,7 +63,7 @@ extension SeriesDownloadDelegate {
 
 class SeriesDownload {
     weak var series: Series?
-    private let totalProgress = Progress(totalUnitCount: -1)
+    private let totallProgress = Progress(totalUnitCount: -1)
     private let activeDownloads = SynchronizedDictionary<UUID, FilesDownloadTask>()
     private weak var downloadDelegate: SeriesDownloadDelegate?
     private let persistentContainer: NSPersistentContainer
@@ -84,7 +84,7 @@ class SeriesDownload {
         var result = false
         let documentsURL = FileManager.documents
         let seriesDirectoryURL = documentsURL.appendingPathComponent(series.directory)
-        totalProgress.totalUnitCount = 0
+        totallProgress.totalUnitCount = 0
         if let downloadObject = series.managedObject.downloadTask {
             result = true
             addFilesDownloadTask(queue: queue,
@@ -124,8 +124,8 @@ class SeriesDownload {
                                      downloadedFiles: downloadedFiles,
                                      source: source)
         let unitCount = allFiles.reduce(0) { $0 + $1.units }
-        totalProgress.totalUnitCount += unitCount
-        totalProgress.addChild(task.progress, withPendingUnitCount: unitCount)
+        totallProgress.totalUnitCount += unitCount
+        totallProgress.addChild(task.progress, withPendingUnitCount: unitCount)
         activeDownloads[task.id] = task
         task.delegate = self
         task.start()
@@ -144,7 +144,7 @@ extension SeriesDownload: FilesDownloadTaskDelegate {
         }
         downloadDelegate?.series(
             series: series,
-            didUpdateTotalProgress: totalProgress.fractionCompleted)
+            didUpdateTotalProgress: totallProgress.fractionCompleted)
     }
 
     private func deleteDownloadTask(_ downloadTask: DownloadTaskPersistence,

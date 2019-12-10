@@ -66,6 +66,6 @@ extension RootViewController: MiniPlayerDelegate {
         modal.transitioningDelegate = transitionDelegate
         modal.modalPresentationStyle = .custom
         modal.radio = radio
-        present(modal, animated: true, completion: nil)
+        present(modal, animated: true)
     }
 }
