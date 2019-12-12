@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15505" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="qRN-Dn-tzl">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15702" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="qRN-Dn-tzl">
     <device id="retina5_5" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15510"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15704"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -330,16 +330,16 @@
                                 </subviews>
                             </stackView>
                             <stackView opaque="NO" contentMode="scaleAspectFit" axis="vertical" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="Aej-cZ-ph8" userLabel="Controls Stack">
-                                <rect key="frame" x="0.0" y="538.66666666666663" width="414" height="115.33333333333337"/>
+                                <rect key="frame" x="0.0" y="528.66666666666663" width="414" height="125.33333333333337"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="9HR-Hi-lCF" userLabel="Control Buttons">
-                                        <rect key="frame" x="0.0" y="0.0" width="414" height="60"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="414" height="68"/>
                                         <subviews>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="YTt-J4-QJA" userLabel="Rewind" customClass="ControlsButton" customModule="Sim_Radio" customModuleProvider="target">
-                                                <rect key="frame" x="46" y="0.0" width="60" height="60"/>
+                                                <rect key="frame" x="46" y="0.0" width="68" height="68"/>
                                                 <constraints>
-                                                    <constraint firstAttribute="width" constant="60" id="HQC-N4-Ype"/>
-                                                    <constraint firstAttribute="height" constant="60" id="Reu-Hf-Ldp"/>
+                                                    <constraint firstAttribute="width" constant="68" id="HQC-N4-Ype"/>
+                                                    <constraint firstAttribute="height" constant="68" id="Reu-Hf-Ldp"/>
                                                 </constraints>
                                                 <state key="normal" image="Rewind"/>
                                                 <connections>
@@ -347,10 +347,10 @@
                                                 </connections>
                                             </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bDI-bl-x0I" userLabel="Play-Pause" customClass="ControlsButton" customModule="Sim_Radio" customModuleProvider="target">
-                                                <rect key="frame" x="177" y="0.0" width="60" height="60"/>
+                                                <rect key="frame" x="173" y="0.0" width="68" height="68"/>
                                                 <constraints>
-                                                    <constraint firstAttribute="width" constant="60" id="hyn-5X-eMv"/>
-                                                    <constraint firstAttribute="height" constant="60" id="orS-9K-OrR"/>
+                                                    <constraint firstAttribute="width" constant="68" id="hyn-5X-eMv"/>
+                                                    <constraint firstAttribute="height" constant="68" id="orS-9K-OrR"/>
                                                 </constraints>
                                                 <state key="normal" image="Play"/>
                                                 <connections>
@@ -358,10 +358,10 @@
                                                 </connections>
                                             </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="GlH-3c-RhH" userLabel="FastForward" customClass="ControlsButton" customModule="Sim_Radio" customModuleProvider="target">
-                                                <rect key="frame" x="308" y="0.0" width="60" height="60"/>
+                                                <rect key="frame" x="300" y="0.0" width="68" height="68"/>
                                                 <constraints>
-                                                    <constraint firstAttribute="width" constant="60" id="ekg-JB-VkD"/>
-                                                    <constraint firstAttribute="height" constant="60" id="sZb-J4-8fh"/>
+                                                    <constraint firstAttribute="width" constant="68" id="ekg-JB-VkD"/>
+                                                    <constraint firstAttribute="height" constant="68" id="sZb-J4-8fh"/>
                                                 </constraints>
                                                 <state key="normal" image="FastForward"/>
                                                 <connections>
@@ -382,17 +382,17 @@
                                         </constraints>
                                     </view>
                                     <stackView opaque="NO" contentMode="scaleToFill" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="nJH-0J-8u7" userLabel="Volume Stack View">
-                                        <rect key="frame" x="30" y="68" width="354" height="47.333333333333343"/>
+                                        <rect key="frame" x="30" y="76" width="354" height="49.333333333333343"/>
                                         <subviews>
                                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Min Volume" translatesAutoresizingMaskIntoConstraints="NO" id="OQ5-Zd-YdD">
-                                                <rect key="frame" x="0.0" y="13.666666666666742" width="20" height="20"/>
+                                                <rect key="frame" x="0.0" y="14.666666666666742" width="20" height="20"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" constant="20" id="9hS-VZ-tKV"/>
                                                     <constraint firstAttribute="height" constant="20" id="o60-qK-VOQ"/>
                                                 </constraints>
                                             </imageView>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="e0Q-M3-VAA">
-                                                <rect key="frame" x="20" y="3.6666666666667425" width="314" height="40"/>
+                                                <rect key="frame" x="20" y="4.6666666666667425" width="314" height="40"/>
                                                 <subviews>
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="o3J-b0-pl7" userLabel="Fake Slider View">
                                                         <rect key="frame" x="8" y="19" width="294" height="2"/>
@@ -421,7 +421,7 @@
                                                 </constraints>
                                             </view>
                                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Max Volume" translatesAutoresizingMaskIntoConstraints="NO" id="8pz-Nb-eBz">
-                                                <rect key="frame" x="334" y="13.666666666666742" width="20" height="20"/>
+                                                <rect key="frame" x="334" y="14.666666666666742" width="20" height="20"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="20" id="cSr-0G-Iw6"/>
                                                     <constraint firstAttribute="width" constant="20" id="cna-V4-ETk"/>
@@ -454,7 +454,7 @@
                             <constraint firstItem="NU7-99-5pE" firstAttribute="trailing" secondItem="fpv-Nw-SBU" secondAttribute="trailing" id="21D-dp-aOl"/>
                             <constraint firstItem="DOq-oc-ZVX" firstAttribute="top" secondItem="0ny-Ic-6ZB" secondAttribute="bottom" constant="20" id="2sa-to-de6"/>
                             <constraint firstItem="0ny-Ic-6ZB" firstAttribute="trailing" secondItem="tMT-dY-ion" secondAttribute="trailing" id="30s-9l-6jz"/>
-                            <constraint firstItem="Aej-cZ-ph8" firstAttribute="top" relation="lessThanOrEqual" secondItem="DOq-oc-ZVX" secondAttribute="bottom" constant="80" id="5wM-IT-wxy"/>
+                            <constraint firstItem="Aej-cZ-ph8" firstAttribute="top" relation="lessThanOrEqual" secondItem="DOq-oc-ZVX" secondAttribute="bottom" constant="70" id="5wM-IT-wxy"/>
                             <constraint firstItem="RBE-jt-HKV" firstAttribute="leading" secondItem="zCz-yE-I91" secondAttribute="leading" id="6og-Hc-g5H"/>
                             <constraint firstItem="RBE-jt-HKV" firstAttribute="trailing" secondItem="zCz-yE-I91" secondAttribute="trailing" id="7eH-GL-iH8"/>
                             <constraint firstItem="led-gT-G1a" firstAttribute="top" relation="lessThanOrEqual" secondItem="Aej-cZ-ph8" secondAttribute="bottom" constant="4" id="8Fb-hr-dUM"/>

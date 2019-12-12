@@ -34,7 +34,7 @@ class SeriesCollectionView: UICollectionView {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .vertical
         super.init(frame: .zero, collectionViewLayout: layout)
-
+        alwaysBounceVertical = true
         backgroundColor = .white
         delegate = self
         dataSource = self
