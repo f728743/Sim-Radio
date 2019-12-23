@@ -40,7 +40,7 @@ class StationModelDownloadOperation: AsyncOperation {
                 }
                 if self.isCancelled { return }
                 let model = try Model.loadStation(from: localTempFileURL)
-                let destinationURL = FileManager.documents
+                let destinationURL = FileManager.documentsURL
                     .appendingPathComponent(self.directory)
                     .appendingPathComponent(LibraryConstants.stationJson)
                 if self.isCancelled { return }

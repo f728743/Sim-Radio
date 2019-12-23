@@ -7,20 +7,24 @@ import UIKit
 
 class SeriesViewController: UIViewController {
     weak var radio: Radio!
-    private var seriesCollectionView = SeriesCollectionView()
+    private var collectionView: SeriesCollectionView = {
+        let view = SeriesCollectionView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        radio.library.addObserver(seriesCollectionView)
-        view.addSubview(seriesCollectionView)
+        radio.library.addObserver(collectionView)
+        view.addSubview(collectionView)
 
-        seriesCollectionView.library = radio.library
-        seriesCollectionView.libraryDelegate = self
+        collectionView.library = radio.library
+        collectionView.libraryDelegate = self
 
-        seriesCollectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
-        seriesCollectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
-        seriesCollectionView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
-        seriesCollectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+        collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+        collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
+        collectionView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
+        collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
     }
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {

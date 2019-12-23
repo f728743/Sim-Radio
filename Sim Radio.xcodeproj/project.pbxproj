@@ -60,6 +60,7 @@
 		7C834958237FC44400C7C355 /* Progress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C834956237FC44400C7C355 /* Progress.swift */; };
 		7C834959237FC44400C7C355 /* Synchronization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C834957237FC44400C7C355 /* Synchronization.swift */; };
 		7C9C3EA3237F368A0063D235 /* SimRadio.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 7C9C3EA1237F368A0063D235 /* SimRadio.xcdatamodeld */; };
+		7CA6549523AB4D4800118B89 /* BuiltIn in Resources */ = {isa = PBXBuildFile; fileRef = 7CA6549423AB4D4800118B89 /* BuiltIn */; };
 		7CBA899C23954A4400020783 /* PopMenuItemViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CBA899B23954A4400020783 /* PopMenuItemViewController.swift */; };
 		7CBA899E2395A49B00020783 /* PopMenuHeaderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CBA899D2395A49B00020783 /* PopMenuHeaderViewController.swift */; };
 		7CBCF427239804EF0062113C /* ContextMenuLogoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CBCF426239804EF0062113C /* ContextMenuLogoView.swift */; };
@@ -133,6 +134,7 @@
 		7C834956237FC44400C7C355 /* Progress.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Progress.swift; sourceTree = "<group>"; };
 		7C834957237FC44400C7C355 /* Synchronization.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Synchronization.swift; sourceTree = "<group>"; };
 		7C9C3EA2237F368A0063D235 /* SimRadio.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = SimRadio.xcdatamodel; sourceTree = "<group>"; };
+		7CA6549423AB4D4800118B89 /* BuiltIn */ = {isa = PBXFileReference; lastKnownFileType = folder; path = BuiltIn; sourceTree = "<group>"; };
 		7CBA899B23954A4400020783 /* PopMenuItemViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopMenuItemViewController.swift; sourceTree = "<group>"; };
 		7CBA899D2395A49B00020783 /* PopMenuHeaderViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopMenuHeaderViewController.swift; sourceTree = "<group>"; };
 		7CBCF426239804EF0062113C /* ContextMenuLogoView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContextMenuLogoView.swift; sourceTree = "<group>"; };
@@ -311,6 +313,7 @@
 		7C5294A623800E2500737224 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				7CA6549423AB4D4800118B89 /* BuiltIn */,
 				7C51BAE323487335005F0884 /* Assets.xcassets */,
 				7C51BAE523487335005F0884 /* LaunchScreen.storyboard */,
 				7C51BAE023487334005F0884 /* Main.storyboard */,
@@ -442,6 +445,7 @@
 			files = (
 				7C51BAE723487335005F0884 /* LaunchScreen.storyboard in Resources */,
 				7C51BAE423487335005F0884 /* Assets.xcassets in Resources */,
+				7CA6549523AB4D4800118B89 /* BuiltIn in Resources */,
 				7C51BAE223487334005F0884 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -598,6 +602,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				"DEBUG_INFORMATION_FORMAT[sdk=*]" = "dwarf-with-dsym";
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;

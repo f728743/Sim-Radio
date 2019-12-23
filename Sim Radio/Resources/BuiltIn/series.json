@@ -1,0 +1,14 @@
+{
+    "info": {
+        "title": "Audionautix",
+        "logo": "logo.png"
+    },
+    "common": {
+        "fileGroups": []
+    },
+    "stations": [
+        {
+            "path": "audionautix"
+        }
+    ]
+}

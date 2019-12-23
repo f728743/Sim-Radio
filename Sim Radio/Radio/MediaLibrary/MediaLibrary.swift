@@ -9,6 +9,7 @@ import CoreData
 struct LibraryConstants {
     static let seriesJson = "series.json"
     static let stationJson = "station.json"
+    static let wasAlreadyRunningKey = "wasAlreadyRunning"
 }
 
 public protocol LibraryItemAppearance {
@@ -62,6 +63,10 @@ class MediaLibrary {
     private(set) var items: [LibraryItem] = []
 
     init() {
+        if !UserDefaults.standard.bool(forKey: LibraryConstants.wasAlreadyRunningKey) {
+            createBuiltInSeries()
+            UserDefaults.standard.set(true, forKey: LibraryConstants.wasAlreadyRunningKey)
+        }
         let fetchResult = fetchSeries()
         audiofilesDownloadManager.downloadSeriesAudiofiles(series: fetchResult.series, downloadDelegate: self)
         items = fetchResult.series
@@ -71,6 +76,43 @@ class MediaLibrary {
             }
             self.deleteAllData(seriesManagedObjects: fetchResult.beingDeletedSeries)
         }
+    }
+
+    private func createBuiltInSeries() {
+        let seriesPath = UUID().uuidString
+        let bundleSeriesURL = Bundle.main.resourceURL!.appendingPathComponent("BuiltIn")
+        let documentsSeriesURL = FileManager.documentsURL.appendingPathComponent(seriesPath)
+        do {
+            try copyContentsOfDirectory(at: bundleSeriesURL, to: documentsSeriesURL)
+            try createBuiltInManagedObjects(at: seriesPath)
+        } catch {
+            fatalError("Failed to create built in series: \(error)")
+        }
+    }
+
+    private func createBuiltInManagedObjects(at directory: String) throws {
+        let context = persistentContainer.viewContext
+        let seriesBaseURL = FileManager.documentsURL.appendingPathComponent(directory)
+        let seriesURL = seriesBaseURL.appendingPathComponent(LibraryConstants.seriesJson)
+        let originBase = Bundle.main.resourceURL!.appendingPathComponent("BuiltIn")
+        let origin = originBase.appendingPathComponent(LibraryConstants.seriesJson)
+        let seriesManagdObgect = SeriesPersistence(entity: SeriesPersistence.entity(), insertInto: context)
+        seriesManagdObgect.origin = origin
+        seriesManagdObgect.directory = directory
+        seriesManagdObgect.isBeingDeleted = false
+        let series = try Model.loadSeries(from: seriesURL)
+        series.stations.forEach { seriesPath in
+            let stationManagdObgect = StationPersistence(entity: StationPersistence.entity(), insertInto: context)
+            let stationOrigin = originBase
+                .appendingPathComponent(seriesPath.path)
+                .appendingPathComponent(LibraryConstants.stationJson)
+            let stationDirectory = directory
+                                  .appendingPathComponent(seriesPath.path)
+            stationManagdObgect.origin = stationOrigin
+            stationManagdObgect.directory = stationDirectory
+            stationManagdObgect.series = seriesManagdObgect
+        }
+        try context.save()
     }
 }
 
@@ -186,7 +228,7 @@ extension MediaLibrary {
         persistentContainer.performBackgroundTask { context in
             context.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
             for series in seriesManagedObjects {
-                let seriesURL = FileManager.documents.appendingPathComponent(series.directory)
+                let seriesURL = FileManager.documentsURL.appendingPathComponent(series.directory)
                 try? FileManager.default.removeItem(at: seriesURL)
                 guard let backgroundSeries = context.object(with: series.objectID) as? SeriesPersistence  else {
                     print("Internal error: can't obtain series ManagedObject")
@@ -260,7 +302,7 @@ extension MediaLibrary: LibraryControl {
                             self.download(series: series, stations: stations, putInstead: placeholder)
                         }
                     } else {
-                        let seriesURL = FileManager.documents.appendingPathComponent(series.directory)
+                        let seriesURL = FileManager.documentsURL.appendingPathComponent(series.directory)
                         try? FileManager.default.removeItem(at: seriesURL)
                         self.removePlaceholder(placeholder)
                     }

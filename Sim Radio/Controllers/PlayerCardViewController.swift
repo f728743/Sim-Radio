@@ -25,7 +25,7 @@ class PlayerCardViewController: UIViewController {
     let shadowAlphaZommedIn: CGFloat = 0.3
     let shadowAlphaZommedOut: CGFloat = 0.1
     var transitionDuration: TimeInterval = 0.6
-    let artZoomTransitionDuration: TimeInterval = 2
+    let artZoomTransitionDuration: TimeInterval = 1.5
 
     @IBOutlet weak var artViewLeadingInset: NSLayoutConstraint!
     @IBOutlet weak var artViewTrailingInset: NSLayoutConstraint!

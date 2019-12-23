@@ -44,7 +44,7 @@ class SeriesModelDownloadOperation: AsyncOperation {
                 }
                 if self.isCancelled { return }
                 let model = try Model.loadSeries(from: localTempFileURL)
-                let destinationURL = FileManager.documents
+                let destinationURL = FileManager.documentsURL
                     .appendingPathComponent(self.directory)
                     .appendingPathComponent(LibraryConstants.seriesJson)
                 if self.isCancelled { return }

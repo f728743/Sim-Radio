@@ -82,7 +82,7 @@ class SeriesDownload {
     func startDownload(queue: OperationQueue) -> Bool {
         guard let series = series else { return false }
         var result = false
-        let documentsURL = FileManager.documents
+        let documentsURL = FileManager.documentsURL
         let seriesDirectoryURL = documentsURL.appendingPathComponent(series.directory)
         totallProgress.totalUnitCount = 0
         if let downloadObject = series.managedObject.downloadTask {

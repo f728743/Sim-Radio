@@ -17,7 +17,7 @@ class Series {
         return managedObject.directory
     }
     var directoryURL: URL {
-        return FileManager.documents.appendingPathComponent(directory)
+        return FileManager.documentsURL.appendingPathComponent(directory)
     }
     var title: String {
         return model.info.title
@@ -38,11 +38,11 @@ class Series {
                 downloadProgress = 0
                 commonFilesDownloaded = false
             }
-            let modelURL = FileManager.documents
+            let modelURL = FileManager.documentsURL
                 .appendingPathComponent(managedObject.directory)
                 .appendingPathComponent(LibraryConstants.seriesJson)
             model = try Model.loadSeries(from: modelURL)
-            let logoURL = FileManager.documents
+            let logoURL = FileManager.documentsURL
                 .appendingPathComponent(managedObject.directory)
                 .appendingPathComponent(model.info.logo)
             logo = Series.loadLogo(contentsOfFile: logoURL)
@@ -93,7 +93,7 @@ class Station {
         return managedObject.directory
     }
     var directoryURL: URL {
-        return FileManager.documents.appendingPathComponent(directory)
+        return FileManager.documentsURL.appendingPathComponent(directory)
     }
     var title: String {
         return model.info.title
@@ -128,11 +128,11 @@ class Station {
         do {
             self.series = series
             self.managedObject = managedObject
-            let modelURL = FileManager.documents
+            let modelURL = FileManager.documentsURL
                 .appendingPathComponent(managedObject.directory)
                 .appendingPathComponent(LibraryConstants.stationJson)
             model = try Model.loadStation(from: modelURL)
-            let logoURL = FileManager.documents
+            let logoURL = FileManager.documentsURL
                 .appendingPathComponent(managedObject.directory)
                 .appendingPathComponent(model.info.logo)
             logo = Station.loadLogo(contentsOfFile: logoURL)

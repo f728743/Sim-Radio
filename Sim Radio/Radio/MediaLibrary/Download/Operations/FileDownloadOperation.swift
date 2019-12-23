@@ -26,7 +26,7 @@ class FileDownloadOperation: AsyncOperation {
                         throw DownloadError.failedToDownloadFile(url: self.url)
                 }
                 if self.isCancelled { return }
-                let destinationURL = FileManager.documents
+                let destinationURL = FileManager.documentsURL
                     .appendingPathComponent(self.directory)
                     .appendingPathComponent(remoteFileURL.lastPathComponent)
                 if self.isCancelled { return }
