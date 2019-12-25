@@ -1,6 +1,6 @@
 # Sim Radio
 
-![gta_radio_gui](other/screenshot.gif)
+![gta_radio_gui](other/screen.gif)
 
 SimRadio app allows you to create the impression of listening to a live radio station on your iPhone.
 Radio stations in Sim Radio are playlists with advanced control over the sequence of playback of audio files.
