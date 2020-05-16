@@ -18,7 +18,7 @@ This Privacy Policy describes how your personal information is handled in Sim Ra
 We do not collect, use, save, or have access to any of your personal data recorded in Sim Radio.\
 Individual settings relating to the Sim Radio apps are not personal and are stored only on your device.\
 Our Applications Comply with the Children’s Online Privacy Protection Act\
-Our applications don’t collect personal information from anyone, including children under the age of 13.\
+Our applications don’t collect personal information from anyone, including children under the age of 13.
 
 ### Contact Us
 
