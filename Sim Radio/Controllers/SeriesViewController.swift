@@ -94,7 +94,8 @@ extension SeriesViewController {
                                          preferredStyle: .alert)
         urlInput.addTextField { $0.placeholder = "URL" }
         urlInput.addAction(UIAlertAction(title: "Enter", style: .default) { _ in
-            guard let url = URL(string: urlInput.textFields![0].text ?? "") else {
+            let urlString = urlInput.textFields![0].text ?? ""
+            guard let url = URL(string: urlString) else {
                 return
             }
             self.radio.library.downloadSeriesFrom(

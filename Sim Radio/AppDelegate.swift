@@ -17,6 +17,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         if let rootViewController = window?.rootViewController as? RootViewController {
             rootViewController.radio = radio
         }
+        if #available(iOS 13.0, *) {
+            window?.overrideUserInterfaceStyle = .light
+        }
         return true
     }
 }
