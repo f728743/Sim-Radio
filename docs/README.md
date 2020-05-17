@@ -1,5 +1,8 @@
 # Sim Radio
 
+<a href="https://apps.apple.com/ru/app/polycuberis/id1510007455" target="_blank"><img src="assets/img/Appstore.png" 
+alt="App Store: Polycuberis" width="147" height="50" /></a>
+
 ![gta_radio_gui](assets/img/Screenshot.gif)
 
 SimRadio app allows you to create the impression of listening to a live radio station on your iPhone.
@@ -11,6 +14,8 @@ You can create your own “radio station”, put it somewhere where you can down
 ## Examples
 
 You can learn how to create your radio station here: <https://github.com/f728743/RadioExample>
+
+Try to download GTA 5 radio stations 📻 <https://cutt.ly/VrAjvQs>
 
 ## Privacy Policy
 
