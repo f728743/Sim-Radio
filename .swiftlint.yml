@@ -1,11 +1,8 @@
+identifier_name:
+    min_length: 1
+
+cyclomatic_complexity:
+    ignores_case_statements: true
+
 disabled_rules:
-  - todo
-  - file_length
-  - type_body_length
-
-variable_name:
-  min_length:
-    warning: 1
-
-function_body_length:
-  warning: 120
+   - trailing_whitespace
