@@ -75,13 +75,12 @@ private extension Double {
     }
 }
 
-
 public extension Color {
     static var random: Color {
-        Color (
-            red: .random (in: 0...1.0),
-            green: .random (in: 0...1.0),
-            blue: .random (in: 0...1.0)
+        Color(
+            red: .random(in: 0 ... 1.0),
+            green: .random(in: 0 ... 1.0),
+            blue: .random(in: 0 ... 1.0)
         )
     }
 }
@@ -92,4 +91,3 @@ public extension View {
         background(Color.random)
     }
 }
-
