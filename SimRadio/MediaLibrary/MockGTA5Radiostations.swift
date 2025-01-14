@@ -6,18 +6,13 @@
 //
 
 import Foundation
-
-struct MockGTA5Radio {
-    private let stations = gta5stations
-}
-
-extension MockGTA5Radio {
-    var mediaList: MediaList {
+extension MediaList {
+    static var mockGta5: Self {
         MediaList(
             artwork: stationGroupImageUrl(),
             title: "GTA V Radio",
             subtitle: nil,
-            items: stations.map {
+            items: gta5stations.map {
                 Media(
                     artwork: stationImageUrl(String($0.logo.split(separator: ".")[0])),
                     title: $0.title,

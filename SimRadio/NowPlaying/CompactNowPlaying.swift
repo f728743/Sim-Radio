@@ -9,7 +9,7 @@ import Kingfisher
 import SwiftUI
 
 struct CompactNowPlaying: View {
-    @Environment(NowPlayingController.self) var model
+    @EnvironmentObject var model: NowPlayingController
     @Binding var expanded: Bool
     var hideArtworkOnExpanded: Bool = true
     var animationNamespace: Namespace.ID
@@ -91,15 +91,15 @@ extension PlayerButtonConfig {
 }
 
 #Preview {
+    @Previewable @StateObject var playerController = NowPlayingController(player: Player())
+    
     CompactNowPlaying(
         expanded: .constant(false),
         animationNamespace: Namespace().wrappedValue
     )
+    .onAppear {
+        playerController.mediaList = .mockGta5
+    }
     .background(.gray)
-    .environment(
-        NowPlayingController(
-            playList: PlayListController(),
-            player: Player()
-        )
-    )
+    .environmentObject(playerController)
 }

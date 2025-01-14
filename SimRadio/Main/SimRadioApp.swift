@@ -11,9 +11,7 @@ import SwiftUI
 struct SimRadioApp: App {
     var body: some Scene {
         WindowGroup {
-            OverlayableRootView {
-                OverlaidRootView()
-            }
+            AppView()
         }
     }
 }

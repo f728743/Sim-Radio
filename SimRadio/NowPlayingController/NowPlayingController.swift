@@ -6,29 +6,35 @@
 //
 
 import Kingfisher
-import Observation
 import UIKit
 
-@Observable
-class NowPlayingController {
+class NowPlayingController: ObservableObject {
     enum State {
         case playing
         case paused
     }
 
-    var state: State = .paused
-    var currentIndex: Int? = 1
-    private let playList: PlayListController
+    @Published var state: State = .paused
+    @Published var currentIndex: Int? = 1
+    @Published var mediaList: MediaList = .empty {
+        didSet {
+            stopPlaying()
+            let currentItemId = currentIndex.map { oldValue.items[safe: $0]?.id } ?? nil
+            if let currentItemId {
+                currentIndex = mediaList.items.firstIndex { $0.id == currentItemId }
+            }
+        }
+    }
+    
     private let player: Player
     var colors: [ColorFrequency] = []
 
     var currentMedia: Media? {
         guard let currentIndex else { return nil }
-        return playList.items[safe: currentIndex]
+        return mediaList.items[safe: currentIndex]
     }
 
-    init(playList: PlayListController, player: Player) {
-        self.playList = playList
+    init(player: Player) {
         self.player = player
     }
 
@@ -58,6 +64,14 @@ class NowPlayingController {
         updateColors()
     }
 
+    func onPlay(itemId: UUID) {
+        let index = mediaList.items.firstIndex { $0.id == itemId }
+        guard let index else { return }
+        stopPlaying()
+        currentIndex = index
+        onPlayPause()
+    }
+    
     func onPlayPause() {
         enshureMediaAvailable()
         guard let currentMedia else { return }
@@ -79,10 +93,14 @@ class NowPlayingController {
         }
 
         var next = currentIndex + 1
-        if next >= playList.items.count {
+        if next >= mediaList.items.count {
             next = 0
         }
         self.currentIndex = next
+        if state == .playing {
+            stopPlaying()
+            onPlayPause()
+        }
         updateColors()
     }
 
@@ -90,7 +108,7 @@ class NowPlayingController {
         enshureMediaAvailable()
         guard currentMedia != nil else { return }
 
-        let lastIndex = playList.items.count - 1
+        let lastIndex = mediaList.items.count - 1
         guard let currentIndex else {
             self.currentIndex = lastIndex
             return
@@ -100,6 +118,10 @@ class NowPlayingController {
         if prev < 0 {
             prev = lastIndex
         }
+        if state == .playing {
+            stopPlaying()
+            onPlayPause()
+        }
         self.currentIndex = prev
         updateColors()
     }
@@ -107,18 +129,18 @@ class NowPlayingController {
 
 private extension NowPlayingController {
     func enshureMediaAvailable() {
-        if playList.items.isEmpty {
+        if mediaList.items.isEmpty {
             selectFirstAvailableMedia()
         }
     }
 
     func selectFirstAvailableMedia() {
         stopPlaying()
-        playList.selectFirstAvailable()
-        currentIndex = playList.items.isEmpty ? nil : 0
+        currentIndex = mediaList.items.isEmpty ? nil : 0
     }
 
     func stopPlaying() {
+        guard state != .paused else { return }
         state = .paused
         player.stop()
     }
@@ -146,7 +168,7 @@ private extension NowPlayingController.State {
     }
 }
 
-private extension Media {
+extension Media {
     static var placeholder: Self {
         Media(
             artwork: nil,
@@ -156,3 +178,15 @@ private extension Media {
         )
     }
 }
+
+extension MediaList {
+    static var empty: Self {
+        MediaList(
+            artwork: nil,
+            title: "---",
+            subtitle: nil,
+            items: []
+        )
+    }
+}
+

@@ -8,21 +8,13 @@
 import SwiftUI
 
 struct OverlaidRootView: View {
-    @State private var playlistController: PlayListController
-    @State private var playerController: NowPlayingController
     @State private var nowPlayingExpandProgress: CGFloat = .zero
     @State private var showOverlayingNowPlayng: Bool = false
     @State private var expandedNowPlaying: Bool = false
     @State private var showNowPlayingReplacement: Bool = false
+    
+    @EnvironmentObject var playerController: NowPlayingController
 
-    init() {
-        let playlistController = PlayListController()
-        playerController = NowPlayingController(
-            playList: playlistController,
-            player: Player()
-        )
-        self.playlistController = playlistController
-    }
 
     var body: some View {
         ZStack(alignment: .bottom) {
@@ -30,14 +22,12 @@ struct OverlaidRootView: View {
             CompactNowPlayingReplacement(expanded: .constant(false))
                 .opacity(showNowPlayingReplacement ? 1 : 0)
         }
-        .environment(playerController)
-        .environment(playlistController)
         .universalOverlay(animation: .none, show: $showOverlayingNowPlayng) {
             ExpandableNowPlaying(
                 show: $showOverlayingNowPlayng,
                 expanded: $expandedNowPlaying
             )
-            .environment(playerController)
+            .environmentObject(playerController)
             .onPreferenceChange(NowPlayingExpandProgressPreferenceKey.self) { value in
                 nowPlayingExpandProgress = value
             }
@@ -78,7 +68,5 @@ private struct CompactNowPlayingReplacement: View {
 }
 
 #Preview {
-    OverlayableRootView {
-        OverlaidRootView()
-    }
+    AppView()
 }

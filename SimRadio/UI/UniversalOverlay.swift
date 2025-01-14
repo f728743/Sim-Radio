@@ -149,7 +149,5 @@ private class PassthroughWindow: UIWindow {
 }
 
 #Preview {
-    OverlayableRootView {
-        OverlaidRootView()
-    }
+    AppView()
 }

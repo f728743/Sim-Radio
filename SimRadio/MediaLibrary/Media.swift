@@ -7,7 +7,8 @@
 
 import Foundation
 
-struct Media {
+struct Media: Identifiable {
+    let id = UUID()
     let artwork: URL?
     let title: String
     let subtitle: String?

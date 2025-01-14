@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct PlayerButtons: View {
-    @Environment(NowPlayingController.self) var model
+    @EnvironmentObject var model: NowPlayingController
     let spacing: CGFloat
     let imageSize: CGFloat = 34
     @State var backwardAnimationTrigger: PlayerButtonTrigger = .one(bouncing: false)
@@ -68,6 +68,7 @@ extension PlayerButtonConfig {
 }
 
 #Preview {
+    @Previewable @StateObject var playerController = NowPlayingController(player: Player())    
     ZStack(alignment: .top) {
         PreviewBackground()
         VStack {
@@ -79,7 +80,8 @@ extension PlayerButtonConfig {
         }
         .foregroundStyle(Color(Palette.PlayerCard.opaque))
     }
-    .environment(
-        NowPlayingController(playList: PlayListController(), player: Player())
-    )
+    .onAppear {
+        playerController.mediaList = .mockGta5
+    }
+    .environmentObject(playerController)
 }

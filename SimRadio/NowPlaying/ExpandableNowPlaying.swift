@@ -14,7 +14,7 @@ enum PlayerMatchedGeometry {
 struct ExpandableNowPlaying: View {
     @Binding var show: Bool
     @Binding var expanded: Bool
-    @Environment(NowPlayingController.self) var model
+    @EnvironmentObject var model: NowPlayingController
     @State private var offsetY: CGFloat = 0.0
     @State private var mainWindow: UIWindow?
     @State private var needRestoreProgressOnActive: Bool = false
@@ -200,7 +200,5 @@ private extension UIWindow {
 }
 
 #Preview {
-    OverlayableRootView {
-        OverlaidRootView()
-    }
+    AppView()
 }

@@ -116,7 +116,7 @@ private extension MarqueeText {
 #Preview {
     HStack {
         MarqueeText(
-            "A text that is way too long, but it scrolls",
+            "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
             config: .init(
                 startDelay: 3,
                 leftFade: 32,

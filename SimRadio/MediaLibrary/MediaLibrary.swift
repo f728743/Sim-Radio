@@ -11,7 +11,7 @@ final class MediaLibrary {
     var list: [MediaList]
 
     init() {
-        list = [MockGTA5Radio().mediaList]
+        list = [.mockGta5]
     }
 
     var isEmpty: Bool {

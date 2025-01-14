@@ -9,9 +9,12 @@ import Kingfisher
 import SwiftUI
 
 struct MediaListView: View {
-    @Environment(PlayListController.self) var model
+    let mediaList: MediaList
+    @EnvironmentObject var nowPlaying: NowPlayingController
     @Environment(\.nowPlayingExpandProgress) var expandProgress
 
+    @State private var selection: Media.ID?
+    
     var body: some View {
         NavigationStack {
             content
@@ -50,12 +53,20 @@ private extension MediaListView {
                 .listSectionSeparator(.hidden, edges: .bottom)
         }
         .listStyle(.plain)
+        .onChange(of: selection) { _, newValue in
+            if let newValue {
+                if nowPlaying.mediaList.id != mediaList.id {
+                    nowPlaying.mediaList = mediaList
+                }
+                nowPlaying.onPlay(itemId: newValue)
+            }
+        }
     }
 
     var header: some View {
         VStack(spacing: 0) {
             let border = UIScreen.hairlineWidth
-            KFImage.url(model.display.artwork)
+            KFImage.url(mediaList.artwork)
                 .resizable()
                 .aspectRatio(contentMode: .fill)
                 .background(Color(.palette.artworkBackground))
@@ -67,11 +78,11 @@ private extension MediaListView {
                 )
                 .padding(.horizontal, 52)
 
-            Text(model.display.title)
+            Text(mediaList.title)
                 .font(.appFont.mediaListHeaderTitle)
                 .padding(.top, 18)
 
-            if let subtitle = model.display.subtitle {
+            if let subtitle = mediaList.subtitle {
                 Text(subtitle)
                     .font(.appFont.mediaListHeaderSubtitle)
                     .foregroundStyle(Color(.palette.textSecondary))
@@ -112,16 +123,17 @@ private extension MediaListView {
     }
 
     var list: some View {
-        ForEach(Array(model.display.items.enumerated()), id: \.offset) { offset, item in
-            let isLastItem = offset == model.items.count - 1
+        ForEach(Array(mediaList.items.enumerated()), id: \.offset) { offset, item in
+            let isLastItem = offset == mediaList.items.count - 1
             MediaItemView(
                 artwork: item.artwork,
                 title: item.title,
                 subtitle: item.subtitle
             )
+            .contentShape(.rect)
             .listRowInsets(.screenInsets)
+            .listRowBackground(item.id == selection ? Color(uiColor: .systemGray4) : nil)
             .alignmentGuide(.listRowSeparatorLeading) {
-                print($0)
                 return isLastItem ? $0[.leading] : $0[.leading] + 60
             }
             .swipeActions(edge: .trailing) {
@@ -130,17 +142,22 @@ private extension MediaListView {
                 }
                 .tint(.init(.systemBlue))
             }
+            .onTapGesture {
+                selection = item.id
+                Task {
+                    try? await Task.sleep(for: .milliseconds(80))
+                    selection = nil
+                }
+            }
         }
     }
 
     @ViewBuilder
     var footer: some View {
-        if let text = model.footer {
-            Text(text)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .foregroundStyle(Color(.palette.textTertiary))
-                .font(.appFont.mediaListItemFooter)
-        }
+        Text(mediaList.footer)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .foregroundStyle(Color(.palette.textTertiary))
+            .font(.appFont.mediaListItemFooter)
     }
 }
 
@@ -188,7 +205,12 @@ private extension EdgeInsets {
     )
 }
 
+private extension MediaList {
+    var footer: LocalizedStringKey {
+         "^[\(items.count) station](inflect: true)"
+    }
+}
+
 #Preview {
-    MediaListView()
-        .environment(PlayListController())
+    MediaListView(mediaList: .mockGta5)
 }

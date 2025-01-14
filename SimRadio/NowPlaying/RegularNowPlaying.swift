@@ -9,7 +9,7 @@ import Kingfisher
 import SwiftUI
 
 struct RegularNowPlaying: View {
-    @Environment(NowPlayingController.self) var model
+    @EnvironmentObject var model: NowPlayingController
     @Binding var expanded: Bool
     var size: CGSize
     var safeArea: EdgeInsets
@@ -73,10 +73,7 @@ private extension RegularNowPlaying {
 }
 
 #Preview {
-    @Previewable @State var model = NowPlayingController(
-        playList: PlayListController(),
-        player: Player()
-    )
+    @Previewable @StateObject var model = NowPlayingController(player: Player())
 
     RegularNowPlaying(
         expanded: .constant(true),
@@ -85,7 +82,8 @@ private extension RegularNowPlaying {
         animationNamespace: Namespace().wrappedValue
     )
     .onAppear {
-        model.onAppear()
+        model.mediaList = .mockGta5
+        model.onAppear()        
     }
     .background {
         ColorfulBackground(
@@ -94,5 +92,5 @@ private extension RegularNowPlaying {
         .overlay(Color(UIColor(white: 0.4, alpha: 0.5)))
     }
     .ignoresSafeArea()
-    .environment(model)
+    .environmentObject(model)
 }

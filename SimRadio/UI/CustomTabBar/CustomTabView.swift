@@ -142,5 +142,4 @@ extension View {
 
 #Preview {
     RootView()
-        .environment(PlayListController())
 }
