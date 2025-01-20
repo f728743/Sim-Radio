@@ -11,4 +11,4 @@ You can create a list of tracks, add DJ drops and intros, records of "news" and 
 
 You can create your own “radio station”, put it somewhere where you can download it via http to SimRadio on your iPhone
 
-Try to download GTA 5 radio stations 📻 <https://cutt.ly/VrAjvQs>
+Try to download GTA 5 radio stations 📻 <https://cutt.ly/VrAjvQs> or GTA 4 <https://cutt.ly/UHiP6qY>
