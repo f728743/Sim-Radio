@@ -42,10 +42,6 @@ final class CustomVisualEffectView: UIVisualEffectView {
 
     required init?(coder _: NSCoder) { nil }
 
-    deinit {
-        animator?.stopAnimation(true)
-    }
-
     override public func draw(_ rect: CGRect) {
         super.draw(rect)
         effect = nil

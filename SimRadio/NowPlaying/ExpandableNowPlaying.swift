@@ -142,7 +142,7 @@ extension Animation {
     }
 }
 
-private struct ProgressTracker: View, Animatable {
+private struct ProgressTracker: View, @preconcurrency Animatable {
     var progress: CGFloat = 0
 
     var animatableData: CGFloat {
@@ -166,7 +166,7 @@ private extension UIWindow {
                     self.stacked(progress: progress)
                 },
                 completion: { _ in
-                    delay(animationDuration) {
+                    DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + animationDuration) {
                         self.resetStacked()
                     }
                 }

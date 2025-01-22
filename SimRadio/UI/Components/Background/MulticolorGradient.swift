@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct MulticolorGradient: View, Animatable {
+struct MulticolorGradient: View, @preconcurrency Animatable {
     var points: ColorPoints
     var animationUpdateHandler: ((ColorPoints) -> Void)?
 
@@ -15,7 +15,7 @@ struct MulticolorGradient: View, Animatable {
         Uniforms(params: GradientParams(points: points, bias: 0.05, power: 2.5, noise: 2))
     }
 
-    var animatableData: ColorPoints.AnimatableData {
+    var animatableData: ColorPointsAnimatableData {
         get {
             points.animatableData
         }

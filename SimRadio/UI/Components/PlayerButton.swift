@@ -54,7 +54,7 @@ struct PlayerButton<Content: View>: View {
                 },
                 onEnded: {
                     guard isEnabled else { return }
-                    delay(0.2) {
+                    DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 0.2) {
                         withAnimation {
                             showCircle = false
                         }
@@ -82,7 +82,7 @@ extension View {
 }
 
 private struct PlayerButtonConfigEnvironmentKey: EnvironmentKey {
-    static var defaultValue: PlayerButtonConfig = .init()
+    static let defaultValue: PlayerButtonConfig = .init()
 }
 
 extension EnvironmentValues {

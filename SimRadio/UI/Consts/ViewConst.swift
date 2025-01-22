@@ -16,7 +16,9 @@ extension ViewConst {
     static let tabbarHeight: CGFloat = safeAreaInsets.bottom + 92
     static let compactNowPlayingHeight: CGFloat = 56
     static var safeAreaInsets: EdgeInsets {
-        EdgeInsets(UIApplication.keyWindow?.safeAreaInsets ?? .zero)
+        MainActor.assumeIsolated {
+            EdgeInsets(UIApplication.keyWindow?.safeAreaInsets ?? .zero)
+        }
     }
 }
 

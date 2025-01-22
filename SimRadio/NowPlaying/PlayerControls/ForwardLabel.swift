@@ -120,7 +120,7 @@ private struct ForwardLabel: View {
     }
 }
 
-private struct AnimationWrapper: View, Animatable {
+private struct AnimationWrapper: View, @preconcurrency Animatable {
     let size: CGFloat
     let linear: Bool
     var progress: Double

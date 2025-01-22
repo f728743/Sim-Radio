@@ -8,34 +8,27 @@
 import Kingfisher
 import UIKit
 
+@MainActor
 class NowPlayingController: ObservableObject {
     enum State {
         case playing
         case paused
     }
-
+    @Published var colors: [ColorFrequency] = []
     @Published var state: State = .paused
     @Published var currentIndex: Int? = 1
     @Published var mediaList: MediaList = .empty {
-        didSet {
-            stopPlaying()
-            let currentItemId = currentIndex.map { oldValue.items[safe: $0]?.id } ?? nil
-            if let currentItemId {
-                currentIndex = mediaList.items.firstIndex { $0.id == currentItemId }
-            }
-        }
+        didSet { onMediaListChanged(oldValue: oldValue) }
     }
-    
     private let player: Player
-    var colors: [ColorFrequency] = []
+    
+    init(player: Player) {
+        self.player = player
+    }
 
     var currentMedia: Media? {
         guard let currentIndex else { return nil }
         return mediaList.items[safe: currentIndex]
-    }
-
-    init(player: Player) {
-        self.player = player
     }
 
     var display: Media {
@@ -144,17 +137,24 @@ private extension NowPlayingController {
         state = .paused
         player.stop()
     }
+    
+    func onMediaListChanged(oldValue: MediaList) {
+        stopPlaying()
+        let currentItemId = currentIndex.map { oldValue.items[safe: $0]?.id } ?? nil
+        if let currentItemId {
+            currentIndex = mediaList.items.firstIndex { $0.id == currentItemId }
+        }
+    }
 
     func updateColors() {
-        guard let url = display.artwork else { return }
-        KingfisherManager.shared.retrieveImage(
-            with: url,
-            options: nil,
-            progressBlock: nil
-        ) { [weak self] result in
-            if case let .success(image) = result {
-                self?.colors = (image.image.dominantColorFrequencies(with: .high) ?? [])
-            }
+        Task {
+            guard let url = display.artwork else { return }
+            let imageResult = try await KingfisherManager.shared.retrieveImage(
+                with: url,
+                options: nil,
+                progressBlock: nil
+            )
+            colors = imageResult.image.dominantColorFrequencies(with: .high) ?? []
         }
     }
 }
