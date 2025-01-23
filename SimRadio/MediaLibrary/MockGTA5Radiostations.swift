@@ -6,6 +6,7 @@
 //
 
 import Foundation
+
 extension MediaList {
     static var mockGta5: Self {
         MediaList(

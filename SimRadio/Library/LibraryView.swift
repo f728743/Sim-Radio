@@ -1,9 +1,9 @@
-import SwiftUI
 import Kingfisher
+import SwiftUI
 
 struct LibraryView: View {
     @Environment(\.nowPlayingExpandProgress) var expandProgress
-    
+
     var body: some View {
         NavigationStack {
             List {
@@ -15,7 +15,7 @@ struct LibraryView: View {
                     navigationLink(title: "Songs", icon: "music.note", count: nil)
                     navigationLink(title: "Downloaded", icon: "arrow.down.circle", count: nil)
                 }
-                
+
                 // Recently Added Section
 //                Section(header: Text("Recently Added")
 //                    .font(.appFont.mediaListHeaderTitle)
@@ -47,7 +47,7 @@ struct LibraryView: View {
                             .foregroundStyle(Color(.palette.brand))
                     }
                 }
-                
+
                 ToolbarItem(placement: .topBarTrailing) {
                     Button {
                         print("Profile")
@@ -60,7 +60,7 @@ struct LibraryView: View {
             }
         }
     }
-    
+
     private func navigationLink(title: String, icon: String, count: Int?) -> some View {
         NavigationLink {
             Text(title)
@@ -69,12 +69,12 @@ struct LibraryView: View {
                 Image(systemName: icon)
                     .foregroundStyle(Color(.palette.brand))
                     .frame(width: 32)
-                
+
                 Text(title)
                     .font(.appFont.mediaListHeaderTitle)
-                
+
                 Spacer()
-                
+
                 if let count {
                     Text("\(count)")
                         .font(.appFont.mediaListItemSubtitle)
@@ -87,7 +87,7 @@ struct LibraryView: View {
 
 struct RecentlyAddedItem: View {
     let item: MediaList
-    
+
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             KFImage.url(item.artwork)
@@ -99,12 +99,12 @@ struct RecentlyAddedItem: View {
                     RoundedRectangle(cornerRadius: 8)
                         .stroke(Color(.palette.artworkBorder), lineWidth: UIScreen.hairlineWidth)
                 )
-            
+
             VStack(alignment: .leading, spacing: 2) {
                 Text(item.title)
                     .font(.appFont.mediaListItemTitle)
                     .lineLimit(1)
-                
+
                 if let subtitle = item.subtitle {
                     Text(subtitle)
                         .font(.appFont.mediaListItemSubtitle)
@@ -115,11 +115,10 @@ struct RecentlyAddedItem: View {
         }
         .padding(.horizontal)
     }
-} 
+}
 
 #Preview {
     NavigationStack {
         LibraryView()
     }
 }
-

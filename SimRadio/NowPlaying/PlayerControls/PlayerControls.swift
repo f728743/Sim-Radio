@@ -52,12 +52,12 @@ private extension PlayerControls {
                     .font(.title3)
                     .fontWeight(.semibold)
                     .foregroundStyle(Color(palette.opaque))
-                    .id(model.display.title)
+                    .id(model.display.id)
                 MarqueeText(model.display.subtitle ?? "", config: cfg)
                     .transformEffect(.identity)
                     .foregroundStyle(Color(palette.opaque))
                     .blendMode(.overlay)
-                    .id(model.display.subtitle)
+                    .id(model.display.id)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
         }

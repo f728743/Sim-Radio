@@ -14,10 +14,10 @@ struct RootView: View {
         CustomTabView(selection: $tabSelection) {
             MediaListView(mediaList: .mockGta5)
                 .tabBarItem(tab: .home, selection: $tabSelection)
-            
+
             Text("Radio")
                 .tabBarItem(tab: .radio, selection: $tabSelection)
-            
+
             LibraryView()
                 .tabBarItem(tab: .library, selection: $tabSelection)
 

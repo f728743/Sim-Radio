@@ -12,9 +12,8 @@ struct OverlaidRootView: View {
     @State private var showOverlayingNowPlayng: Bool = false
     @State private var expandedNowPlaying: Bool = false
     @State private var showNowPlayingReplacement: Bool = false
-    
-    @EnvironmentObject var playerController: NowPlayingController
 
+    @EnvironmentObject var playerController: NowPlayingController
 
     var body: some View {
         ZStack(alignment: .bottom) {

@@ -14,7 +14,7 @@ struct MediaListView: View {
     @Environment(\.nowPlayingExpandProgress) var expandProgress
 
     @State private var selection: Media.ID?
-    
+
     var body: some View {
         NavigationStack {
             content
@@ -51,6 +51,7 @@ private extension MediaListView {
                 .padding(.top, 17)
                 .listRowInsets(.screenInsets)
                 .listSectionSeparator(.hidden, edges: .bottom)
+                .listRowBackground(Color(.palette.appBackground(expandProgress: expandProgress)))
         }
         .listStyle(.plain)
         .onChange(of: selection) { _, newValue in
@@ -92,6 +93,7 @@ private extension MediaListView {
             buttons
                 .padding(.top, 14)
         }
+        .listRowBackground(Color(.palette.appBackground(expandProgress: expandProgress)))
     }
 
     var buttons: some View {
@@ -132,9 +134,13 @@ private extension MediaListView {
             )
             .contentShape(.rect)
             .listRowInsets(.screenInsets)
-            .listRowBackground(item.id == selection ? Color(uiColor: .systemGray4) : nil)
+            .listRowBackground(
+                item.id == selection
+                    ? Color(uiColor: .systemGray4)
+                    : Color(.palette.appBackground(expandProgress: expandProgress))
+            )
             .alignmentGuide(.listRowSeparatorLeading) {
-                return isLastItem ? $0[.leading] : $0[.leading] + 60
+                isLastItem ? $0[.leading] : $0[.leading] + 60
             }
             .swipeActions(edge: .trailing) {
                 Button {} label: {
@@ -207,7 +213,7 @@ private extension EdgeInsets {
 
 private extension MediaList {
     var footer: LocalizedStringKey {
-         "^[\(items.count) station](inflect: true)"
+        "^[\(items.count) station](inflect: true)"
     }
 }
 

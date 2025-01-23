@@ -313,8 +313,8 @@ extension EnvironmentValues {
 }
 
 #Preview {
-    @Previewable @State var progress: Double = 0.5
-    @Previewable @State var volume: Double = 0.5
+    @Previewable @State var progress = 0.5
+    @Previewable @State var volume = 0.5
     let range = 0.0 ... 2
     VStack(spacing: 50) {
         ElasticSlider(

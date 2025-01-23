@@ -25,7 +25,9 @@ struct PlayerButtons: View {
                     )
                 },
                 onEnded: {
-                    backwardAnimationTrigger.toggle(bouncing: true)
+                    DispatchQueue.main.async {
+                        backwardAnimationTrigger.toggle(bouncing: true)
+                    }
                     model.onBackward()
                 }
             )
@@ -48,7 +50,9 @@ struct PlayerButtons: View {
                     )
                 },
                 onEnded: {
-                    forwardAnimationTrigger.toggle(bouncing: true)
+                    DispatchQueue.main.async {
+                        forwardAnimationTrigger.toggle(bouncing: true)
+                    }
                     model.onForward()
                 }
             )
@@ -68,7 +72,7 @@ extension PlayerButtonConfig {
 }
 
 #Preview {
-    @Previewable @StateObject var playerController = NowPlayingController(player: Player())    
+    @Previewable @StateObject var playerController = NowPlayingController(player: Player())
     ZStack(alignment: .top) {
         PreviewBackground()
         VStack {

@@ -70,6 +70,7 @@ private struct CustomTabBarView: View {
         HStack {
             ForEach(tabs, id: \.self) { tab in
                 tabView(tab)
+                    .contentShape(.rect)
                     .onTapGesture {
                         selection = tab
                     }

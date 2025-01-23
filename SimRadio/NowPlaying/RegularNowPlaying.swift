@@ -83,7 +83,7 @@ private extension RegularNowPlaying {
     )
     .onAppear {
         model.mediaList = .mockGta5
-        model.onAppear()        
+        model.onAppear()
     }
     .background {
         ColorfulBackground(

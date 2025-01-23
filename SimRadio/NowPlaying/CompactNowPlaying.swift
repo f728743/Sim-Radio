@@ -47,7 +47,9 @@ struct CompactNowPlaying: View {
                 },
                 onEnded: {
                     model.onForward()
-                    forwardAnimationTrigger.toggle(bouncing: true)
+                    DispatchQueue.main.async {
+                        forwardAnimationTrigger.toggle(bouncing: true)
+                    }
                 }
             )
             .playerButtonStyle(.miniPlayer)
@@ -92,7 +94,7 @@ extension PlayerButtonConfig {
 
 #Preview {
     @Previewable @StateObject var playerController = NowPlayingController(player: Player())
-    
+
     CompactNowPlaying(
         expanded: .constant(false),
         animationNamespace: Namespace().wrappedValue

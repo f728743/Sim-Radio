@@ -14,14 +14,16 @@ class NowPlayingController: ObservableObject {
         case playing
         case paused
     }
+
     @Published var colors: [ColorFrequency] = []
     @Published var state: State = .paused
     @Published var currentIndex: Int? = 1
     @Published var mediaList: MediaList = .empty {
         didSet { onMediaListChanged(oldValue: oldValue) }
     }
+
     private let player: Player
-    
+
     init(player: Player) {
         self.player = player
     }
@@ -63,8 +65,9 @@ class NowPlayingController: ObservableObject {
         stopPlaying()
         currentIndex = index
         onPlayPause()
+        updateColors()
     }
-    
+
     func onPlayPause() {
         enshureMediaAvailable()
         guard let currentMedia else { return }
@@ -137,7 +140,7 @@ private extension NowPlayingController {
         state = .paused
         player.stop()
     }
-    
+
     func onMediaListChanged(oldValue: MediaList) {
         stopPlaying()
         let currentItemId = currentIndex.map { oldValue.items[safe: $0]?.id } ?? nil
@@ -189,4 +192,3 @@ extension MediaList {
         )
     }
 }
-
