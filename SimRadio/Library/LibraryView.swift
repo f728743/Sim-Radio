@@ -3,51 +3,38 @@ import SwiftUI
 
 struct LibraryView: View {
     @Environment(\.nowPlayingExpandProgress) var expandProgress
+    @EnvironmentObject var library: MediaLibrary
 
     var body: some View {
         NavigationStack {
             List {
                 // Library sections
                 Group {
-//                    navigationLink(title: "Playlists", icon: "music.note.list", count: model.library.list.count)
-                    navigationLink(title: "Artists", icon: "music.mic", count: nil)
-                    navigationLink(title: "Albums", icon: "square.stack", count: nil)
-                    navigationLink(title: "Songs", icon: "music.note", count: nil)
-                    navigationLink(title: "Downloaded", icon: "arrow.down.circle", count: nil)
+                    navigationLink(title: "Downloaded", icon: "arrow.down.circle")
                 }
 
                 // Recently Added Section
-//                Section(header: Text("Recently Added")
-//                    .font(.appFont.mediaListHeaderTitle)
-//                    .foregroundStyle(.primary)
-//                    .textCase(nil)
-//                    .padding(.top, 24)
-//                ) {
-//                    LazyVGrid(columns: [
-//                        GridItem(.flexible()),
-//                        GridItem(.flexible())
-//                    ], spacing: 16) {
-//                        ForEach(model.library.list.prefix(4), id: \.title) { item in
-//                            RecentlyAddedItem(item: item)
-//                        }
-//                    }
-//                    .listRowInsets(EdgeInsets())
-//                    .listRowSeparator(.hidden)
-//                }
+                Section(header: Text("Recently Added")
+                    .font(.appFont.mediaListHeaderTitle)
+                    .foregroundStyle(.primary)
+                    .textCase(nil)
+                    .padding(.top, 24)
+                ) {
+                    LazyVGrid(columns: [
+                        GridItem(.flexible()),
+                        GridItem(.flexible())
+                    ], spacing: 16) {
+                        ForEach(library.list.prefix(4), id: \.title) { item in
+                            RecentlyAddedItem(item: item)
+                        }
+                    }
+                    .listRowInsets(EdgeInsets())
+                    .listRowSeparator(.hidden)
+                }
             }
             .listStyle(.plain)
             .navigationTitle("Library")
             .toolbar {
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button {
-                        print("Sort/Filter")
-                    } label: {
-                        Image(systemName: "ellipsis")
-                            .font(.system(size: 20, weight: .semibold))
-                            .foregroundStyle(Color(.palette.brand))
-                    }
-                }
-
                 ToolbarItem(placement: .topBarTrailing) {
                     Button {
                         print("Profile")
@@ -61,7 +48,7 @@ struct LibraryView: View {
         }
     }
 
-    private func navigationLink(title: String, icon: String, count: Int?) -> some View {
+    private func navigationLink(title: String, icon: String) -> some View {
         NavigationLink {
             Text(title)
         } label: {
@@ -72,14 +59,6 @@ struct LibraryView: View {
 
                 Text(title)
                     .font(.appFont.mediaListHeaderTitle)
-
-                Spacer()
-
-                if let count {
-                    Text("\(count)")
-                        .font(.appFont.mediaListItemSubtitle)
-                        .foregroundStyle(Color(.palette.textSecondary))
-                }
             }
         }
     }

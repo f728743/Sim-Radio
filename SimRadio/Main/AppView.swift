@@ -9,9 +9,13 @@ import SwiftUI
 
 struct AppView: View {
     @StateObject private var playerController: NowPlayingController
+    @StateObject private var library: MediaLibrary
 
     init() {
+        let library = MediaLibrary()
+        library.reload()
         let nowPlaying = NowPlayingController(player: Player())
+        _library = StateObject(wrappedValue: library)
         _playerController = StateObject(wrappedValue: nowPlaying)
     }
 
@@ -19,6 +23,7 @@ struct AppView: View {
         OverlayableRootView {
             OverlaidRootView()
                 .environmentObject(playerController)
+                .environmentObject(library)
         }
     }
 }

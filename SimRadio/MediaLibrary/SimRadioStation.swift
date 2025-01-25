@@ -8,7 +8,7 @@
 import Foundation
 
 enum SimRadio {
-    struct Series: Codable {
+    struct Series: Codable, Sendable {
         let info: SeriesInfo
         let common: SeriesCommon
         let stations: [Station]
@@ -19,7 +19,7 @@ enum SimRadio {
         let logo: String
     }
 
-    struct SeriesCommon: Codable {
+    struct SeriesCommon: Codable, Sendable {
         let fileGroups: [FileGroup]
     }
 
@@ -30,12 +30,12 @@ enum SimRadio {
         let playlist: Playlist
     }
 
-    struct FileGroup: Codable {
+    struct FileGroup: Codable, Sendable {
         let tag: String
         let files: [File]
     }
 
-    struct File: Codable {
+    struct File: Codable, Sendable {
         let tag: String?
         let path: String
         let duration: Double
