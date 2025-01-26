@@ -3,46 +3,45 @@ import SwiftUI
 
 struct LibraryView: View {
     @Environment(\.nowPlayingExpandProgress) var expandProgress
+    @Environment(Router.self) var router
     @EnvironmentObject var library: MediaLibrary
 
     var body: some View {
-        NavigationStack {
-            List {
-                // Library sections
-                Group {
-                    navigationLink(title: "Downloaded", icon: "arrow.down.circle")
-                }
+        List {
+            navigationLink(title: "Downloaded", icon: "arrow.down.circle")
 
-                // Recently Added Section
-                Section(header: Text("Recently Added")
+            Section(
+                header: Text("Recently Added")
                     .font(.appFont.mediaListHeaderTitle)
                     .foregroundStyle(.primary)
                     .textCase(nil)
                     .padding(.top, 24)
+            ) {
+                LazyVGrid(
+                    columns: [GridItem(.flexible()), GridItem(.flexible())],
+                    spacing: 16
                 ) {
-                    LazyVGrid(columns: [
-                        GridItem(.flexible()),
-                        GridItem(.flexible())
-                    ], spacing: 16) {
-                        ForEach(library.list.prefix(4), id: \.title) { item in
-                            RecentlyAddedItem(item: item)
-                        }
+                    ForEach(library.list) { item in
+                        RecentlyAddedItem(item: item)
+                            .onTapGesture {
+                                router.navigateToMediaList(item: item)
+                            }
                     }
-                    .listRowInsets(EdgeInsets())
-                    .listRowSeparator(.hidden)
                 }
+                .listRowInsets(EdgeInsets())
+                .listRowSeparator(.hidden)
             }
-            .listStyle(.plain)
-            .navigationTitle("Library")
-            .toolbar {
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button {
-                        print("Profile")
-                    } label: {
-                        Image(systemName: "person.crop.circle")
-                            .font(.system(size: 20, weight: .semibold))
-                            .foregroundStyle(Color(.palette.brand))
-                    }
+        }
+        .listStyle(.plain)
+        .navigationTitle("Library")
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                Button {
+                    print("Profile")
+                } label: {
+                    Image(systemName: "person.crop.circle")
+                        .font(.system(size: 20, weight: .semibold))
+                        .foregroundStyle(Color(.palette.brand))
                 }
             }
         }
@@ -97,7 +96,11 @@ struct RecentlyAddedItem: View {
 }
 
 #Preview {
-    NavigationStack {
-        LibraryView()
-    }
+    @Previewable @StateObject var library = MediaLibrary()
+
+    LibraryView()
+        .environmentObject(library)
+        .onAppear {
+            library.reload()
+        }
 }

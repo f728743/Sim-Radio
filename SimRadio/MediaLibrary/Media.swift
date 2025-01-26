@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Media: Identifiable {
+struct Media: Identifiable, Equatable, Hashable {
     let id = UUID()
     let artwork: URL?
     let title: String

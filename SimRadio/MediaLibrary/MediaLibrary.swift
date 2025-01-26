@@ -40,10 +40,11 @@ final class MediaLibrary: ObservableObject {
 }
 
 extension Media {
-    init(from station: SimRadio.Station, baseUrl _: String) {
+    init(from station: SimRadio.Station, baseUrl: String) {
         title = station.info.title
         subtitle = station.info.genre
-        artwork = URL(string: station.info.logo)
+        let artwork = "\(baseUrl)/\(station.tag)/\(station.info.logo)"
+        self.artwork = URL(string: artwork)
         online = false
     }
 }

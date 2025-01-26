@@ -16,22 +16,20 @@ struct MediaListView: View {
     @State private var selection: Media.ID?
 
     var body: some View {
-        NavigationStack {
-            content
-                .contentMargins(.bottom, ViewConst.tabbarHeight + 27, for: .scrollContent)
-                .contentMargins(.bottom, ViewConst.tabbarHeight, for: .scrollIndicators)
-                .background(Color(.palette.appBackground(expandProgress: expandProgress)))
-                .toolbar {
-                    Button {
-                        print("Profile tapped")
-                    }
-                    label: {
-                        Image(systemName: "person.crop.circle")
-                            .font(.system(size: 20, weight: .semibold))
-                            .foregroundStyle(Color(.palette.brand))
-                    }
+        content
+            .contentMargins(.bottom, ViewConst.tabbarHeight + 27, for: .scrollContent)
+            .contentMargins(.bottom, ViewConst.tabbarHeight, for: .scrollIndicators)
+            .background(Color(.palette.appBackground(expandProgress: expandProgress)))
+            .toolbar {
+                Button {
+                    print("Profile tapped")
                 }
-        }
+                label: {
+                    Image(systemName: "person.crop.circle")
+                        .font(.system(size: 20, weight: .semibold))
+                        .foregroundStyle(Color(.palette.brand))
+                }
+            }
     }
 }
 

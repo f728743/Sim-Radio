@@ -12,14 +12,9 @@ struct RootView: View {
 
     var body: some View {
         CustomTabView(selection: $tabSelection) {
-            MediaListView(mediaList: .mockGta5)
-                .tabBarItem(tab: .home, selection: $tabSelection)
-
-            Text("Radio")
-                .tabBarItem(tab: .radio, selection: $tabSelection)
-
             LibraryView()
-                .tabBarItem(tab: .library, selection: $tabSelection)
+                .withRouter()
+                .tabBarItem(tab: .home, selection: $tabSelection)
 
             Text("Looking for something?")
                 .tabBarItem(tab: .search, selection: $tabSelection)
