@@ -21,14 +21,8 @@ struct MediaListView: View {
             .contentMargins(.bottom, ViewConst.tabbarHeight, for: .scrollIndicators)
             .background(Color(.palette.appBackground(expandProgress: expandProgress)))
             .toolbar {
-                Button {
-                    print("Profile tapped")
-                }
-                label: {
-                    Image(systemName: "person.crop.circle")
-                        .font(.system(size: 20, weight: .semibold))
-                        .foregroundStyle(Color(.palette.brand))
-                }
+                Button { print("Profile tapped") }
+                    label: { ProfileToolbarButton() }
             }
     }
 }

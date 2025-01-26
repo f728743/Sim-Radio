@@ -14,6 +14,8 @@ struct RoutedView: View {
         switch route {
         case let .mediaList(item):
             MediaListView(mediaList: item)
+        case .downloaded:
+            DownloadedView()
         }
     }
 }

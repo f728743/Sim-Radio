@@ -14,6 +14,7 @@ struct RootView: View {
         CustomTabView(selection: $tabSelection) {
             LibraryView()
                 .withRouter()
+                .accentColor(Color(.palette.brand))
                 .tabBarItem(tab: .home, selection: $tabSelection)
 
             Text("Looking for something?")
@@ -23,5 +24,7 @@ struct RootView: View {
 }
 
 #Preview {
+    @Previewable @StateObject var library = MediaLibrary()
     RootView()
+        .environmentObject(library)
 }

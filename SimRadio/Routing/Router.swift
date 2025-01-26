@@ -9,6 +9,7 @@ import SwiftUI
 
 enum Route: Hashable, Equatable {
     case mediaList(item: MediaList)
+    case downloaded
 }
 
 @Observable
@@ -17,6 +18,10 @@ class Router {
 
     func navigateToMediaList(item: MediaList) {
         path.append(Route.mediaList(item: item))
+    }
+
+    func navigateToDownloaded() {
+        path.append(Route.downloaded)
     }
 
     func popToRoot() {

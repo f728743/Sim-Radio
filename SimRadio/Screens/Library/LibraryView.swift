@@ -9,6 +9,9 @@ struct LibraryView: View {
     var body: some View {
         List {
             navigationLink(title: "Downloaded", icon: "arrow.down.circle")
+                .onTapGesture {
+                    router.navigateToDownloaded()
+                }
 
             Section(
                 header: Text("Recently Added")
@@ -35,30 +38,19 @@ struct LibraryView: View {
         .listStyle(.plain)
         .navigationTitle("Library")
         .toolbar {
-            ToolbarItem(placement: .topBarTrailing) {
-                Button {
-                    print("Profile")
-                } label: {
-                    Image(systemName: "person.crop.circle")
-                        .font(.system(size: 20, weight: .semibold))
-                        .foregroundStyle(Color(.palette.brand))
-                }
-            }
+            Button { print("Profile tapped") }
+                label: { ProfileToolbarButton() }
         }
     }
 
     private func navigationLink(title: String, icon: String) -> some View {
-        NavigationLink {
-            Text(title)
-        } label: {
-            HStack {
-                Image(systemName: icon)
-                    .foregroundStyle(Color(.palette.brand))
-                    .frame(width: 32)
+        HStack {
+            Image(systemName: icon)
+                .foregroundStyle(Color(.palette.brand))
+                .frame(width: 32)
 
-                Text(title)
-                    .font(.appFont.mediaListHeaderTitle)
-            }
+            Text(title)
+                .font(.appFont.mediaListHeaderTitle)
         }
     }
 }
@@ -99,6 +91,7 @@ struct RecentlyAddedItem: View {
     @Previewable @StateObject var library = MediaLibrary()
 
     LibraryView()
+        .withRouter()
         .environmentObject(library)
         .onAppear {
             library.reload()
