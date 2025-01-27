@@ -9,32 +9,20 @@ struct LibraryView: View {
     var body: some View {
         List {
             navigationLink(title: "Downloaded", icon: "arrow.down.circle")
+                .listRowInsets(.init(top: 0, leading: 23, bottom: 0, trailing: 22))
+                .listSectionSeparator(.hidden, edges: .top)
+                .listRowBackground(Color(.palette.appBackground(expandProgress: expandProgress)))
+
                 .onTapGesture {
                     router.navigateToDownloaded()
                 }
+            recentlyAdded
+                .listRowInsets(.init(top: 25, leading: 20, bottom: 0, trailing: 20))
+                .listSectionSeparator(.hidden, edges: .bottom)
+                .listRowBackground(Color(.palette.appBackground(expandProgress: expandProgress)))
 
-            Section(
-                header: Text("Recently Added")
-                    .font(.appFont.mediaListHeaderTitle)
-                    .foregroundStyle(.primary)
-                    .textCase(nil)
-                    .padding(.top, 24)
-            ) {
-                LazyVGrid(
-                    columns: [GridItem(.flexible()), GridItem(.flexible())],
-                    spacing: 16
-                ) {
-                    ForEach(library.list) { item in
-                        RecentlyAddedItem(item: item)
-                            .onTapGesture {
-                                router.navigateToMediaList(item: item)
-                            }
-                    }
-                }
-                .listRowInsets(EdgeInsets())
-                .listRowSeparator(.hidden)
-            }
         }
+        .background(Color(.palette.appBackground(expandProgress: expandProgress)))
         .listStyle(.plain)
         .navigationTitle("Library")
         .toolbar {
@@ -42,24 +30,52 @@ struct LibraryView: View {
                 label: { ProfileToolbarButton() }
         }
     }
+}
 
-    private func navigationLink(title: String, icon: String) -> some View {
-        HStack {
-            Image(systemName: icon)
-                .foregroundStyle(Color(.palette.brand))
-                .frame(width: 32)
+private extension LibraryView {
+    var recentlyAdded: some View {
+        VStack(spacing: 13) {
+            Text("Recently Added")
+                .font(.system(size: 22, weight: .semibold))
+                .frame(maxWidth: .infinity, alignment: .leading)
 
-            Text(title)
-                .font(.appFont.mediaListHeaderTitle)
+            LazyVGrid(
+                columns: [GridItem(.flexible()), GridItem(.flexible())],
+                spacing: 16
+            ) {
+                ForEach(library.list) { item in
+                    RecentlyAddedItem(item: item)
+                        .onTapGesture {
+                            router.navigateToMediaList(item: item)
+                        }
+                }
+            }
         }
+    }
+
+    func navigationLink(title: String, icon: String) -> some View {
+        HStack(spacing: 11) {
+            Image(systemName: icon)
+                .font(.system(size: 22))
+                .foregroundStyle(Color(.palette.brand))
+            Text(title)
+                .font(.system(size: 20))
+                .lineLimit(1)
+            Spacer()
+            Image(systemName: "chevron.right")
+                .font(.system(size: 14, weight: .semibold))
+                .foregroundStyle(Color(.palette.stroke))
+        }
+        .frame(height: 48)
+        .contentShape(.rect)
     }
 }
 
-struct RecentlyAddedItem: View {
+private struct RecentlyAddedItem: View {
     let item: MediaList
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
+        VStack(alignment: .leading, spacing: 5) {
             KFImage.url(item.artwork)
                 .resizable()
                 .aspectRatio(1, contentMode: .fit)
@@ -70,9 +86,9 @@ struct RecentlyAddedItem: View {
                         .stroke(Color(.palette.artworkBorder), lineWidth: UIScreen.hairlineWidth)
                 )
 
-            VStack(alignment: .leading, spacing: 2) {
+            VStack(alignment: .leading, spacing: 0) {
                 Text(item.title)
-                    .font(.appFont.mediaListItemTitle)
+                    .font(.system(size: 13, weight: .medium))
                     .lineLimit(1)
 
                 if let subtitle = item.subtitle {
@@ -83,7 +99,6 @@ struct RecentlyAddedItem: View {
                 }
             }
         }
-        .padding(.horizontal)
     }
 }
 

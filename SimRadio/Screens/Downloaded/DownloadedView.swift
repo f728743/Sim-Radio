@@ -20,7 +20,7 @@ extension DownloadedView {
         VStack(spacing: 0) {
             Image(systemName: "icloud.and.arrow.down")
                 .font(.system(size: 48))
-                .foregroundStyle(Color(.palette.textTertiary))
+                .foregroundStyle(Color(.palette.stroke))
             Text("Download Stations to Listen to Offline")
                 .font(.system(size: 22, weight: .semibold))
                 .padding(.top, 16)

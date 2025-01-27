@@ -12,11 +12,11 @@ enum AppFont {
     static let miniPlayerTitle: Font = .system(size: 15, weight: .medium)
     static let button: Font = .system(size: 17, weight: .semibold)
     static let mediaListHeaderTitle: Font = .system(size: 20, weight: .semibold)
-    static let mediaListHeaderSubtitle: Font = .system(size: 20, weight: .regular)
-    static let mediaListItemTitle: Font = .system(size: 16, weight: .regular)
-    static let mediaListItemSubtitle: Font = .system(size: 13, weight: .regular)
-    static let mediaListItemFooter: Font = .system(size: 15, weight: .regular)
-    static let tabbar: Font = .system(size: 10, weight: .regular)
+    static let mediaListHeaderSubtitle: Font = .system(size: 20)
+    static let mediaListItemTitle: Font = .system(size: 16)
+    static let mediaListItemSubtitle: Font = .system(size: 13)
+    static let mediaListItemFooter: Font = .system(size: 15)
+    static let tabbar: Font = .system(size: 10)
 }
 
 extension Font {

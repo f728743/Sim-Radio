@@ -51,6 +51,11 @@ extension Palette {
         dark: UIColor(r: 128, g: 128, b: 128, a: 255)
     )
 
+    static let stroke: UIColor = .dynamic(
+        light: UIColor(r: 197, g: 197, b: 199, a: 255),
+        dark: UIColor(r: 70, g: 69, b: 73, a: 255)
+    )
+
     static func appBackground(expandProgress: CGFloat) -> UIColor {
         UIColor {
             $0.userInterfaceStyle == .light
