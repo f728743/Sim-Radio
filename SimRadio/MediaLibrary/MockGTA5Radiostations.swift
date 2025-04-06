@@ -10,15 +10,22 @@ import Foundation
 extension MediaList {
     static var mockGta5: Self {
         MediaList(
-            artwork: stationGroupImageUrl(),
-            title: "GTA V Radio",
-            subtitle: nil,
+            id: .simRadioSeries(.init(value: "sample-gta5")),
+            meta: .init(
+                artwork: stationGroupImageUrl(),
+                title: "GTA V Radio",
+                subtitle: nil
+            ),
             items: gta5stations.map {
                 Media(
-                    artwork: stationImageUrl(String($0.logo.split(separator: ".")[0])),
-                    title: $0.title,
-                    subtitle: $0.genre,
-                    online: false
+                    id: .simRadio(.init(value: $0.title)),
+                    meta: .init(
+                        artwork: stationImageUrl(String($0.logo.split(separator: ".")[0])),
+                        title: $0.title,
+                        listSubtitle: $0.genre,
+                        detailsSubtitle: $0.detailsSubtitle,
+                        online: false
+                    )
                 )
             }
         )
@@ -39,6 +46,9 @@ private struct GTARadioStation {
     let genre: String
     let logo: String
     let dj: String?
+    var detailsSubtitle: String {
+        dj.map { "Hosted by \($0) – \(genre)" } ?? genre
+    }
 }
 
 private let gta5stations: [GTARadioStation] = [

@@ -15,7 +15,7 @@ struct AudioFile {
 
     init(
         baseUrl: URL,
-        model: SimRadio.File
+        model: SimRadioDTO.File
     ) {
         tag = model.tag
         var fileUrl = baseUrl
@@ -52,21 +52,21 @@ struct AttachedFileSource: FileSource {
 }
 
 struct GroupFileSource: FileSource {
-    var randomfiles: RandomFilePick
+    var randomFiles: RandomFilePicker
 
     init?(files: [AudioFile]) {
-        guard let files = RandomFilePick(from: files, withDontRepeatRatio: 3.0 / 7.0) else {
+        guard let files = RandomFilePicker(from: files, withDontRepeatRatio: 3.0 / 7.0) else {
             return nil
         }
-        randomfiles = files
+        randomFiles = files
     }
 
     func next(parentFile _: AudioFile?) -> AudioFile? {
-        return randomfiles.next()
+        return randomFiles.next()
     }
 }
 
-class RandomFilePick {
+class RandomFilePicker {
     private var discardPile: [AudioFile] = []
     private var draw: [AudioFile] = []
     private let maxDiscardPileCount: Int
@@ -94,7 +94,7 @@ class RandomFilePick {
     }
 }
 
-func makeFileSource(model: SimRadio.Source, fileGroups: AudioFileGroups) -> FileSource? {
+func makeFileSource(model: SimRadioDTO.Source, fileGroups: AudioFileGroups) -> FileSource? {
     switch model.type {
     case .file:
         guard

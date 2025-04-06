@@ -13,9 +13,9 @@ struct RoutedView: View {
     var body: some View {
         switch route {
         case let .mediaList(item):
-            MediaListView(mediaList: item)
+            MediaListScreen(mediaList: item)
         case .downloaded:
-            DownloadedView()
+            DownloadedScreen()
         }
     }
 }

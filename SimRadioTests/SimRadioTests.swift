@@ -11,7 +11,7 @@ import Testing
 
 struct SimRadioTests {
     @Test func testMakePlaylist() async throws {
-        let series = try JSONDecoder().decode(SimRadio.Series.self, from: radioJson.data(using: .utf8)!)
+        let series = try JSONDecoder().decode(SimRadioDTO.Series.self, from: radioJson.data(using: .utf8)!)
 
         let playlistBuilder = PlaylistBuilder(
             baseUrl: URL(string: "/")!,
@@ -22,12 +22,12 @@ struct SimRadioTests {
         srand48(Int(100))
         let playlist = try playlistBuilder.makePlaylist(duration: 3 * 60 * 60)
 
-        #expect(playlist.description == playlistForSrand100)
+        #expect(playlist.description == playlistForSeed100)
     }
 }
 
 // swiftlint:disable line_length file_length
-let playlistForSrand100 = #"""
+let playlistForSeed100 = #"""
 (0.0..5.18): id/id_02.m4a
 (5.18..215.38): /radio_01_class_rock/big_log.m4a
 (215.38..433.04): /radio_01_class_rock/burning_heart.m4a

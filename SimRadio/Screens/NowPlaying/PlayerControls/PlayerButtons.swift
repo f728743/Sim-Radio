@@ -72,7 +72,7 @@ extension PlayerButtonConfig {
 }
 
 #Preview {
-    @Previewable @StateObject var playerController = NowPlayingController(player: Player())
+    @Previewable @StateObject var playerController = NowPlayingController(player: MediaPlayer())
     ZStack(alignment: .top) {
         PreviewBackground()
         VStack {
@@ -85,7 +85,7 @@ extension PlayerButtonConfig {
         .foregroundStyle(Color(Palette.PlayerCard.opaque))
     }
     .onAppear {
-        playerController.mediaList = .mockGta5
+//        playerController.mediaList = .mockGta5
     }
     .environmentObject(playerController)
 }

@@ -31,13 +31,13 @@ extension Double {
 
 class PlaylistBuilder {
     let baseUrl: URL
-    let commonFiles: [SimRadio.FileGroup]
-    let station: SimRadio.Station
+    let commonFiles: [SimRadioDTO.FileGroup]
+    let station: SimRadioDTO.Station
 
     init(
         baseUrl: URL,
-        commonFiles: [SimRadio.FileGroup],
-        station: SimRadio.Station
+        commonFiles: [SimRadioDTO.FileGroup],
+        station: SimRadioDTO.Station
     ) {
         self.baseUrl = baseUrl
         self.commonFiles = commonFiles
@@ -77,7 +77,7 @@ private extension PlaylistBuilder {
         return stationFiles.merging(commonFiles, uniquingKeysWith: { first, _ in first })
     }
 
-    func convert(files: [SimRadio.FileGroup], baseUrl: URL) -> AudioFileGroups {
+    func convert(files: [SimRadioDTO.FileGroup], baseUrl: URL) -> AudioFileGroups {
         Dictionary(
             uniqueKeysWithValues: files.map {
                 let fileList = $0.files.map {
@@ -116,7 +116,7 @@ private extension PlaylistBuilder {
         guard let file = fragment.src.next(parentFile: nil) else {
             throw PlaylistError.wrongSource
         }
-        let mixes = try makeFragmentMixin(
+        let mixes = try makeMixesForFragment(
             to: file,
             starts: sec,
             at: fragment.mixPositions,
@@ -130,7 +130,7 @@ private extension PlaylistBuilder {
         return AudioComponent(url: file.url, playing: range, mixes: mixes)
     }
 
-    func makeFragmentMixin(
+    func makeMixesForFragment(
         to file: AudioFile,
         starts sec: Double,
         at positions: [String: Double],
@@ -165,7 +165,7 @@ private extension PlaylistBuilder {
 }
 
 extension Double {
-    func rounded(toPlaces places: Int) -> Double {
+    func rounded(places: Int) -> Double {
         let divisor = pow(10.0, Double(places))
         return (self * divisor).rounded() / divisor
     }
@@ -204,8 +204,8 @@ struct AudioComponent {
 
 extension AudioComponent: CustomStringConvertible {
     func description(nesting: Int) -> String {
-        let from = playing.start.rounded(toPlaces: 2)
-        let to = (playing.start + playing.duration).rounded(toPlaces: 2)
+        let from = playing.start.rounded(places: 2)
+        let to = (playing.start + playing.duration).rounded(places: 2)
         let indent = String(repeating: "  ", count: nesting)
         return [
             "\(indent)(\(from)..\(to)): \(urlTail(url))",
@@ -234,7 +234,7 @@ private class PlaylistRules {
     let fragments: [String: Fragment]
 
     init(
-        model: SimRadio.Playlist,
+        model: SimRadioDTO.Playlist,
         fileGroups: AudioFileGroups
     ) throws {
         firstFragmentTag = model.firstFragment.fragmentTag
@@ -246,11 +246,11 @@ private class PlaylistRules {
 
     struct Mix {
         var src: FileSource
-        let condition: SimRadio.Conditon
+        let condition: SimRadioDTO.Condition
         var positions: [String]
 
         init(
-            model: SimRadio.Mix,
+            model: SimRadioDTO.Mix,
             fileGroups: AudioFileGroups
         ) throws {
             guard let src = makeFileSource(model: model.src, fileGroups: fileGroups) else {
@@ -264,12 +264,12 @@ private class PlaylistRules {
 
     struct Fragment {
         let src: FileSource
-        let nextFragment: [SimRadio.FragmentRef]
+        let nextFragment: [SimRadioDTO.FragmentRef]
         let mixPositions: [String: Double]
         let mixins: [Mix]
 
         init(
-            model: SimRadio.Fragment,
+            model: SimRadioDTO.Fragment,
             fileGroups: AudioFileGroups
         ) throws {
             guard let src = makeFileSource(model: model.src, fileGroups: fileGroups) else {

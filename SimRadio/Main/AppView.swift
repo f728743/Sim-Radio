@@ -9,21 +9,20 @@ import SwiftUI
 
 struct AppView: View {
     @StateObject private var playerController: NowPlayingController
-    @StateObject private var library: MediaLibrary
+    @State private var dependencies: AppDependencies
 
     init() {
-        let library = MediaLibrary()
-        library.reload()
-        let nowPlaying = NowPlayingController(player: Player())
-        _library = StateObject(wrappedValue: library)
+        let dependencies = AppDependencies()
+        let nowPlaying = NowPlayingController(player: MediaPlayer())
         _playerController = StateObject(wrappedValue: nowPlaying)
+        _dependencies = State(wrappedValue: dependencies)
     }
 
     var body: some View {
         OverlayableRootView {
             OverlaidRootView()
                 .environmentObject(playerController)
-                .environmentObject(library)
+                .environment(dependencies.mediaState)
         }
     }
 }

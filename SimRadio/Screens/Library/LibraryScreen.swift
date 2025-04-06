@@ -1,10 +1,18 @@
+//
+//  LibraryScreen.swift
+//  SimRadio
+//
+//  Created by Alexey Vorobyov on 06.04.2025.
+//
+
 import Kingfisher
 import SwiftUI
 
-struct LibraryView: View {
+struct LibraryScreen: View {
     @Environment(\.nowPlayingExpandProgress) var expandProgress
     @Environment(Router.self) var router
-    @EnvironmentObject var library: MediaLibrary
+    @Environment(MediaState.self) var mediaState
+    @State private var viewModel = LibraryScreenViewModel()
 
     var body: some View {
         List {
@@ -24,13 +32,16 @@ struct LibraryView: View {
         .listStyle(.plain)
         .navigationTitle("Library")
         .toolbar {
-            Button { print("Profile tapped") }
+            Button { viewModel.populate() }
                 label: { ProfileToolbarButton() }
+        }
+        .task {
+            viewModel.mediaState = mediaState
         }
     }
 }
 
-private extension LibraryView {
+private extension LibraryScreen {
     var recentlyAdded: some View {
         VStack(spacing: 13) {
             Text("Recently Added")
@@ -41,7 +52,7 @@ private extension LibraryView {
                 columns: [GridItem(.flexible()), GridItem(.flexible())],
                 spacing: 16
             ) {
-                ForEach(library.list) { item in
+                ForEach(viewModel.recentlyAdded) { item in
                     RecentlyAddedItem(item: item)
                         .onTapGesture {
                             router.navigateToMediaList(item: item)
@@ -74,7 +85,7 @@ private struct RecentlyAddedItem: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 5) {
-            KFImage.url(item.artwork)
+            KFImage.url(item.meta.artwork)
                 .resizable()
                 .aspectRatio(1, contentMode: .fit)
                 .background(Color(.palette.artworkBackground))
@@ -85,11 +96,11 @@ private struct RecentlyAddedItem: View {
                 )
 
             VStack(alignment: .leading, spacing: 0) {
-                Text(item.title)
+                Text(item.meta.title)
                     .font(.system(size: 13, weight: .medium))
                     .lineLimit(1)
 
-                if let subtitle = item.subtitle {
+                if let subtitle = item.meta.subtitle {
                     Text(subtitle)
                         .font(.appFont.mediaListItemSubtitle)
                         .foregroundStyle(Color(.palette.textSecondary))
@@ -100,13 +111,14 @@ private struct RecentlyAddedItem: View {
     }
 }
 
-#Preview {
-    @Previewable @StateObject var library = MediaLibrary()
-
-    LibraryView()
-        .withRouter()
-        .environmentObject(library)
-        .onAppear {
-            library.reload()
-        }
-}
+// TODO:
+//    #Preview {
+//        @Previewable @StateObject var library = MediaLibrary()
+//
+//        LibraryView()
+//            .withRouter()
+//            .environmentObject(library)
+//            .onAppear {
+//                library.reload()
+//            }
+//    }

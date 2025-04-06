@@ -70,7 +70,7 @@ private extension CompactNowPlaying {
     @ViewBuilder
     var artwork: some View {
         if !hideArtworkOnExpanded || !expanded {
-            KFImage.url(model.display.artwork)
+            KFImage.url(model.display.meta.artwork)
                 .resizable()
                 .aspectRatio(contentMode: .fill)
                 .background(Color(UIColor.systemGray4))
@@ -93,14 +93,14 @@ extension PlayerButtonConfig {
 }
 
 #Preview {
-    @Previewable @StateObject var playerController = NowPlayingController(player: Player())
+    @Previewable @StateObject var playerController = NowPlayingController(player: MediaPlayer())
 
     CompactNowPlaying(
         expanded: .constant(false),
         animationNamespace: Namespace().wrappedValue
     )
     .onAppear {
-        playerController.mediaList = .mockGta5
+//        playerController.mediaList = .mockGta5
     }
     .background(.gray)
     .environmentObject(playerController)

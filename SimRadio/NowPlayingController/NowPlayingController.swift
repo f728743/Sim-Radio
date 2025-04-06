@@ -22,9 +22,9 @@ class NowPlayingController: ObservableObject {
         didSet { onMediaListChanged(oldValue: oldValue) }
     }
 
-    private let player: Player
+    private let player: MediaPlayer
 
-    init(player: Player) {
+    init(player: MediaPlayer) {
         self.player = player
     }
 
@@ -38,16 +38,16 @@ class NowPlayingController: ObservableObject {
     }
 
     var title: String {
-        display.title
+        display.meta.title
     }
 
     var subtitle: String? {
-        display.subtitle
+        display.meta.detailsSubtitle
     }
 
     var playPauseButton: ButtonType {
         switch state {
-        case .playing: currentMedia.map(\.online) ?? false ? .stop : .pause
+        case .playing: currentMedia.map(\.meta.online) ?? false ? .stop : .pause
         case .paused: .play
         }
     }
@@ -59,7 +59,7 @@ class NowPlayingController: ObservableObject {
         updateColors()
     }
 
-    func onPlay(itemId: UUID) {
+    func onPlay(itemId: MediaID) {
         let index = mediaList.items.firstIndex { $0.id == itemId }
         guard let index else { return }
         stopPlaying()
@@ -69,7 +69,7 @@ class NowPlayingController: ObservableObject {
     }
 
     func onPlayPause() {
-        enshureMediaAvailable()
+        ensureMediaAvailable()
         guard let currentMedia else { return }
         state.toggle()
         if state == .playing {
@@ -80,7 +80,7 @@ class NowPlayingController: ObservableObject {
     }
 
     func onForward() {
-        enshureMediaAvailable()
+        ensureMediaAvailable()
         guard currentMedia != nil else { return }
 
         guard let currentIndex else {
@@ -101,7 +101,7 @@ class NowPlayingController: ObservableObject {
     }
 
     func onBackward() {
-        enshureMediaAvailable()
+        ensureMediaAvailable()
         guard currentMedia != nil else { return }
 
         let lastIndex = mediaList.items.count - 1
@@ -124,7 +124,7 @@ class NowPlayingController: ObservableObject {
 }
 
 private extension NowPlayingController {
-    func enshureMediaAvailable() {
+    func ensureMediaAvailable() {
         if mediaList.items.isEmpty {
             selectFirstAvailableMedia()
         }
@@ -151,7 +151,7 @@ private extension NowPlayingController {
 
     func updateColors() {
         Task {
-            guard let url = display.artwork else { return }
+            guard let url = display.meta.artwork else { return }
             let imageResult = try await KingfisherManager.shared.retrieveImage(
                 with: url,
                 options: nil,
@@ -174,21 +174,14 @@ private extension NowPlayingController.State {
 extension Media {
     static var placeholder: Self {
         Media(
-            artwork: nil,
-            title: "---",
-            subtitle: "---",
-            online: false
-        )
-    }
-}
-
-extension MediaList {
-    static var empty: Self {
-        MediaList(
-            artwork: nil,
-            title: "---",
-            subtitle: nil,
-            items: []
+            id: .emptyMediaID,
+            meta: .init(
+                artwork: nil,
+                title: "---",
+                listSubtitle: "---",
+                detailsSubtitle: "---",
+                online: false
+            )
         )
     }
 }

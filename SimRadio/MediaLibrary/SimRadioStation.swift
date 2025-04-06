@@ -2,13 +2,14 @@
 //  SimRadioStation.swift
 //  SimRadio
 //
-//  Created by Alexey Vorobyov on 12.01.2025.
+//  Created by Alexey Vorobyov on 26.03.2025.
 //
 
 import Foundation
 
-enum SimRadio {
+enum SimRadioDTO {
     struct Series: Codable, Sendable {
+        let origin: String?
         let info: SeriesInfo
         let common: SeriesCommon
         let stations: [Station]
@@ -78,19 +79,19 @@ enum SimRadio {
         let posTag: String
     }
 
-    struct Conditon: Codable {
+    struct Condition: Codable {
         let type: ConditionType
         let fragmentTag: String?
         let probability: Double?
         let from: String?
         let to: String?
-        let condition: [Conditon]?
+        let condition: [Condition]?
     }
 
     struct Mix: Codable {
         let tag: String
         let src: Source
-        let condition: Conditon
+        let condition: Condition
         let posVariant: [PosVariant]
     }
 

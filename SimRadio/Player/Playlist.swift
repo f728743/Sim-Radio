@@ -13,18 +13,18 @@ struct PlayingTime {
 }
 
 @MainActor
-class Playlist {
+class Playlist { // TODO: make it actor
     let baseUrl: URL
-    let commonFiles: [SimRadio.FileGroup]
-    let station: SimRadio.Station
+    let commonFiles: [SimRadioDTO.FileGroup]
+    let station: SimRadioDTO.Station
     let timescale: CMTimeScale = 1000
     var nextPlayerItem: AVPlayerItem?
     var lastPlaying: (range: TimeRange, day: Date)?
 
     init(
         baseUrl: URL,
-        commonFiles: [SimRadio.FileGroup],
-        station: SimRadio.Station
+        commonFiles: [SimRadioDTO.FileGroup],
+        station: SimRadioDTO.Station
     ) throws {
         self.baseUrl = baseUrl
         self.commonFiles = commonFiles
@@ -34,10 +34,10 @@ class Playlist {
     func getPlayerItem(
         for day: Date,
         from: TimeInterval,
-        minDuraton: TimeInterval
+        minDuration: TimeInterval
     ) async throws -> AVPlayerItem {
         let dayLength: TimeInterval = 24 * 60 * 60
-        let to = from + minDuraton
+        let to = from + minDuration
         let playlistBuilder = PlaylistBuilder(
             baseUrl: baseUrl,
             commonFiles: commonFiles,
@@ -75,11 +75,11 @@ class Playlist {
         return itemLoader.playerItem
     }
 
-    func prepareNextPlayerItem(minDuraton: TimeInterval) async throws {
+    func prepareNextPlayerItem(minDuration: TimeInterval) async throws {
         guard let lastPlayingEnd = lastPlaying?.range.end, let lastPlayingDay = lastPlaying?.day else {
             throw LibraryError.playlistError
         }
-        nextPlayerItem = try await getPlayerItem(for: lastPlayingDay, from: lastPlayingEnd, minDuraton: minDuraton)
+        nextPlayerItem = try await getPlayerItem(for: lastPlayingDay, from: lastPlayingEnd, minDuration: minDuration)
     }
 }
 
@@ -158,11 +158,11 @@ private class PlayerItemLoaderInternal {
 
         let destTrack = destination == .main ? mainTrack : mixTrack
         let asset = AVURLAsset(url: item.url)
-                
+
         guard let assetTrack = try await asset.loadTracks(withMediaType: AVMediaType.audio).first else {
             throw LibraryError.fileNotFound(url: item.url)
         }
-        
+
         try destTrack.insertTimeRange(
             .init(range: playingTime.range, scale: timescale),
             of: assetTrack,

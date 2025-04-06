@@ -1,5 +1,5 @@
 //
-//  MixPlayngCondition.swift
+//  MixPlayingCondition.swift
 //  SimRadio
 //
 //  Created by Alexey Vorobyov on 28.01.2025.
@@ -7,11 +7,11 @@
 
 import Foundation
 
-protocol MixPlayngCondition {
+protocol MixPlayingCondition {
     func isSatisfied(forNextFragment tag: String, startingFrom second: TimeInterval) -> Bool?
 }
 
-extension SimRadio.Conditon: MixPlayngCondition {
+extension SimRadioDTO.Condition: MixPlayingCondition {
     func isSatisfied(forNextFragment tag: String, startingFrom second: TimeInterval) -> Bool? {
         switch type {
         case .nextFragment:
@@ -23,7 +23,7 @@ extension SimRadio.Conditon: MixPlayngCondition {
         case .groupOr:
             isGroupOrSatisfied(nextFragment: tag, starts: second)
         case .timeInterval:
-            isSatisfiedАForTimeInterval(starts: second)
+            isSatisfiedForTimeInterval(starts: second)
         }
     }
 
@@ -47,7 +47,7 @@ extension SimRadio.Conditon: MixPlayngCondition {
         return condition.firstIndex { $0.isSatisfied(forNextFragment: tag, startingFrom: sec) == true } != nil
     }
 
-    func isSatisfiedАForTimeInterval(starts sec: TimeInterval) -> Bool? {
+    func isSatisfiedForTimeInterval(starts sec: TimeInterval) -> Bool? {
         guard let from = from.map({ secOfDay(hhmm: $0) }) ?? nil,
               let to = to.map({ secOfDay(hhmm: $0) }) ?? nil
         else {

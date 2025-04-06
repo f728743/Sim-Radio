@@ -1,5 +1,5 @@
 //
-//  MediaListView.swift
+//  MediaListScreen.swift
 //  SimRadio
 //
 //  Created by Alexey Vorobyov on 09.12.2024.
@@ -8,12 +8,18 @@
 import Kingfisher
 import SwiftUI
 
-struct MediaListView: View {
-    let mediaList: MediaList
+struct MediaListScreen: View {
     @EnvironmentObject var nowPlaying: NowPlayingController
     @Environment(\.nowPlayingExpandProgress) var expandProgress
-
+    @Environment(MediaState.self) var mediaState
     @State private var selection: Media.ID?
+    @State private var viewModel: MediaListScreenViewModel
+
+    init(mediaList: MediaList) {
+        _viewModel = State(
+            wrappedValue: MediaListScreenViewModel(mediaList: mediaList)
+        )
+    }
 
     var body: some View {
         content
@@ -24,10 +30,14 @@ struct MediaListView: View {
                 Button { print("Profile tapped") }
                     label: { ProfileToolbarButton() }
             }
+            .task {
+                viewModel.mediaState = mediaState
+                viewModel.nowPlaying = nowPlaying
+            }
     }
 }
 
-private extension MediaListView {
+private extension MediaListScreen {
     var content: some View {
         List {
             header
@@ -46,20 +56,12 @@ private extension MediaListView {
                 .listRowBackground(Color(.palette.appBackground(expandProgress: expandProgress)))
         }
         .listStyle(.plain)
-        .onChange(of: selection) { _, newValue in
-            if let newValue {
-                if nowPlaying.mediaList.id != mediaList.id {
-                    nowPlaying.mediaList = mediaList
-                }
-                nowPlaying.onPlay(itemId: newValue)
-            }
-        }
     }
 
     var header: some View {
         VStack(spacing: 0) {
             let border = UIScreen.hairlineWidth
-            KFImage.url(mediaList.artwork)
+            KFImage.url(viewModel.mediaList.meta.artwork)
                 .resizable()
                 .aspectRatio(contentMode: .fill)
                 .background(Color(.palette.artworkBackground))
@@ -71,11 +73,11 @@ private extension MediaListView {
                 )
                 .padding(.horizontal, 52)
 
-            Text(mediaList.title)
+            Text(viewModel.mediaList.meta.title)
                 .font(.appFont.mediaListHeaderTitle)
                 .padding(.top, 18)
 
-            if let subtitle = mediaList.subtitle {
+            if let subtitle = viewModel.mediaList.meta.subtitle {
                 Text(subtitle)
                     .font(.appFont.mediaListHeaderSubtitle)
                     .foregroundStyle(Color(.palette.textSecondary))
@@ -117,12 +119,12 @@ private extension MediaListView {
     }
 
     var list: some View {
-        ForEach(Array(mediaList.items.enumerated()), id: \.offset) { offset, item in
-            let isLastItem = offset == mediaList.items.count - 1
+        ForEach(Array(viewModel.mediaList.items.enumerated()), id: \.offset) { offset, item in
+            let isLastItem = offset == viewModel.mediaList.items.count - 1
             MediaItemView(
-                artwork: item.artwork,
-                title: item.title,
-                subtitle: item.subtitle
+                artwork: item.meta.artwork,
+                title: item.meta.title,
+                subtitle: item.meta.listSubtitle
             )
             .contentShape(.rect)
             .listRowInsets(.screenInsets)
@@ -135,12 +137,16 @@ private extension MediaListView {
                 isLastItem ? $0[.leading] : $0[.leading] + 60
             }
             .swipeActions(edge: .trailing) {
-                Button {} label: {
-                    Label("Download", systemImage: "arrow.down")
+                let swipeButton = viewModel.swipeButton(media: item.id)
+                Button {
+                    viewModel.onSwipeActions(media: item.id, button: swipeButton)
+                } label: {
+                    Label(swipeButton.label, systemImage: swipeButton.systemImage)
                 }
-                .tint(.init(.systemBlue))
+                .tint(swipeButton.color)
             }
             .onTapGesture {
+                viewModel.onSelect(media: item.id)
                 selection = item.id
                 Task {
                     try? await Task.sleep(for: .milliseconds(80))
@@ -152,7 +158,7 @@ private extension MediaListView {
 
     @ViewBuilder
     var footer: some View {
-        Text(mediaList.footer)
+        Text(viewModel.mediaList.footer)
             .frame(maxWidth: .infinity, alignment: .leading)
             .foregroundStyle(Color(.palette.textTertiary))
             .font(.appFont.mediaListItemFooter)
@@ -210,5 +216,5 @@ private extension MediaList {
 }
 
 #Preview {
-    MediaListView(mediaList: .mockGta5)
+    MediaListScreen(mediaList: .mockGta5)
 }

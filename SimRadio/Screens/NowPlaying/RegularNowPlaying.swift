@@ -55,7 +55,7 @@ private extension RegularNowPlaying {
         GeometryReader {
             let size = $0.size
             let small = model.state == .paused
-            KFImage.url(model.display.artwork)
+            KFImage.url(model.display.meta.artwork)
                 .resizable()
                 .aspectRatio(contentMode: .fill)
                 .background(Color(UIColor.palette.playerCard.artworkBackground))
@@ -73,7 +73,7 @@ private extension RegularNowPlaying {
 }
 
 #Preview {
-    @Previewable @StateObject var model = NowPlayingController(player: Player())
+    @Previewable @StateObject var model = NowPlayingController(player: MediaPlayer())
 
     RegularNowPlaying(
         expanded: .constant(true),
@@ -82,7 +82,7 @@ private extension RegularNowPlaying {
         animationNamespace: Namespace().wrappedValue
     )
     .onAppear {
-        model.mediaList = .mockGta5
+//        model.mediaList = .mockGta5
         model.onAppear()
     }
     .background {

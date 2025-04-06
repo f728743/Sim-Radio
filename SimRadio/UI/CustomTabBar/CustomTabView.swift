@@ -107,7 +107,7 @@ struct TabBarItemsPreferenceKey: PreferenceKey {
     }
 }
 
-struct TabBarItemViewModifer: ViewModifier {
+struct TabBarItemViewModifier: ViewModifier {
     let tab: TabBarItem
     @Binding var selection: TabBarItem
 
@@ -118,7 +118,7 @@ struct TabBarItemViewModifer: ViewModifier {
     }
 }
 
-struct TabBarItemViewModiferWithOnAppear: ViewModifier {
+struct TabBarItemViewModifierWithOnAppear: ViewModifier {
     let tab: TabBarItem
     @Binding var selection: TabBarItem
 
@@ -137,7 +137,7 @@ struct TabBarItemViewModiferWithOnAppear: ViewModifier {
 
 extension View {
     func tabBarItem(tab: TabBarItem, selection: Binding<TabBarItem>) -> some View {
-        modifier(TabBarItemViewModiferWithOnAppear(tab: tab, selection: selection))
+        modifier(TabBarItemViewModifierWithOnAppear(tab: tab, selection: selection))
     }
 }
 

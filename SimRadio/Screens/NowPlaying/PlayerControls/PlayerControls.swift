@@ -47,13 +47,13 @@ private extension PlayerControls {
             VStack(alignment: .leading, spacing: 4) {
                 let fade = ViewConst.playerCardPaddings
                 let cfg = MarqueeText.Config(leftFade: fade, rightFade: fade)
-                MarqueeText(model.display.title, config: cfg)
+                MarqueeText(model.display.meta.title, config: cfg)
                     .transformEffect(.identity)
                     .font(.title3)
                     .fontWeight(.semibold)
                     .foregroundStyle(Color(palette.opaque))
                     .id(model.display.id)
-                MarqueeText(model.display.subtitle ?? "", config: cfg)
+                MarqueeText(model.display.meta.detailsSubtitle ?? "", config: cfg)
                     .transformEffect(.identity)
                     .foregroundStyle(Color(palette.opaque))
                     .blendMode(.overlay)
@@ -99,14 +99,14 @@ private extension PlayerControls {
 }
 
 #Preview {
-    @Previewable @StateObject var playerController = NowPlayingController(player: Player())
+    @Previewable @StateObject var playerController = NowPlayingController(player: MediaPlayer())
     ZStack(alignment: .bottom) {
         PreviewBackground()
         PlayerControls()
             .frame(height: 400)
     }
     .onAppear {
-        playerController.mediaList = .mockGta5
+//        playerController.mediaList = .mockGta5
     }
     .environmentObject(playerController)
 }

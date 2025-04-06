@@ -12,7 +12,7 @@ struct RootView: View {
 
     var body: some View {
         CustomTabView(selection: $tabSelection) {
-            LibraryView()
+            LibraryScreen()
                 .withRouter()
                 .accentColor(Color(.palette.brand))
                 .tabBarItem(tab: .home, selection: $tabSelection)
@@ -23,8 +23,9 @@ struct RootView: View {
     }
 }
 
-#Preview {
-    @Previewable @StateObject var library = MediaLibrary()
-    RootView()
-        .environmentObject(library)
-}
+// TODO:
+//    #Preview {
+//        @Previewable @StateObject var library = MediaLibrary()
+//        RootView()
+//            .environmentObject(library)
+//    }

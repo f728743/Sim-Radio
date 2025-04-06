@@ -1,5 +1,5 @@
 //
-//  DownloadedView.swift
+//  DownloadedScreen.swift
 //  SimRadio
 //
 //  Created by Alexey Vorobyov on 26.01.2025.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct DownloadedView: View {
+struct DownloadedScreen: View {
     var body: some View {
         empty
             .padding(.horizontal, 40)
@@ -15,7 +15,7 @@ struct DownloadedView: View {
     }
 }
 
-extension DownloadedView {
+extension DownloadedScreen {
     var empty: some View {
         VStack(spacing: 0) {
             Image(systemName: "icloud.and.arrow.down")
@@ -34,5 +34,5 @@ extension DownloadedView {
 }
 
 #Preview {
-    DownloadedView()
+    DownloadedScreen()
 }
