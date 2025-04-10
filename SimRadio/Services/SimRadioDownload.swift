@@ -36,7 +36,7 @@ actor SimRadioDownload {
     }
 
     enum DownloadState {
-        case queued
+        case scheduled
         case downloading
         case completed
         case paused
@@ -120,7 +120,7 @@ private extension SimRadioDownload {
     func download(station: SimStation) async {
         guard let mediaState = await mediaState else { return }
         stationDownloads[station.id] = DownloadableStation(
-            status: .init(state: .queued, totalBytes: 0, downloadedBytes: 0),
+            status: .init(state: .scheduled, totalBytes: 0, downloadedBytes: 0),
             fileGroupIDs: station.fileGroups
         )
 
@@ -134,9 +134,6 @@ private extension SimRadioDownload {
             guard let urls = allFileGroups[groupID]?.files.compactMap({ $0.url }) else {
                 continue
             }
-
-            let urlGroups = urls.map { ($0, groupID) }
-            let groupOfURLUpdate = Dictionary(uniqueKeysWithValues: urlGroups)
 
             let files = urls.map { DownloadInfo(url: $0, state: .queued) }
             let downloadableGroup = DownloadableFileGroup(id: groupID, files: files)
@@ -236,7 +233,7 @@ private extension SimRadioDownload {
         guard let stationDownloadInfo = stationDownloads[stationID] else {
             // Should not happen if called correctly
             log(error: "Station \(stationID) not found during status calculation.")
-            return DownloadStatus(state: .queued, totalBytes: 0, downloadedBytes: 0)
+            return DownloadStatus(state: .scheduled, totalBytes: 0, downloadedBytes: 0)
         }
         return stationDownloadInfo
             .fileGroupIDs.map { groupState($0) }
@@ -247,7 +244,7 @@ private extension SimRadioDownload {
         guard let files = groupDownloads[groupID]?.files else {
             log(warning: "GroupState called for unknown groupID \(groupID)")
             return DownloadStatus(
-                state: .queued,
+                state: .scheduled,
                 totalBytes: 0,
                 downloadedBytes: 0,
             )
@@ -419,22 +416,6 @@ extension Int64 {
     }
 }
 
-protocol DownloadProgressProtocol {
-    var totalBytes: Int64 { get }
-    var downloadedBytes: Int64 { get }
-}
-
-extension DownloadProgressProtocol {
-    var progress: Double {
-        guard totalBytes != 0 else { return 0.0 }
-        return (Double(downloadedBytes) / Double(totalBytes)).clamped(to: 0.0 ... 1.0)
-    }
-
-    var percent: Double { progress * 100 }
-    var percentString: String { String(format: "%.1f%%", percent) }
-    var progressString: String { "\(percentString) (\(downloadedBytes.bytesToMB) / \(totalBytes.bytesToMB))" }
-}
-
 // Internal enum to simplify state aggregation
 private enum SimDownloadStateInternal {
     case downloading
@@ -477,7 +458,7 @@ extension Collection where Element: SimDownloadStateInternalProtocol {
             default: fatalError()
             }
         }
-        return .queued
+        return .scheduled
     }
 }
 
@@ -539,7 +520,7 @@ private extension SimRadioDownload.DownloadState {
         case .completed: return .completed
         case .paused: return .paused
         case .failed: return .failed
-        case .queued: return .queued
+        case .scheduled: return .queued
         }
     }
 }

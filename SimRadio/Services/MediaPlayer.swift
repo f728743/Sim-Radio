@@ -48,7 +48,7 @@ private extension MediaPlayer {
                 let playerItem = try await playlist.getPlayerItem(
                     for: Date().startOfDay,
                     from: nowSec,
-                            minDuration: 3 * 60
+                    minDuration: 3 * 60
                 )
                 let player = AVPlayer(playerItem: playerItem)
                 player.play()

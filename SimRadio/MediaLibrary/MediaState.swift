@@ -11,7 +11,7 @@ import Observation
 @Observable @MainActor
 class MediaState {
     var simRadio: SimRadioMedia = .empty
-    var downloadState: [MediaID: MediaDownloadStatus] = [:]
+    private(set) var downloadStatus: [MediaID: MediaDownloadStatus] = [:]
     let simRadioDownloader: SimRadioDownload
 
     init(simRadioDownloader: SimRadioDownload) {
@@ -45,9 +45,9 @@ class MediaState {
     func populate() async {
         let baseUrl = "https://raw.githubusercontent.com/tmp-acc/"
         let simRadioURLs = [
-            "GTA-V-Radio-Stations-TestDownload/master/sim_radio_stations.json"
+            //            "GTA-V-Radio-Stations-TestDownload/master/sim_radio_stations.json"
 //            "GTA-IV-Radio-Stations/master/sim_radio_stations.json",
-//            "GTA-V-Radio-Stations/master/sim_radio_stations.json"
+            "GTA-V-Radio-Stations/master/sim_radio_stations.json"
         ].compactMap { URL(string: "\(baseUrl)\($0)") }
 
         await addSimRadio(urls: simRadioURLs)
@@ -58,10 +58,37 @@ class MediaState {
             await loadSimRadio()
         }
     }
+
+    func download(_ mediaID: MediaID) async {
+        guard !downloadStatus.keys.contains(mediaID) else { return }
+        downloadStatus[mediaID] = .new
+        simRadioDownloader.downloadMedia(withID: mediaID)
+    }
+}
+
+extension MediaDownloadStatus.DownloadState {
+    init(_ state: SimRadioDownload.DownloadState) {
+        switch state {
+        case .completed: self = .completed
+        case .scheduled: self = .scheduled
+        case .downloading: self = .downloading
+        case .paused: self = .paused
+        case .failed: self = .paused
+        }
+    }
 }
 
 private extension MediaState {
     func handleDownloaderEvent(_ event: SimRadioDownload.Event) async {
+        switch event {
+        case let .updatedStation(id, status):
+            downloadStatus[.simRadio(id)] = .init(
+                state: .init(status.state),
+                totalBytes: status.totalBytes,
+                downloadedBytes: status.downloadedBytes
+            )
+        default: break
+        }
         print(event)
     }
 
@@ -151,7 +178,7 @@ private extension MediaState {
     func stopCurrentMediaDownload(_ mediaIDs: [MediaID]) async {
         for id in mediaIDs {
             await simRadioDownloader.cancelDownloadMedia(withID: id)
-            downloadState.removeValue(forKey: id)
+            downloadStatus.removeValue(forKey: id)
         }
     }
 

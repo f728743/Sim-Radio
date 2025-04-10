@@ -19,19 +19,6 @@ struct MediaList: Identifiable, Hashable, Equatable {
     }
 }
 
-struct MediaDownloadStatus {
-    enum DownloadState {
-        case scheduled
-        case inProgress
-        case completed
-        case paused
-    }
-
-    let state: DownloadState
-    let totalBytes: Int64
-    let downloadedBytes: Int64
-}
-
 struct Media: Identifiable, Hashable, Equatable {
     let id: MediaID
     let meta: Meta
@@ -64,5 +51,13 @@ extension MediaList {
             subtitle: nil
         ),
         items: []
+    )
+}
+
+extension MediaDownloadStatus {
+    static let new: MediaDownloadStatus = .init(
+        state: .scheduled,
+        totalBytes: 0,
+        downloadedBytes: 0
     )
 }

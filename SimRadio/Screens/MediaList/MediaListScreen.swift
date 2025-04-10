@@ -122,9 +122,12 @@ private extension MediaListScreen {
         ForEach(Array(viewModel.mediaList.items.enumerated()), id: \.offset) { offset, item in
             let isLastItem = offset == viewModel.mediaList.items.count - 1
             MediaItemView(
-                artwork: item.meta.artwork,
-                title: item.meta.title,
-                subtitle: item.meta.listSubtitle
+                model: .init(
+                    artwork: item.meta.artwork,
+                    title: item.meta.title,
+                    subtitle: item.meta.listSubtitle,
+                    status: viewModel.downloadStatus(for: item.id)
+                )
             )
             .contentShape(.rect)
             .listRowInsets(.screenInsets)
@@ -165,41 +168,6 @@ private extension MediaListScreen {
     }
 }
 
-struct MediaItemView: View {
-    let artwork: URL?
-    let title: String
-    let subtitle: String?
-
-    var body: some View {
-        HStack(spacing: 12) {
-            let border = UIScreen.hairlineWidth
-            KFImage.url(artwork)
-                .resizable()
-                .frame(width: 48, height: 48)
-                .aspectRatio(contentMode: .fill)
-                .background(Color(.palette.artworkBackground))
-                .clipShape(.rect(cornerRadius: 5))
-                .overlay(
-                    RoundedRectangle(cornerRadius: 5)
-                        .inset(by: border / 2)
-                        .stroke(Color(.palette.artworkBorder), lineWidth: border)
-                )
-
-            VStack(alignment: .leading, spacing: 2) {
-                Text(title)
-                    .font(.appFont.mediaListItemTitle)
-                Text(subtitle ?? "")
-                    .font(.appFont.mediaListItemSubtitle)
-                    .foregroundStyle(Color(.palette.textTertiary))
-            }
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .lineLimit(1)
-        }
-        .padding(.top, 4)
-        .frame(height: 56, alignment: .top)
-    }
-}
-
 private extension EdgeInsets {
     static let screenInsets: EdgeInsets = .init(
         top: 0,
@@ -216,5 +184,15 @@ private extension MediaList {
 }
 
 #Preview {
+    @Previewable @State var mediaState = MediaState(
+        simRadioDownloader: SimRadioDownload()
+    )
+
+    @Previewable @StateObject var playerController = NowPlayingController(
+        player: MediaPlayer()
+    )
+
     MediaListScreen(mediaList: .mockGta5)
+        .environment(mediaState)
+        .environmentObject(playerController)
 }

@@ -34,10 +34,28 @@ class MediaListScreenViewModel {
         .download
     }
 
-    func onSwipeActions(media: Media.ID, button: SwipeButton) {
-        print(button, media)
+    func onSwipeActions(media: Media.ID, button _: SwipeButton) {
+        Task {
+            await mediaState?.download(media)
+        }
+    }
+
+    func downloadStatus(for itemID: MediaID) -> MediaDownloadStatus? {
+        mediaState?.downloadStatus[itemID]
     }
 }
+
+// private extension MediaDownloadProgressView.State {
+//    init(status: MediaDownloadStatus) {
+//        let progress = status.totalBytes > 0 ? Double(status.downloadedBytes) / Double(status.totalBytes) : 0
+//        switch status.state {
+//        case .completed: self = .completed
+//        case .scheduled: self = .scheduled
+//        case .inProgress: self = .progress(progress.clamped(to: 0.0 ... 1.0))
+//        case .paused: self = .paused
+//        }
+//    }
+// }
 
 extension MediaListScreenViewModel.SwipeButton {
     var systemImage: String {
