@@ -8,12 +8,12 @@
 import Foundation
 
 struct SimRadioMedia {
-    let series: [SimSeries.ID: SimSeries]
+    let series: [SimGameSeries.ID: SimGameSeries]
     let fileGroups: [SimFileGroup.ID: SimFileGroup]
     let stations: [SimStation.ID: SimStation]
 }
 
-struct SimSeries {
+struct SimGameSeries {
     struct ID: Hashable { let value: String }
     var id: ID
     let meta: MediaList.Meta
@@ -59,22 +59,22 @@ private extension URL {
     }
 }
 
-extension SimRadioDTO.Series {
+extension SimRadioDTO.GameSeries {
     func simFileGroups(origin: URL) -> [SimFileGroup.ID: SimFileGroup] {
-        let common = common.fileGroups.map { SimFileGroup(dto: $0, origin: origin) }
+        let shared = gameSeriesShared.fileGroups.map { SimFileGroup(dto: $0, origin: origin) }
         let stations = stations.flatMap { station in
             station.fileGroups.map { SimFileGroup(dto: $0, origin: origin, pathTag: station.tag) }
         }
         return Dictionary(
-            uniqueKeysWithValues: (common + stations).map { ($0.id, $0) }
+            uniqueKeysWithValues: (shared + stations).map { ($0.id, $0) }
         )
     }
 }
 
 extension SimRadioMedia {
-    init(dto: SimRadioDTO.Series, origin: URL) {
-        let series = SimSeries(dto: dto, origin: origin)
-        let stations = dto.stations.map { SimStation(dto: $0, common: dto.common, origin: origin) }
+    init(dto: SimRadioDTO.GameSeries, origin: URL) {
+        let series = SimGameSeries(dto: dto, origin: origin)
+        let stations = dto.stations.map { SimStation(dto: $0, gameSeriesShared: dto.gameSeriesShared, origin: origin) }
         self.init(
             series: Dictionary(uniqueKeysWithValues: [(series.id, series)]),
             fileGroups: dto.simFileGroups(origin: origin),
@@ -83,8 +83,8 @@ extension SimRadioMedia {
     }
 }
 
-extension SimSeries {
-    init(dto: SimRadioDTO.Series, origin: URL) {
+extension SimGameSeries {
+    init(dto: SimRadioDTO.GameSeries, origin: URL) {
         self.init(
             id: .init(origin: origin),
             meta: .init(
@@ -92,7 +92,7 @@ extension SimSeries {
                 title: dto.info.title,
                 subtitle: nil
             ),
-            stations: dto.stations.map { stationID(origin: origin, stationTag: $0.tag) }
+            stations: dto.stations.map { .init(origin: origin, stationTag: $0.tag) }
         )
     }
 
@@ -107,19 +107,21 @@ extension SimRadioDTO.StationInfo {
 }
 
 extension SimStation {
-    init(dto: SimRadioDTO.Station, common: SimRadioDTO.SeriesCommon, origin: URL) {
+    init(dto: SimRadioDTO.Station, gameSeriesShared: SimRadioDTO.GameSeriesShared, origin: URL) {
         let artwork = origin.simRadioBaseURL
             .appendingPathComponent(dto.tag)
             .appendingPathComponent(dto.info.logo)
         let fullFileGroupSet = Set(dto.playlist.fileGroupTags)
-        let commonFileGroupSet = Set(common.fileGroups.map { $0.tag })
+        let gameSeriesSharedFileGroupSet = Set(gameSeriesShared.fileGroups.map { $0.tag })
         let stationFileGroups = fullFileGroupSet
-            .subtracting(commonFileGroupSet)
-            .map { fileGroupID(origin: origin, pathTag: dto.tag, groupTag: $0) }
-        let usedCommonFileGroupSet = fullFileGroupSet.intersection(commonFileGroupSet)
-        let usedCommonFileGroups = usedCommonFileGroupSet.map { fileGroupID(origin: origin, groupTag: $0) }
+            .subtracting(gameSeriesSharedFileGroupSet)
+            .map { SimFileGroup.ID(origin: origin, pathTag: dto.tag, groupTag: $0) }
+        let usedGameSeriesSharedFileGroupSet = fullFileGroupSet.intersection(gameSeriesSharedFileGroupSet)
+        let usedGameSeriesSharedFileGroups = usedGameSeriesSharedFileGroupSet.map {
+            SimFileGroup.ID(origin: origin, groupTag: $0)
+        }
         self.init(
-            id: stationID(origin: origin, stationTag: dto.tag),
+            id: .init(origin: origin, stationTag: dto.tag),
             meta: .init(
                 artwork: artwork,
                 title: dto.info.title,
@@ -127,13 +129,13 @@ extension SimStation {
                 detailsSubtitle: dto.info.detailsSubtitle,
                 online: true
             ),
-            fileGroups: stationFileGroups + usedCommonFileGroups,
+            fileGroups: stationFileGroups + usedGameSeriesSharedFileGroups,
             playlistRules: dto.playlist
         )
     }
 }
 
-extension SimSeries.ID {
+extension SimGameSeries.ID {
     var directoryURL: URL {
         .documentsDirectory.appending(path: value, directoryHint: .isDirectory)
     }
@@ -151,19 +153,23 @@ extension SimRadioDTO.Playlist {
     }
 }
 
-private func stationID(origin: URL, stationTag: String) -> SimStation.ID {
-    .init(value: "\(SimSeries.ID(origin: origin).value)/\(stationTag)")
+extension SimStation.ID {
+    init(origin: URL, stationTag: String) {
+        self.init(value: "\(SimGameSeries.ID(origin: origin).value)/\(stationTag)")
+    }
 }
 
-private func fileGroupID(origin: URL, pathTag: String? = nil, groupTag: String) -> SimFileGroup.ID {
-    let path = pathTag.map { "/\($0)" } ?? ""
-    return .init(value: "\(origin.nonCryptoHash)\(path)/\(groupTag)")
+extension SimFileGroup.ID {
+    init(origin: URL, pathTag: String? = nil, groupTag: String) {
+        let path = pathTag.map { "/\($0)" } ?? ""
+        self.init(value: "\(origin.nonCryptoHash)\(path)/\(groupTag)")
+    }
 }
 
 extension SimFileGroup {
     init(dto: SimRadioDTO.FileGroup, origin: URL, pathTag: String? = nil) {
         self.init(
-            id: fileGroupID(origin: origin, pathTag: pathTag, groupTag: dto.tag),
+            id: .init(origin: origin, pathTag: pathTag, groupTag: dto.tag),
             files: dto.files.map { .init(dto: $0, baseUrl: origin.simRadioBaseURL, pathTag: pathTag) }
         )
     }

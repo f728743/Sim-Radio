@@ -8,10 +8,10 @@
 import Foundation
 
 enum SimRadioDTO {
-    struct Series: Codable, Sendable {
+    struct GameSeries: Codable, Sendable {
         let origin: String?
         let info: SeriesInfo
-        let common: SeriesCommon
+        let common: GameSeriesShared
         let stations: [Station]
     }
 
@@ -20,7 +20,7 @@ enum SimRadioDTO {
         let logo: String
     }
 
-    struct SeriesCommon: Codable, Sendable {
+    struct GameSeriesShared: Codable, Sendable {
         let fileGroups: [FileGroup]
     }
 
@@ -124,5 +124,27 @@ enum SimRadioDTO {
         case groupAnd
         case groupOr
         case timeInterval
+    }
+}
+
+extension SimRadioDTO.GameSeries {
+    // alias
+    var gameSeriesShared: SimRadioDTO.GameSeriesShared {
+        common
+    }
+    
+    init(
+        origin: String?,
+        info: SimRadioDTO.SeriesInfo,
+        gameSeriesShared: SimRadioDTO.GameSeriesShared,
+        stations: [SimRadioDTO.Station]
+    ) {
+        self.init(
+            origin: origin,
+            info: info,
+            common: gameSeriesShared,
+            stations:
+                stations
+        )
     }
 }

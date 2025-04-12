@@ -31,7 +31,7 @@ private extension MediaPlayer {
         return Double(h * 60 * 60 + m * 60 + s)
     }
 
-    @MainActor func testBuildPlaylist(baseUrlStr: String, series: SimRadioDTO.Series) {
+    @MainActor func testBuildPlaylist(baseUrlStr: String, series: SimRadioDTO.GameSeries) {
         guard
             let baseUrl = URL(string: baseUrlStr),
             let station = series.stations.first
@@ -41,16 +41,16 @@ private extension MediaPlayer {
         do {
             let playlist = try Playlist(
                 baseUrl: baseUrl,
-                commonFiles: series.common.fileGroups,
+                gameSeriesSharedFiles: series.gameSeriesShared.fileGroups,
                 station: station
             )
             Task {
-                let playerItem = try await playlist.getPlayerItem(
+                let item = try await playlist.playerItem(
                     for: Date().startOfDay,
                     from: nowSec,
                     minDuration: 3 * 60
                 )
-                let player = AVPlayer(playerItem: playerItem)
+                let player = AVPlayer(playerItem: item)
                 player.play()
                 self.player = player
             }

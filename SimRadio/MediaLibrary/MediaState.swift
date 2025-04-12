@@ -95,7 +95,7 @@ private extension MediaState {
     func loadSimRadio() async {
         let series: [String] = UserDefaults
             .standard
-            .array(forKey: SimSeries.userDefaultsKey) as? [String] ?? []
+            .array(forKey: SimGameSeries.userDefaultsKey) as? [String] ?? []
         for id in series {
             do {
                 try await loadSimRadio(series: .init(value: id))
@@ -107,10 +107,10 @@ private extension MediaState {
         await updateDownloadState(mediaList)
     }
 
-    func loadSimRadio(series id: SimSeries.ID) async throws {
-        let fileURL = id.directoryURL.appending(path: SimSeries.defaultFileName)
+    func loadSimRadio(series id: SimGameSeries.ID) async throws {
+        let fileURL = id.directoryURL.appending(path: SimGameSeries.defaultFileName)
         let jsonData = try await URLSession.shared.data(from: fileURL)
-        let radio = try JSONDecoder().decode(SimRadioDTO.Series.self, from: jsonData.0)
+        let radio = try JSONDecoder().decode(SimRadioDTO.GameSeries.self, from: jsonData.0)
         guard let url = radio.origin.map({ URL(string: $0) }) ?? nil else { return }
         let newMedia = SimRadioMedia(dto: radio, origin: url)
         simRadio = SimRadioMedia(
@@ -132,7 +132,7 @@ private extension MediaState {
 
     func addSimRadio(url: URL) async throws {
         let jsonData = try await URLSession.shared.data(from: url)
-        let radio = try JSONDecoder().decode(SimRadioDTO.Series.self, from: jsonData.0)
+        let radio = try JSONDecoder().decode(SimRadioDTO.GameSeries.self, from: jsonData.0)
         let newMedia = SimRadioMedia(dto: radio, origin: url)
 
         guard newMedia.series.keys.count == 1,
@@ -152,27 +152,27 @@ private extension MediaState {
         await updateDownloadState(mediaList)
     }
 
-    func saveJsonData(series: SimRadioDTO.Series, origin: URL) throws {
-        let directory = SimSeries.ID(origin: origin).directoryURL
+    func saveJsonData(series: SimRadioDTO.GameSeries, origin: URL) throws {
+        let directory = SimGameSeries.ID(origin: origin).directoryURL
         try directory.ensureDirectoryExists()
-        let fileURL = directory.appending(path: SimSeries.defaultFileName, directoryHint: .notDirectory)
+        let fileURL = directory.appending(path: SimGameSeries.defaultFileName, directoryHint: .notDirectory)
         try fileURL.removeFileIfExists()
-        let series = SimRadioDTO.Series(
+        let gameSeries = SimRadioDTO.GameSeries(
             origin: origin.absoluteString,
             info: series.info,
-            common: series.common,
+            gameSeriesShared: series.gameSeriesShared,
             stations: series.stations,
         )
-        let jsonData = try JSONEncoder().encode(series)
+        let jsonData = try JSONEncoder().encode(gameSeries)
         try jsonData.write(to: fileURL)
     }
 
-    func saveToUserDefaults(_ seriesID: SimSeries.ID) {
+    func saveToUserDefaults(_ seriesID: SimGameSeries.ID) {
         let currentIDs: [String] = UserDefaults
             .standard
-            .array(forKey: SimSeries.userDefaultsKey) as? [String] ?? []
+            .array(forKey: SimGameSeries.userDefaultsKey) as? [String] ?? []
         guard !currentIDs.contains(seriesID.value) else { return }
-        UserDefaults.standard.set(currentIDs + [seriesID.value], forKey: SimSeries.userDefaultsKey)
+        UserDefaults.standard.set(currentIDs + [seriesID.value], forKey: SimGameSeries.userDefaultsKey)
     }
 
     func stopCurrentMediaDownload(_ mediaIDs: [MediaID]) async {

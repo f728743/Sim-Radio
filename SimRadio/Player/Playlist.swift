@@ -15,7 +15,7 @@ struct PlayingTime {
 @MainActor
 class Playlist { // TODO: make it actor
     let baseUrl: URL
-    let commonFiles: [SimRadioDTO.FileGroup]
+    let gameSeriesSharedFiles: [SimRadioDTO.FileGroup]
     let station: SimRadioDTO.Station
     let timescale: CMTimeScale = 1000
     var nextPlayerItem: AVPlayerItem?
@@ -23,15 +23,15 @@ class Playlist { // TODO: make it actor
 
     init(
         baseUrl: URL,
-        commonFiles: [SimRadioDTO.FileGroup],
+        gameSeriesSharedFiles: [SimRadioDTO.FileGroup],
         station: SimRadioDTO.Station
     ) throws {
         self.baseUrl = baseUrl
-        self.commonFiles = commonFiles
+        self.gameSeriesSharedFiles = gameSeriesSharedFiles
         self.station = station
     }
 
-    func getPlayerItem(
+    func playerItem(
         for day: Date,
         from: TimeInterval,
         minDuration: TimeInterval
@@ -40,7 +40,7 @@ class Playlist { // TODO: make it actor
         let to = from + minDuration
         let playlistBuilder = PlaylistBuilder(
             baseUrl: baseUrl,
-            commonFiles: commonFiles,
+            gameSeriesSharedFiles: gameSeriesSharedFiles,
             station: station
         )
         srand48(Int(day.timeIntervalSince1970))
@@ -58,7 +58,7 @@ class Playlist { // TODO: make it actor
             srand48(Int(tomorrow.timeIntervalSince1970))
             let playlistBuilder = PlaylistBuilder(
                 baseUrl: baseUrl,
-                commonFiles: commonFiles,
+                gameSeriesSharedFiles: gameSeriesSharedFiles,
                 station: station
             )
             let tomorrowsPlaylist = try playlistBuilder.makePlaylist(duration: dayLength)
@@ -79,7 +79,7 @@ class Playlist { // TODO: make it actor
         guard let lastPlayingEnd = lastPlaying?.range.end, let lastPlayingDay = lastPlaying?.day else {
             throw LibraryError.playlistError
         }
-        nextPlayerItem = try await getPlayerItem(for: lastPlayingDay, from: lastPlayingEnd, minDuration: minDuration)
+        nextPlayerItem = try await playerItem(for: lastPlayingDay, from: lastPlayingEnd, minDuration: minDuration)
     }
 }
 
@@ -170,7 +170,7 @@ private class PlayerItemLoaderInternal {
         )
 
         if destination == .mix {
-            setVolumeRampParams(
+            applyVolumeRamp(
                 duration: playingTime.range.duration,
                 at: playingTime.positionInComposition
             )
@@ -202,7 +202,7 @@ private class PlayerItemLoaderInternal {
         return (depleted: depleted, lastRange: lastRange)
     }
 
-    private func setVolumeRampParams(duration: TimeInterval, at insertPosition: TimeInterval) {
+    private func applyVolumeRamp(duration: TimeInterval, at insertPosition: TimeInterval) {
         let fadeOutEnd = insertPosition
         let fadeOutStart = fadeOutEnd - fadingDuration
         let fadeInStart = insertPosition + duration

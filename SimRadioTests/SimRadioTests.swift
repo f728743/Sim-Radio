@@ -11,11 +11,11 @@ import Testing
 
 struct SimRadioTests {
     @Test func testMakePlaylist() async throws {
-        let series = try JSONDecoder().decode(SimRadioDTO.Series.self, from: radioJson.data(using: .utf8)!)
+        let series = try JSONDecoder().decode(SimRadioDTO.GameSeries.self, from: radioJson.data(using: .utf8)!)
 
         let playlistBuilder = PlaylistBuilder(
             baseUrl: URL(string: "/")!,
-            commonFiles: series.common.fileGroups,
+            gameSeriesSharedFiles: series.gameSeriesShared.fileGroups,
             station: series.stations.first!
         )
 

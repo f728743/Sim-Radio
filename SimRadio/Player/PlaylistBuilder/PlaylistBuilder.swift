@@ -31,16 +31,16 @@ extension Double {
 
 class PlaylistBuilder {
     let baseUrl: URL
-    let commonFiles: [SimRadioDTO.FileGroup]
+    let gameSeriesSharedFiles: [SimRadioDTO.FileGroup]
     let station: SimRadioDTO.Station
 
     init(
         baseUrl: URL,
-        commonFiles: [SimRadioDTO.FileGroup],
+        gameSeriesSharedFiles: [SimRadioDTO.FileGroup],
         station: SimRadioDTO.Station
     ) {
         self.baseUrl = baseUrl
-        self.commonFiles = commonFiles
+        self.gameSeriesSharedFiles = gameSeriesSharedFiles
         self.station = station
     }
 
@@ -51,19 +51,19 @@ class PlaylistBuilder {
         var moment: Double = 0
         var fragmentTag = station.playlist.firstFragment.fragmentTag
 
-        var nextFragmentTag = try getNextFragmentTag(after: fragmentTag, rules: rules)
+        var next = try nextFragmentTag(after: fragmentTag, rules: rules)
 
         while moment < duration {
             let fragment = try makeFragment(
                 tag: fragmentTag,
-                nextTag: nextFragmentTag,
+                nextTag: next,
                 starts: moment,
-                model: rules
+                rules: rules
             )
             result.append(fragment)
             moment += fragment.playing.duration
-            fragmentTag = nextFragmentTag
-            nextFragmentTag = try getNextFragmentTag(after: fragmentTag, rules: rules)
+            fragmentTag = next
+            next = try nextFragmentTag(after: fragmentTag, rules: rules)
         }
         return result
     }
@@ -73,8 +73,8 @@ private extension PlaylistBuilder {
     var fileGroups: AudioFileGroups {
         let stationBaseUrl: URL = baseUrl.appendingPathComponent(station.tag)
         let stationFiles = convert(files: station.fileGroups, baseUrl: stationBaseUrl)
-        let commonFiles = convert(files: commonFiles, baseUrl: baseUrl)
-        return stationFiles.merging(commonFiles, uniquingKeysWith: { first, _ in first })
+        let gameSeriesSharedFiles = convert(files: gameSeriesSharedFiles, baseUrl: baseUrl)
+        return stationFiles.merging(gameSeriesSharedFiles, uniquingKeysWith: { first, _ in first })
     }
 
     func convert(files: [SimRadioDTO.FileGroup], baseUrl: URL) -> AudioFileGroups {
@@ -88,7 +88,7 @@ private extension PlaylistBuilder {
         )
     }
 
-    func getNextFragmentTag(after fragmentTag: String, rules: PlaylistRules) throws -> String {
+    func nextFragmentTag(after fragmentTag: String, rules: PlaylistRules) throws -> String {
         guard let fragment = rules.fragments[fragmentTag] else {
             throw PlaylistError.fragmentNotFound(tag: fragmentTag)
         }
@@ -107,9 +107,9 @@ private extension PlaylistBuilder {
         tag: String,
         nextTag: String,
         starts sec: Double,
-        model: PlaylistRules
+        rules: PlaylistRules
     ) throws -> AudioComponent {
-        guard let fragment = model.fragments[tag] else {
+        guard let fragment = rules.fragments[tag] else {
             throw PlaylistError.fragmentNotFound(tag: tag)
         }
 

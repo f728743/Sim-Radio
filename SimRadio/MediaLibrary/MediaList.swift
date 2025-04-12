@@ -34,7 +34,7 @@ struct Media: Identifiable, Hashable, Equatable {
 
 enum MediaListID: Hashable, Equatable {
     case emptyMediaListID
-    case simRadioSeries(SimSeries.ID)
+    case simRadioSeries(SimGameSeries.ID)
 }
 
 enum MediaID: Hashable {
