@@ -89,7 +89,6 @@ private extension MediaState {
             )
         default: break
         }
-        print(event)
     }
 
     func loadSimRadio() async {

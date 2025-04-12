@@ -132,7 +132,7 @@ extension SimRadioDTO.GameSeries {
     var gameSeriesShared: SimRadioDTO.GameSeriesShared {
         common
     }
-    
+
     init(
         origin: String?,
         info: SimRadioDTO.SeriesInfo,
@@ -144,7 +144,7 @@ extension SimRadioDTO.GameSeries {
             info: info,
             common: gameSeriesShared,
             stations:
-                stations
+            stations
         )
     }
 }

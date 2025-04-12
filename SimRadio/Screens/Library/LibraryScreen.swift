@@ -55,7 +55,7 @@ private extension LibraryScreen {
                 ForEach(viewModel.recentlyAdded) { item in
                     RecentlyAddedItem(item: item)
                         .onTapGesture {
-                            router.navigateToMediaList(item: item)
+                            router.navigateToMedia(items: item.items, listMeta: item.meta)
                         }
                 }
             }

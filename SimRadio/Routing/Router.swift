@@ -8,7 +8,7 @@
 import SwiftUI
 
 enum Route: Hashable, Equatable {
-    case mediaList(item: MediaList)
+    case mediaList(items: [Media], listMeta: MediaList.Meta?)
     case downloaded
 }
 
@@ -16,8 +16,8 @@ enum Route: Hashable, Equatable {
 class Router {
     var path = NavigationPath()
 
-    func navigateToMediaList(item: MediaList) {
-        path.append(Route.mediaList(item: item))
+    func navigateToMedia(items: [Media], listMeta: MediaList.Meta?) {
+        path.append(Route.mediaList(items: items, listMeta: listMeta))
     }
 
     func navigateToDownloaded() {

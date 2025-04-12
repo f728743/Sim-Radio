@@ -11,7 +11,7 @@ private enum DownloadLog {
     case info(verbose: Bool), warning, error
 }
 
-private let logSettings: [DownloadLog] = [.info(verbose: false), .warning, .error]
+private let logSettings: [DownloadLog] = [.warning, .error]
 
 actor SimRadioDownload {
     @MainActor var mediaState: MediaState?
@@ -25,7 +25,7 @@ actor SimRadioDownload {
     }
 
     enum Event {
-        case updatedFileGroup(id: SimFileGroup.ID, status: DownloadStatus)
+        case updatedFileGroup(id: SimFileGroup.ID, status: DownloadStatus) // TODO: get rid
         case updatedStation(id: SimStation.ID, status: DownloadStatus)
     }
 
@@ -192,9 +192,6 @@ private extension SimRadioDownload {
         groupInfo.files[fileIndex] = fileInfo
         groupDownloads[groupID] = groupInfo
 
-//        if case .completed = event.state {
-//            groupIDByURL.removeValue(forKey: event.url)
-//        }
         // --- Event Publishing Logic ---
         // Only publish if state potentially changed or progress occurred
         if stateChanged || event.isProgress {

@@ -15,9 +15,9 @@ struct MediaListScreen: View {
     @State private var selection: Media.ID?
     @State private var viewModel: MediaListScreenViewModel
 
-    init(mediaList: MediaList) {
+    init(items: [Media], listMeta: MediaList.Meta? = nil) {
         _viewModel = State(
-            wrappedValue: MediaListScreenViewModel(mediaList: mediaList)
+            wrappedValue: MediaListScreenViewModel(items: items, listMeta: listMeta)
         )
     }
 
@@ -40,12 +40,14 @@ struct MediaListScreen: View {
 private extension MediaListScreen {
     var content: some View {
         List {
-            header
-                .padding(.top, 7)
-                .padding(.bottom, 26)
-                .listRowInsets(.screenInsets)
-                .listSectionSeparator(.hidden, edges: .top)
-                .alignmentGuide(.listRowSeparatorLeading) { $0[.leading] }
+            if let listMeta = viewModel.listMeta {
+                header(listMeta: listMeta)
+                    .padding(.top, 7)
+                    .padding(.bottom, 26)
+                    .listRowInsets(.screenInsets)
+                    .listSectionSeparator(.hidden, edges: .top)
+                    .alignmentGuide(.listRowSeparatorLeading) { $0[.leading] }
+            }
 
             list
 
@@ -58,10 +60,10 @@ private extension MediaListScreen {
         .listStyle(.plain)
     }
 
-    var header: some View {
+    func header(listMeta: MediaList.Meta) -> some View {
         VStack(spacing: 0) {
             let border = UIScreen.hairlineWidth
-            KFImage.url(viewModel.mediaList.meta.artwork)
+            KFImage.url(listMeta.artwork)
                 .resizable()
                 .aspectRatio(contentMode: .fill)
                 .background(Color(.palette.artworkBackground))
@@ -73,11 +75,11 @@ private extension MediaListScreen {
                 )
                 .padding(.horizontal, 52)
 
-            Text(viewModel.mediaList.meta.title)
+            Text(listMeta.title)
                 .font(.appFont.mediaListHeaderTitle)
                 .padding(.top, 18)
 
-            if let subtitle = viewModel.mediaList.meta.subtitle {
+            if let subtitle = listMeta.subtitle {
                 Text(subtitle)
                     .font(.appFont.mediaListHeaderSubtitle)
                     .foregroundStyle(Color(.palette.textSecondary))
@@ -119,8 +121,8 @@ private extension MediaListScreen {
     }
 
     var list: some View {
-        ForEach(Array(viewModel.mediaList.items.enumerated()), id: \.offset) { offset, item in
-            let isLastItem = offset == viewModel.mediaList.items.count - 1
+        ForEach(Array(viewModel.items.enumerated()), id: \.offset) { offset, item in
+            let isLastItem = offset == viewModel.items.count - 1
             MediaItemView(
                 model: .init(
                     artwork: item.meta.artwork,
@@ -161,7 +163,7 @@ private extension MediaListScreen {
 
     @ViewBuilder
     var footer: some View {
-        Text(viewModel.mediaList.footer)
+        Text(viewModel.footer)
             .frame(maxWidth: .infinity, alignment: .leading)
             .foregroundStyle(Color(.palette.textTertiary))
             .font(.appFont.mediaListItemFooter)
@@ -177,12 +179,6 @@ private extension EdgeInsets {
     )
 }
 
-private extension MediaList {
-    var footer: LocalizedStringKey {
-        "^[\(items.count) station](inflect: true)"
-    }
-}
-
 #Preview {
     @Previewable @State var mediaState = MediaState(
         simRadioDownloader: SimRadioDownload()
@@ -192,7 +188,10 @@ private extension MediaList {
         player: MediaPlayer()
     )
 
-    MediaListScreen(mediaList: .mockGta5)
-        .environment(mediaState)
-        .environmentObject(playerController)
+    MediaListScreen(
+        items: MediaList.mockGta5.items,
+        listMeta: MediaList.mockGta5.meta
+    )
+    .environment(mediaState)
+    .environmentObject(playerController)
 }

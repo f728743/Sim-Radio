@@ -14,18 +14,20 @@ class MediaListScreenViewModel {
         case download
     }
 
-    let mediaList: MediaList
     var mediaState: MediaState?
     var nowPlaying: NowPlayingController?
+    let items: [Media]
+    let listMeta: MediaList.Meta?
 
-    init(mediaList: MediaList) {
-        self.mediaList = mediaList
+    init(items: [Media], listMeta: MediaList.Meta?) {
+        self.items = items
+        self.listMeta = listMeta
     }
 
     func onSelect(media: Media.ID) {
         guard let nowPlaying else { return }
-        if nowPlaying.mediaList.id != mediaList.id {
-            nowPlaying.mediaList = mediaList
+        if nowPlaying.items != items {
+            nowPlaying.items = items
         }
         nowPlaying.onPlay(itemId: media)
     }
@@ -43,19 +45,11 @@ class MediaListScreenViewModel {
     func downloadStatus(for itemID: MediaID) -> MediaDownloadStatus? {
         mediaState?.downloadStatus[itemID]
     }
-}
 
-// private extension MediaDownloadProgressView.State {
-//    init(status: MediaDownloadStatus) {
-//        let progress = status.totalBytes > 0 ? Double(status.downloadedBytes) / Double(status.totalBytes) : 0
-//        switch status.state {
-//        case .completed: self = .completed
-//        case .scheduled: self = .scheduled
-//        case .inProgress: self = .progress(progress.clamped(to: 0.0 ... 1.0))
-//        case .paused: self = .paused
-//        }
-//    }
-// }
+    var footer: LocalizedStringKey {
+        "^[\(items.count) station](inflect: true)"
+    }
+}
 
 extension MediaListScreenViewModel.SwipeButton {
     var systemImage: String {

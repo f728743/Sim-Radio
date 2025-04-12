@@ -18,7 +18,7 @@ class NowPlayingController: ObservableObject {
     @Published var colors: [ColorFrequency] = []
     @Published var state: State = .paused
     @Published var currentIndex: Int? = 1
-    @Published var mediaList: MediaList = .empty {
+    @Published var items: [Media] = [] {
         didSet { onMediaListChanged(oldValue: oldValue) }
     }
 
@@ -30,7 +30,7 @@ class NowPlayingController: ObservableObject {
 
     var currentMedia: Media? {
         guard let currentIndex else { return nil }
-        return mediaList.items[safe: currentIndex]
+        return items[safe: currentIndex]
     }
 
     var display: Media {
@@ -60,7 +60,7 @@ class NowPlayingController: ObservableObject {
     }
 
     func onPlay(itemId: MediaID) {
-        let index = mediaList.items.firstIndex { $0.id == itemId }
+        let index = items.firstIndex { $0.id == itemId }
         guard let index else { return }
         stopPlaying()
         currentIndex = index
@@ -89,7 +89,7 @@ class NowPlayingController: ObservableObject {
         }
 
         var next = currentIndex + 1
-        if next >= mediaList.items.count {
+        if next >= items.count {
             next = 0
         }
         self.currentIndex = next
@@ -104,7 +104,7 @@ class NowPlayingController: ObservableObject {
         ensureMediaAvailable()
         guard currentMedia != nil else { return }
 
-        let lastIndex = mediaList.items.count - 1
+        let lastIndex = items.count - 1
         guard let currentIndex else {
             self.currentIndex = lastIndex
             return
@@ -125,14 +125,14 @@ class NowPlayingController: ObservableObject {
 
 private extension NowPlayingController {
     func ensureMediaAvailable() {
-        if mediaList.items.isEmpty {
+        if items.isEmpty {
             selectFirstAvailableMedia()
         }
     }
 
     func selectFirstAvailableMedia() {
         stopPlaying()
-        currentIndex = mediaList.items.isEmpty ? nil : 0
+        currentIndex = items.isEmpty ? nil : 0
     }
 
     func stopPlaying() {
@@ -141,11 +141,11 @@ private extension NowPlayingController {
         player.stop()
     }
 
-    func onMediaListChanged(oldValue: MediaList) {
+    func onMediaListChanged(oldValue: [Media]) {
         stopPlaying()
-        let currentItemId = currentIndex.map { oldValue.items[safe: $0]?.id } ?? nil
+        let currentItemId = currentIndex.map { oldValue[safe: $0]?.id } ?? nil
         if let currentItemId {
-            currentIndex = mediaList.items.firstIndex { $0.id == currentItemId }
+            currentIndex = items.firstIndex { $0.id == currentItemId }
         }
     }
 

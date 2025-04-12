@@ -8,10 +8,29 @@
 import SwiftUI
 
 struct DownloadedScreen: View {
+    @Environment(MediaState.self) var mediaState
+    @State private var viewModel: DownloadedScreenViewModel
+
+    init() {
+        _viewModel = State(
+            wrappedValue: DownloadedScreenViewModel()
+        )
+    }
+    
     var body: some View {
-        empty
-            .padding(.horizontal, 40)
-            .offset(y: -ViewConst.compactNowPlayingHeight)
+        Group {
+            if viewModel.items.isEmpty {
+                empty
+                    .padding(.horizontal, 40)
+                    .offset(y: -ViewConst.compactNowPlayingHeight)
+            } else {
+                MediaListScreen(items: viewModel.items)
+                    .id(viewModel.items.count)
+            }
+        }
+        .task {
+            viewModel.mediaState = mediaState
+        }        
     }
 }
 
@@ -34,5 +53,10 @@ extension DownloadedScreen {
 }
 
 #Preview {
+    @Previewable @State var mediaState = MediaState(
+        simRadioDownloader: SimRadioDownload()
+    )
+    
     DownloadedScreen()
+        .environment(mediaState)
 }
