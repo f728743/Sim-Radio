@@ -16,6 +16,12 @@ struct MediaDownloadStatus {
     let state: DownloadState
     let totalBytes: Int64
     let downloadedBytes: Int64
+
+    init(state: DownloadState, totalBytes: Int64 = 0, downloadedBytes: Int64 = 0) {
+        self.state = state
+        self.totalBytes = totalBytes
+        self.downloadedBytes = downloadedBytes
+    }
 }
 
 extension MediaDownloadStatus: DownloadProgressProtocol {}

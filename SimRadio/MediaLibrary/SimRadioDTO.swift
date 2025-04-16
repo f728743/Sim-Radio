@@ -1,5 +1,5 @@
 //
-//  SimRadioStation.swift
+//  SimRadioDTO.swift
 //  SimRadio
 //
 //  Created by Alexey Vorobyov on 26.03.2025.
@@ -42,6 +42,13 @@ enum SimRadioDTO {
         let duration: Double
         let audibleDuration: Double?
         let attaches: Attaches?
+        let markers: [TrackMarker]?
+    }
+
+    struct TrackMarker: Codable {
+        let title: String
+        let artist: String
+        let startTime: TimeInterval
     }
 
     struct Attaches: Codable {

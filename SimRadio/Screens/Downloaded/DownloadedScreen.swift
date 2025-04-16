@@ -16,7 +16,7 @@ struct DownloadedScreen: View {
             wrappedValue: DownloadedScreenViewModel()
         )
     }
-    
+
     var body: some View {
         Group {
             if viewModel.items.isEmpty {
@@ -30,7 +30,7 @@ struct DownloadedScreen: View {
         }
         .task {
             viewModel.mediaState = mediaState
-        }        
+        }
     }
 }
 
@@ -56,7 +56,7 @@ extension DownloadedScreen {
     @Previewable @State var mediaState = MediaState(
         simRadioDownloader: SimRadioDownload()
     )
-    
+
     DownloadedScreen()
         .environment(mediaState)
 }

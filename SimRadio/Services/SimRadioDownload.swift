@@ -73,7 +73,7 @@ actor SimRadioDownload {
         eventContinuation?.finish()
     }
 
-    nonisolated func downloadMedia(withID id: MediaID) {
+    nonisolated func downloadMedia(withID id: MediaID, missing _: [SimFileGroup.ID: [URL]] = [:]) {
         Task {
             await doDownloadMedia(withID: id)
         }
@@ -168,15 +168,15 @@ private extension SimRadioDownload {
         }
     }
 
-    func groupID(of downloadRequest: DownloadQueue.DownloadRequest) -> SimFileGroup.ID? {
+    func groupID(of downloadRequest: DownloadQueue.DownloadRequest) -> SimFileGroup.ID {
         .init(value: downloadRequest.destinationDirectoryPath)
     }
 
     func handleDownloaderEvent(_ event: DownloadQueue.Event) async {
-        guard let groupID = groupID(of: event.downloadRequest),
-              let fileIndex = groupDownloads[groupID]?
-              .files
-              .firstIndex(where: { $0.url == event.downloadRequest.sourceURL })
+        let groupID = groupID(of: event.downloadRequest)
+        guard let fileIndex = groupDownloads[groupID]?
+            .files
+            .firstIndex(where: { $0.url == event.downloadRequest.sourceURL })
         else {
             log(warning: "Missing groupID or fileIndex for event: \(event)")
             return

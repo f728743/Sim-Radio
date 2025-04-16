@@ -53,11 +53,3 @@ extension MediaList {
         items: []
     )
 }
-
-extension MediaDownloadStatus {
-    static let new: MediaDownloadStatus = .init(
-        state: .scheduled,
-        totalBytes: 0,
-        downloadedBytes: 0
-    )
-}

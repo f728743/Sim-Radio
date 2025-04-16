@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct MediaDownloadProgressView: View {
-    var status: MediaDownloadStatus = .new
+    var status: MediaDownloadStatus = .init(state: .scheduled)
     var size: CGFloat = 12.3
 
     var body: some View {
@@ -103,7 +103,7 @@ private extension MediaDownloadProgressView {
 }
 
 #Preview(traits: .sizeThatFitsLayout) {
-    MediaDownloadProgressView(status: .new)
+    MediaDownloadProgressView(status: .init(state: .scheduled))
     MediaDownloadProgressView(status: .init(state: .scheduled, totalBytes: 100, downloadedBytes: 33))
     MediaDownloadProgressView(status: .init(state: .downloading, totalBytes: 100, downloadedBytes: 33))
     MediaDownloadProgressView(status: .init(state: .paused, totalBytes: 100, downloadedBytes: 33))

@@ -16,7 +16,7 @@ class DownloadedScreenViewModel {
     }
 }
 
-extension MediaState {
+private extension MediaState {
     var donloadedMedia: [Media] {
         downloadStatus
             .map { $0 }

@@ -19,8 +19,12 @@ extension URL {
     }
 
     func removeFileIfExists() throws {
-        if FileManager.default.fileExists(atPath: path) {
+        if isFileExists {
             try FileManager.default.removeItem(at: self)
         }
+    }
+
+    var isFileExists: Bool {
+        FileManager.default.fileExists(atPath: path)
     }
 }

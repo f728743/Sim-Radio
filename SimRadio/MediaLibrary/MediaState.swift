@@ -13,9 +13,11 @@ class MediaState {
     var simRadio: SimRadioMedia = .empty
     private(set) var downloadStatus: [MediaID: MediaDownloadStatus] = [:]
     let simRadioDownloader: SimRadioDownload
+    let storage: RadioStorage
 
     init(simRadioDownloader: SimRadioDownload) {
         self.simRadioDownloader = simRadioDownloader
+        storage = UserDefaultsRadioStorage()
         simRadioDownloader.mediaState = self
         Task { [weak self] in
             guard let self else { return }
@@ -45,9 +47,9 @@ class MediaState {
     func populate() async {
         let baseUrl = "https://raw.githubusercontent.com/tmp-acc/"
         let simRadioURLs = [
-            //            "GTA-V-Radio-Stations-TestDownload/master/sim_radio_stations.json"
+            "GTA-V-Radio-Stations-TestDownload/master/sim_radio_stations.json"
 //            "GTA-IV-Radio-Stations/master/sim_radio_stations.json",
-            "GTA-V-Radio-Stations/master/sim_radio_stations.json"
+//            "GTA-V-Radio-Stations/master/sim_radio_stations.json"
         ].compactMap { URL(string: "\(baseUrl)\($0)") }
 
         await addSimRadio(urls: simRadioURLs)
@@ -61,7 +63,10 @@ class MediaState {
 
     func download(_ mediaID: MediaID) async {
         guard !downloadStatus.keys.contains(mediaID) else { return }
-        downloadStatus[mediaID] = .new
+        downloadStatus[mediaID] = .init(state: .scheduled)
+        if case let .simRadio(stationID) = mediaID {
+            storage.setStorageState(.downloadStarted, for: stationID)
+        }
         simRadioDownloader.downloadMedia(withID: mediaID)
     }
 }
@@ -87,27 +92,32 @@ private extension MediaState {
                 totalBytes: status.totalBytes,
                 downloadedBytes: status.downloadedBytes
             )
+            switch status.state {
+            case .paused, .failed:
+                storage.setStorageState(.downloadPaused, for: id)
+            case .completed:
+                storage.setStorageState(.downloaded, for: id)
+            default: break
+            }
         default: break
         }
     }
 
     func loadSimRadio() async {
-        let series: [String] = UserDefaults
-            .standard
-            .array(forKey: SimGameSeries.userDefaultsKey) as? [String] ?? []
+        let series = storage.addedSeriesIDs
+
         for id in series {
             do {
-                try await loadSimRadio(series: .init(value: id))
+                try await loadSimRadio(series: id)
             } catch {
                 print(error)
             }
         }
-        let mediaList: [MediaID] = simRadio.stations.keys.map { .simRadio($0) }
-        await updateDownloadState(mediaList)
+        await updateDownloadState()
     }
 
     func loadSimRadio(series id: SimGameSeries.ID) async throws {
-        let fileURL = id.directoryURL.appending(path: SimGameSeries.defaultFileName)
+        let fileURL = id.jsonFileURL
         let jsonData = try await URLSession.shared.data(from: fileURL)
         let radio = try JSONDecoder().decode(SimRadioDTO.GameSeries.self, from: jsonData.0)
         guard let url = radio.origin.map({ URL(string: $0) }) ?? nil else { return }
@@ -138,17 +148,16 @@ private extension MediaState {
               let seriesID = newMedia.series.keys.first
         else { return }
 
-        let mediaList: [MediaID] = newMedia.stations.keys.map { .simRadio($0) }
-        await stopCurrentMediaDownload(mediaList)
+        let stations = Array(newMedia.stations.keys)
+        await stopCurrentMediaDownload(stations)
         try await removeAllFilesExceptListed(newMedia.fileGroups.values.compactMap { $0 })
         try saveJsonData(series: radio, origin: url)
-        saveToUserDefaults(seriesID)
+        storage.addSeries(id: seriesID)
         simRadio = SimRadioMedia(
             series: simRadio.series.merging(newMedia.series) { _, new in new },
             fileGroups: simRadio.fileGroups.merging(newMedia.fileGroups) { _, new in new },
             stations: simRadio.stations.merging(newMedia.stations) { _, new in new }
         )
-        await updateDownloadState(mediaList)
     }
 
     func saveJsonData(series: SimRadioDTO.GameSeries, origin: URL) throws {
@@ -166,23 +175,53 @@ private extension MediaState {
         try jsonData.write(to: fileURL)
     }
 
-    func saveToUserDefaults(_ seriesID: SimGameSeries.ID) {
-        let currentIDs: [String] = UserDefaults
-            .standard
-            .array(forKey: SimGameSeries.userDefaultsKey) as? [String] ?? []
-        guard !currentIDs.contains(seriesID.value) else { return }
-        UserDefaults.standard.set(currentIDs + [seriesID.value], forKey: SimGameSeries.userDefaultsKey)
-    }
-
-    func stopCurrentMediaDownload(_ mediaIDs: [MediaID]) async {
-        for id in mediaIDs {
-            await simRadioDownloader.cancelDownloadMedia(withID: id)
-            downloadStatus.removeValue(forKey: id)
+    func stopCurrentMediaDownload(_ stations: [SimStation.ID]) async {
+        for station in stations {
+            await simRadioDownloader.cancelDownloadMedia(withID: .simRadio(station))
+            downloadStatus.removeValue(forKey: .simRadio(station))
         }
     }
 
-    func updateDownloadState(_: [MediaID]) async {
-        // TODO:
+    func updateDownloadState() async {
+        for (station, storageState) in storage.allStoredStationStates {
+            switch storageState {
+            case .downloadPaused:
+                downloadStatus[.simRadio(station)] = .init(state: .paused)
+            case .downloadStarted:
+                await resumeDownloading(station)
+            case .downloaded:
+                downloadStatus[.simRadio(station)] = .init(state: .completed)
+            }
+        }
+    }
+
+    func resumeDownloading(_ station: SimStation.ID) async {
+        do {
+            let currntStatus = try await simRadio.calculateStationLoacalStatus(station)
+            switch currntStatus {
+            case .completed:
+                storage.setStorageState(.downloaded, for: station)
+                downloadStatus[.simRadio(station)] = .init(state: .completed)
+                return
+            case let .partial(missing: missing):
+                simRadioDownloader.downloadMedia(withID: .simRadio(station), missing: missing)
+            case .missing:
+                break
+            }
+        } catch {
+            print(error)
+        }
+        downloadStatus[.simRadio(station)] = .init(state: .scheduled)
+        simRadioDownloader.downloadMedia(withID: .simRadio(station))
+    }
+
+    func calculateStationLoacalStatus(id: MediaID) async throws -> SimRadioMedia.StationLoacalStatus? {
+        switch id {
+        case let .simRadio(simStationID):
+            return try await simRadio.calculateStationLoacalStatus(simStationID)
+        default:
+            return nil
+        }
     }
 
     func removeAllFilesExceptListed(_: [SimFileGroup]) async throws {

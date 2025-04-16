@@ -22,6 +22,11 @@ enum PlaylistError: Error {
 }
 
 extension Double {
+    // The legacy function drand48() is used here intentionally. This is because
+    // the playlist generation logic requires a Pseudo-Random Number Generator (PRNG)
+    // that can be explicitly seeded using srand48(). Seeding allows for reproducible
+    // playlist generation given the same seed derived from the current date for daily consistency
+    // Swift's standard random functions do not offer a straightforward global seeding mechanism like srand48.
     static func rand48() -> Double {
         // swiftlint:disable legacy_random
         drand48()

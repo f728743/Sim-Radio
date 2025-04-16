@@ -81,7 +81,41 @@ extension SimRadioMedia {
             stations: Dictionary(uniqueKeysWithValues: stations.map { ($0.id, $0) })
         )
     }
+
+    enum StationLoacalStatus {
+        case completed
+        case partial(missing: [SimFileGroup.ID: [URL]])
+        case missing
+    }
+
+    func stationFileGroups(_ id: SimStation.ID) -> [SimFileGroup] {
+        return stations[id]?.fileGroups.compactMap { fileGroups[$0] } ?? []
+    }
+
+    func calculateStationLoacalStatus(_ id: SimStation.ID) async throws -> StationLoacalStatus {
+        var missing: [SimFileGroup.ID: [URL]] = [:]
+        var haveAny = false
+        for fileGroup in stationFileGroups(id) {
+            let missingFiles = fileGroup
+                .files
+                .map { $0.url }
+                .filter { !fileGroup.id.localFileURL(for: $0).isFileExists }
+            if fileGroup.files.count > missingFiles.count {
+                haveAny = true
+            }
+            if !missingFiles.isEmpty {
+                missing[fileGroup.id] = missingFiles
+            }
+        }
+
+        if haveAny {
+            return missing.isEmpty ? .completed : .partial(missing: missing)
+        }
+        return .missing
+    }
 }
+
+extension Collection where Element == URL {}
 
 extension SimGameSeries {
     init(dto: SimRadioDTO.GameSeries, origin: URL) {
@@ -140,6 +174,10 @@ extension SimGameSeries.ID {
         .documentsDirectory.appending(path: value, directoryHint: .isDirectory)
     }
 
+    var jsonFileURL: URL {
+        directoryURL.appending(path: SimGameSeries.defaultFileName)
+    }
+
     init(origin: URL) {
         self.init(value: "\(origin.nonCryptoHash)")
     }
@@ -163,6 +201,14 @@ extension SimFileGroup.ID {
     init(origin: URL, pathTag: String? = nil, groupTag: String) {
         let path = pathTag.map { "/\($0)" } ?? ""
         self.init(value: "\(origin.nonCryptoHash)\(path)/\(groupTag)")
+    }
+
+    var directoryURL: URL {
+        .documentsDirectory.appending(path: value, directoryHint: .isDirectory)
+    }
+
+    func localFileURL(for url: URL) -> URL {
+        directoryURL.appending(path: url.lastPathComponent, directoryHint: .notDirectory)
     }
 }
 
