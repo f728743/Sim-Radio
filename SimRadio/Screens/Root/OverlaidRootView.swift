@@ -13,7 +13,8 @@ struct OverlaidRootView: View {
     @State private var expandedNowPlaying: Bool = false
     @State private var showNowPlayingReplacement: Bool = false
 
-    @EnvironmentObject var playerController: NowPlayingController
+    @Environment(NowPlayingController.self) var playerController
+//    @EnvironmentObject var playerController: NowPlayingController
 
     var body: some View {
         ZStack(alignment: .bottom) {
@@ -26,7 +27,7 @@ struct OverlaidRootView: View {
                 show: $showOverlayingNowPlayng,
                 expanded: $expandedNowPlaying
             )
-            .environmentObject(playerController)
+            .environment(playerController)
             .onPreferenceChange(NowPlayingExpandProgressPreferenceKey.self) { [$nowPlayingExpandProgress] value in
                 $nowPlayingExpandProgress.wrappedValue = value
             }

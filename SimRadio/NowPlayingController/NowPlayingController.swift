@@ -8,17 +8,17 @@
 import Kingfisher
 import UIKit
 
-@MainActor
-class NowPlayingController: ObservableObject {
+@Observable @MainActor
+class NowPlayingController {
     enum State {
         case playing
         case paused
     }
 
-    @Published var colors: [ColorFrequency] = []
-    @Published var state: State = .paused
-    @Published var currentIndex: Int? = 1
-    @Published var items: [Media] = [] {
+    var colors: [ColorFrequency] = []
+    var state: State = .paused
+    var currentIndex: Int? = 1
+    var items: [Media] = [] {
         didSet { onMediaListChanged(oldValue: oldValue) }
     }
 

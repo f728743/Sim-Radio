@@ -9,8 +9,8 @@ import Kingfisher
 import SwiftUI
 
 struct MediaListScreen: View {
-    @EnvironmentObject var nowPlaying: NowPlayingController
     @Environment(\.nowPlayingExpandProgress) var expandProgress
+    @Environment(NowPlayingController.self) var nowPlaying
     @Environment(MediaState.self) var mediaState
     @State private var selection: Media.ID?
     @State private var viewModel: MediaListScreenViewModel
@@ -192,7 +192,7 @@ private extension EdgeInsets {
         simRadioDownloader: SimRadioDownload()
     )
 
-    @Previewable @StateObject var playerController = NowPlayingController(
+    @Previewable @State var playerController = NowPlayingController(
         player: MediaPlayer()
     )
 
@@ -201,5 +201,5 @@ private extension EdgeInsets {
         listMeta: MediaList.mockGta5.meta
     )
     .environment(mediaState)
-    .environmentObject(playerController)
+    .environment(playerController)
 }

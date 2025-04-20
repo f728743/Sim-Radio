@@ -9,7 +9,7 @@ import Kingfisher
 import SwiftUI
 
 struct RegularNowPlaying: View {
-    @EnvironmentObject var model: NowPlayingController
+    @Environment(NowPlayingController.self) var model
     @Binding var expanded: Bool
     var size: CGSize
     var safeArea: EdgeInsets
@@ -72,25 +72,25 @@ private extension RegularNowPlaying {
     }
 }
 
-#Preview {
-    @Previewable @StateObject var model = NowPlayingController(player: MediaPlayer())
-
-    RegularNowPlaying(
-        expanded: .constant(true),
-        size: UIScreen.main.bounds.size,
-        safeArea: (UIApplication.keyWindow?.safeAreaInsets ?? .zero).edgeInsets,
-        animationNamespace: Namespace().wrappedValue
-    )
-    .onAppear {
-//        model.mediaList = .mockGta5
-        model.onAppear()
-    }
-    .background {
-        ColorfulBackground(
-            colors: model.colors.map { Color($0.color) }
-        )
-        .overlay(Color(UIColor(white: 0.4, alpha: 0.5)))
-    }
-    .ignoresSafeArea()
-    .environmentObject(model)
-}
+//#Preview {
+//    @Previewable @State var model = NowPlayingController(player: MediaPlayer())
+//
+//    RegularNowPlaying(
+//        expanded: .constant(true),
+//        size: UIScreen.main.bounds.size,
+//        safeArea: (UIApplication.keyWindow?.safeAreaInsets ?? .zero).edgeInsets,
+//        animationNamespace: Namespace().wrappedValue
+//    )
+//    .onAppear {
+////        model.mediaList = .mockGta5
+//        model.onAppear()
+//    }
+//    .background {
+//        ColorfulBackground(
+//            colors: model.colors.map { Color($0.color) }
+//        )
+//        .overlay(Color(UIColor(white: 0.4, alpha: 0.5)))
+//    }
+//    .ignoresSafeArea()
+//    .environment(model)
+//}

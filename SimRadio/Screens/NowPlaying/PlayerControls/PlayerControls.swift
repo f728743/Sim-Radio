@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct PlayerControls: View {
-    @EnvironmentObject var model: NowPlayingController
+    @Environment(NowPlayingController.self) var model
     @State private var volume: Double = 0.5
 
     var body: some View {
@@ -99,7 +99,7 @@ private extension PlayerControls {
 }
 
 #Preview {
-    @Previewable @StateObject var playerController = NowPlayingController(player: MediaPlayer())
+    @Previewable @State var playerController = NowPlayingController(player: MediaPlayer())
     ZStack(alignment: .bottom) {
         PreviewBackground()
         PlayerControls()
@@ -108,5 +108,5 @@ private extension PlayerControls {
     .onAppear {
 //        playerController.mediaList = .mockGta5
     }
-    .environmentObject(playerController)
+    .environment(playerController)
 }

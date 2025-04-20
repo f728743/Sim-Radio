@@ -14,7 +14,7 @@ enum PlayerMatchedGeometry {
 struct ExpandableNowPlaying: View {
     @Binding var show: Bool
     @Binding var expanded: Bool
-    @EnvironmentObject var model: NowPlayingController
+    @Environment(NowPlayingController.self) var model
     @State private var offsetY: CGFloat = 0.0
     @State private var mainWindow: UIWindow?
     @State private var needRestoreProgressOnActive: Bool = false
