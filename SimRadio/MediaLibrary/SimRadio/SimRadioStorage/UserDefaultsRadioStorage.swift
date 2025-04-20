@@ -1,5 +1,5 @@
 //
-//  RadioStorage.swift
+//  UserDefaultsRadioStorage.swift
 //  SimRadio
 //
 //  Created by Alexey Vorobyov on 18.04.2025.
@@ -7,27 +7,8 @@
 
 import Foundation
 
-enum StationStorageState: String {
-    case downloadStarted
-    case downloadPaused
-    case downloaded
-}
-
 @MainActor
-protocol RadioStorage {
-    var addedSeriesIDs: [SimGameSeries.ID] { get }
-    func addSeries(id: SimGameSeries.ID)
-    func removeSeries(id: SimGameSeries.ID)
-    func containsSeries(id: SimGameSeries.ID) -> Bool
-
-    func setStorageState(_ state: StationStorageState, for stationID: SimStation.ID)
-    func getStorageState(for stationID: SimStation.ID) -> StationStorageState?
-    func removeStorageState(for stationID: SimStation.ID)
-    var allStoredStationStates: [SimStation.ID: StationStorageState] { get }
-}
-
-@MainActor
-class UserDefaultsRadioStorage: RadioStorage {
+class UserDefaultsRadioStorage: SimRadioStorage {
     private enum Key: String {
         case addedSeriesIDs = "UserData.addedSeriesIDs" // Use a prefix for uniqueness
         case stationStorageStates = "UserData.stationStorageStates"

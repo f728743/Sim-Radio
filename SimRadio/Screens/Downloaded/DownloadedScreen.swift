@@ -53,9 +53,7 @@ extension DownloadedScreen {
 }
 
 #Preview {
-    @Previewable @State var mediaState = MediaState(
-        simRadioDownloader: SimRadioDownload()
-    )
+    @Previewable @State var mediaState = MediaState.stub
 
     DownloadedScreen()
         .environment(mediaState)

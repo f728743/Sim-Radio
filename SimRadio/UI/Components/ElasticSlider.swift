@@ -308,15 +308,8 @@ extension View {
     }
 }
 
-private struct ElasticSliderConfigEnvironmentKey: EnvironmentKey {
-    static let defaultValue: ElasticSliderConfig = .init()
-}
-
 extension EnvironmentValues {
-    var elasticSliderConfig: ElasticSliderConfig {
-        get { self[ElasticSliderConfigEnvironmentKey.self] }
-        set { self[ElasticSliderConfigEnvironmentKey.self] = newValue }
-    }
+    @Entry var elasticSliderConfig = ElasticSliderConfig()
 }
 
 #Preview {

@@ -188,17 +188,12 @@ private extension EdgeInsets {
 }
 
 #Preview {
-    @Previewable @State var mediaState = MediaState(
-        simRadioDownloader: SimRadioDownload()
-    )
-
-    @Previewable @State var playerController = NowPlayingController(
-        player: MediaPlayer()
-    )
+    @Previewable @State var mediaState = MediaState.stub
+    @Previewable @State var playerController = NowPlayingController.stub
 
     MediaListScreen(
-        items: MediaList.mockGta5.items,
-        listMeta: MediaList.mockGta5.meta
+        items: mediaState.mediaList.first?.items ?? [],
+        listMeta: mediaState.mediaList.first?.meta
     )
     .environment(mediaState)
     .environment(playerController)

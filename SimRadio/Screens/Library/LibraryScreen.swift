@@ -32,7 +32,7 @@ struct LibraryScreen: View {
         .listStyle(.plain)
         .navigationTitle("Library")
         .toolbar {
-            Button { viewModel.populate() }
+            Button { viewModel.testPopulate() }
                 label: { ProfileToolbarButton() }
         }
         .task {
@@ -111,14 +111,12 @@ private struct RecentlyAddedItem: View {
     }
 }
 
-// TODO:
-//    #Preview {
-//        @Previewable @StateObject var library = MediaLibrary()
-//
-//        LibraryView()
-//            .withRouter()
-//            .environmentObject(library)
-//            .onAppear {
-//                library.reload()
-//            }
-//    }
+#Preview {
+    @Previewable @State var mediaState = MediaState.stub
+    @Previewable @State var playerController = NowPlayingController.stub
+
+    LibraryScreen()
+        .withRouter()
+        .environment(mediaState)
+        .environment(playerController)
+}

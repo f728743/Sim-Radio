@@ -1,5 +1,5 @@
 //
-//  SimRadioDownload.swift
+//  DefaultSimRadioDownload.swift
 //  SimRadio
 //
 //  Created by Alexey Vorobyov on 26.03.2025.
@@ -13,38 +13,19 @@ private enum DownloadLog {
 
 private let logSettings: [DownloadLog] = [.warning, .error]
 
-actor SimRadioDownload {
-    @MainActor var mediaState: MediaState?
+extension DefaultSimRadioDownload: SimRadioDownload {}
+
+actor DefaultSimRadioDownload {
+    @MainActor weak var mediaState: SimRadioMediaState?
     private let downloadQueue: DownloadQueue
     private var stationDownloads: [SimStation.ID: DownloadableStation] = [:]
     private var groupDownloads: [SimFileGroup.ID: DownloadableFileGroup] = [:]
 
-    private var eventContinuation: AsyncStream<Event>.Continuation?
-    private(set) lazy var events: AsyncStream<Event> = AsyncStream { continuation in
-        self.eventContinuation = continuation
-    }
-
-    enum Event {
-        case updatedFileGroup(id: SimFileGroup.ID, status: DownloadStatus) // TODO: get rid
-        case updatedStation(id: SimStation.ID, status: DownloadStatus)
-    }
-
-    struct DownloadStatus {
-        let state: DownloadState
-        let totalBytes: Int64
-        let downloadedBytes: Int64
-    }
-
-    enum DownloadState {
-        case scheduled
-        case downloading
-        case completed
-        case paused
-        case failed([URL])
-    }
+    let events: AsyncStream<SimRadioDownloadEvent>
+    private var eventContinuation: AsyncStream<SimRadioDownloadEvent>.Continuation?
 
     struct DownloadableStation {
-        var status: DownloadStatus
+        var status: SimRadioDownloadStatus
         let fileGroupIDs: [SimFileGroup.ID]
     }
 
@@ -58,6 +39,8 @@ actor SimRadioDownload {
             destinationDirectory: .documentsDirectory,
             maxConcurrentDownloads: 8
         )
+
+        (events, eventContinuation) = AsyncStream.makeStream(of: SimRadioDownloadEvent.self)
 
         Task { [weak self] in
             guard let self else { return }
@@ -73,47 +56,48 @@ actor SimRadioDownload {
         eventContinuation?.finish()
     }
 
-    nonisolated func downloadMedia(withID id: MediaID, missing _: [SimFileGroup.ID: [URL]] = [:]) {
+    func downloadStation(withID id: SimStation.ID, missing _: [SimFileGroup.ID: [URL]] = [:]) {
         Task {
-            await doDownloadMedia(withID: id)
+            await doDownloadStation(withID: id)
         }
     }
 
-    nonisolated func pauseDownloadMedia(withID _: MediaID) {
+    func pauseDownloadStation(withID id: SimStation.ID) {
         Task {
-            // TODO: await doPauseDownloadMedia(withID: id)
+            await doPauseDownloadStation(withID: id)
         }
     }
 
-    func cancelDownloadMedia(withID _: MediaID) async {
-        // TODO:
+    func cancelDownloadStation(withID id: SimStation.ID) async {
+        Task {
+            await doCancelDownloadStation(withID: id)
+        }
     }
 }
 
-private extension SimRadioDownload {
+private extension DefaultSimRadioDownload {
     func finishEventStream() {
         eventContinuation?.finish()
         eventContinuation = nil
     }
 
-    func doDownloadMedia(withID id: MediaID) async {
-        guard case let .simRadio(stationID) = id else { return }
+    func doDownloadStation(withID id: SimStation.ID) async {
         guard let mediaState = await mediaState else { return }
 
         // Access mediaState on the MainActor
         let stations = await mediaState.simRadio.stations
-        guard let station = stations[stationID] else {
-            log(error: "Station \(stationID) not found in mediaState")
+        guard let station = stations[id] else {
+            log(error: "Station \(id) not found in mediaState")
             return
         }
 
-        guard !stationDownloads.keys.contains(stationID) else {
-            log(warning: "Station \(stationID) already tracked for download.")
+        guard !stationDownloads.keys.contains(id) else {
+            log(warning: "Station \(id) already tracked for download.")
             // Optionally: Re-evaluate state or publish current status?
             return
         }
 
-        log(info: "Starting download for station \(stationID)")
+        log(info: "Starting download for station \(id)")
         await download(station: station)
     }
 
@@ -121,12 +105,12 @@ private extension SimRadioDownload {
         guard let mediaState = await mediaState else { return }
         stationDownloads[station.id] = DownloadableStation(
             status: .init(state: .scheduled, totalBytes: 0, downloadedBytes: 0),
-            fileGroupIDs: station.fileGroups
+            fileGroupIDs: station.fileGroupIDs
         )
 
         var groupURLs: [SimFileGroup.ID: [URL]] = [:]
         let allFileGroups = await mediaState.simRadio.fileGroups // Access MainActor state
-        for groupID in station.fileGroups {
+        for groupID in station.fileGroupIDs {
             guard groupDownloads[groupID] == nil else {
                 continue
             }
@@ -164,8 +148,68 @@ private extension SimRadioDownload {
             stationDownload.status = calculatedStatus
             stationDownloads[station.id] = stationDownload
             // Yield initial station status event
-            eventContinuation?.yield(.updatedStation(id: station.id, status: calculatedStatus))
+            eventContinuation?.yield(.init(id: station.id, status: calculatedStatus))
         }
+    }
+
+    func doPauseDownloadStation(withID id: SimStation.ID) async {
+        log(info: "Pausing download for station \(id.value)")
+
+        guard let stationInfo = stationDownloads[id] else {
+            log(warning: "Cannot pause download for untracked station: \(id.value)")
+            return
+        }
+
+        // Отменяем все активные и запланированные загрузки для групп этой станции с возможностью возобновления
+        var requestsToPause: [DownloadQueue.DownloadRequest] = []
+        for groupID in stationInfo.fileGroupIDs {
+            if let group = groupDownloads[groupID] {
+                for fileInfo in group.files where fileInfo.state == .downloading || fileInfo.state == .queued {
+                    requestsToPause.append(.init(sourceURL: fileInfo.url, destinationDirectoryPath: groupID.value))
+                }
+            }
+        }
+
+        log(info: "Pausing \(requestsToPause.count) download requests for station \(id.value)")
+        for request in requestsToPause {
+            // Вызываем cancel в DownloadQueue с флагом pausing: true
+            await downloadQueue.cancel(request, pausing: true)
+        }
+        // Статус обновится через handleDownloaderEvent, когда придут события .canceled(..., pausing: true)
+    }
+
+    func doCancelDownloadStation(withID id: SimStation.ID) async {
+        log(info: "Cancelling download for station \(id.value)")
+
+        guard let stationInfo = stationDownloads.removeValue(forKey: id) else {
+            log(warning: "Cannot cancel download for untracked station: \(id.value)")
+            return
+        }
+
+        let groupIDsToKeep = Set(stationDownloads.values.flatMap { $0.fileGroupIDs })
+        let groupIDsToCancel = stationInfo.fileGroupIDs.filter { !groupIDsToKeep.contains($0) }
+
+        // Отменяем все загрузки для групп этой станции без возможности возобновления
+        var allRequestsToCancel: [DownloadQueue.DownloadRequest] = []
+        for groupID in groupIDsToCancel {
+            if let group = groupDownloads.removeValue(forKey: groupID) {
+                let requestsToCancel = group.files.map {
+                    DownloadQueue.DownloadRequest(sourceURL: $0.url, destinationDirectoryPath: groupID.value)
+                }
+                allRequestsToCancel.append(contentsOf: requestsToCancel)
+            }
+        }
+
+        log(info: "Cancelling \(allRequestsToCancel.count) download requests for station \(id.value)")
+        for request in allRequestsToCancel {
+            // Вызываем cancel в DownloadQueue с флагом pausing: false
+            await downloadQueue.cancel(request, pausing: false)
+        }
+        // Отправляем финальное событие об отмене (или это сделает handleDownloaderEvent?)
+        // Так как мы удалили stationDownloads[stationID], handleDownloaderEvent не найдет станцию.
+        // Отправим событие вручную, если это необходимо.
+        // Но лучше полагаться на то, что handleDownloaderEvent обработает отмену файлов.
+        // Если handleDownloaderEvent не найдет станцию, он ничего не сделает - это ок.
     }
 
     func groupID(of downloadRequest: DownloadQueue.DownloadRequest) -> SimFileGroup.ID {
@@ -195,10 +239,6 @@ private extension SimRadioDownload {
         // --- Event Publishing Logic ---
         // Only publish if state potentially changed or progress occurred
         if stateChanged || event.isProgress {
-            // 1. Calculate and yield group status
-            let groupStatus = groupState(groupID)
-            eventContinuation?.yield(.updatedFileGroup(id: groupID, status: groupStatus))
-
             // 2. Find the station associated with this group
             let groupStations = findStationIDs(for: groupID)
             for stationID in groupStations {
@@ -208,7 +248,7 @@ private extension SimRadioDownload {
                 // Update internal state as well
                 stationDownloads[stationID]?.status = stationStatus
 
-                eventContinuation?.yield(.updatedStation(id: stationID, status: stationStatus))
+                eventContinuation?.yield(.init(id: stationID, status: stationStatus))
             }
             if groupStations.isEmpty {
                 log(warning: "Could not find station for groupID \(groupID)")
@@ -226,21 +266,21 @@ private extension SimRadioDownload {
         }
     }
 
-    func calculateStationStatus(stationID: SimStation.ID) async -> DownloadStatus {
+    func calculateStationStatus(stationID: SimStation.ID) async -> SimRadioDownloadStatus {
         guard let stationDownloadInfo = stationDownloads[stationID] else {
             // Should not happen if called correctly
             log(error: "Station \(stationID) not found during status calculation.")
-            return DownloadStatus(state: .scheduled, totalBytes: 0, downloadedBytes: 0)
+            return SimRadioDownloadStatus(state: .scheduled, totalBytes: 0, downloadedBytes: 0)
         }
         return stationDownloadInfo
             .fileGroupIDs.map { groupState($0) }
             .overallStatus
     }
 
-    func groupState(_ groupID: SimFileGroup.ID) -> DownloadStatus {
+    func groupState(_ groupID: SimFileGroup.ID) -> SimRadioDownloadStatus {
         guard let files = groupDownloads[groupID]?.files else {
             log(warning: "GroupState called for unknown groupID \(groupID)")
-            return DownloadStatus(
+            return SimRadioDownloadStatus(
                 state: .scheduled,
                 totalBytes: 0,
                 downloadedBytes: 0,
@@ -280,13 +320,11 @@ private extension SimRadioDownload {
 
         // After sizes are updated, recalculate and yield status updates
         // This ensures progress calculation is accurate sooner.
-        let groupStatus = groupState(groupID)
-        eventContinuation?.yield(.updatedFileGroup(id: groupID, status: groupStatus))
         let groupStations = findStationIDs(for: groupID)
         for stationID in groupStations {
             let stationStatus = await calculateStationStatus(stationID: stationID)
             stationDownloads[stationID]?.status = stationStatus // Update internal state
-            eventContinuation?.yield(.updatedStation(id: stationID, status: stationStatus))
+            eventContinuation?.yield(.init(id: stationID, status: stationStatus))
         }
     }
 
@@ -300,7 +338,7 @@ private extension SimRadioDownload {
             return
         }
 
-        groupInfo.files[fileIndex].update(totalBytes: size)
+        groupInfo.files[fileIndex].totalBytes = size
         groupDownloads[groupID] = groupInfo
     }
 
@@ -344,16 +382,17 @@ extension DownloadInfo {
             // Always update bytes, state remains downloading implicitly
             // unless changed by other events. If it was paused, progress indicates resume.
             if state == .paused || state == .queued {
-                result.update(state: .downloading)
+                result.state = .downloading
                 stateChanged = true
             }
-            result.update(downloadedBytes: downloadedBytes, totalBytes: totalBytes)
+            result.downloadedBytes = downloadedBytes
+            result.totalBytes = totalBytes
 
         case .completed:
-            result.update(state: .completed)
+            result.state = .completed
             // Ensure progress is 100% if totalBytes is known
             if totalBytes > 0 {
-                result.update(downloadedBytes: totalBytes)
+                result.downloadedBytes = totalBytes
             } else {
                 // If total size wasn't fetched, maybe try again or log warning?
                 log(warning: "File \(url.lastPathComponent) completed with unknown total size.")
@@ -363,20 +402,20 @@ extension DownloadInfo {
         case let .failed(error):
             // Store error description or keep simple .failed state?
             // Let's keep it simple for now, aggregation collects URLs.
-            result.update(state: .failed) // Indicate failure
+            result.state = .failed // Indicate failure
             stateChanged = previousState != result.state
             log(error: "Download failed for \(url.lastPathComponent): \(error.localizedDescription)")
 
         case .paused:
             if state == .downloading { // Only transition from downloading to paused
-                result.update(state: .paused)
+                result.state = .paused
                 stateChanged = true
             }
 
         case .queued:
             // Usually means download hasn't started or was reset.
             if state != .queued { // Only update if not already queued
-                result.update(state: .queued)
+                result.state = .queued
                 stateChanged = true
             }
 
@@ -384,8 +423,8 @@ extension DownloadInfo {
             // Treat cancel as reverting to queued or a distinct state?
             // Reverting to queued might be simplest for now.
             if state != .queued {
-                result.update(state: .queued)
-                result.update(downloadedBytes: 0) // Reset progress on cancel
+                result.state = .queued
+                result.downloadedBytes = 0 // Reset progress on cancel
                 stateChanged = true
             }
         }
@@ -439,7 +478,7 @@ extension Array: DownloadProgressProtocol where Element: DownloadProgressProtoco
 
 // Aggregation logic for collections
 extension Collection where Element: SimDownloadStateInternalProtocol {
-    var overallState: SimRadioDownload.DownloadState {
+    var overallState: SimRadioDownloadState {
         if contains(where: { $0.internalState == .downloading }) {
             return .downloading
         }
@@ -460,7 +499,7 @@ extension Collection where Element: SimDownloadStateInternalProtocol {
 }
 
 extension Array where Element: DownloadStatusInternalProtocol {
-    var overallStatus: SimRadioDownload.DownloadStatus {
+    var overallStatus: SimRadioDownloadStatus {
         .init(
             state: overallState,
             totalBytes: totalBytes,
@@ -490,19 +529,19 @@ extension DownloadInfo: DownloadStatusInternalProtocol {
     }
 }
 
-extension SimRadioDownload.DownloadStatus: DownloadStatusInternalProtocol {
+extension SimRadioDownloadStatus: DownloadStatusInternalProtocol {
     fileprivate var failedURLs: [URL] { state.failedURLs }
     fileprivate var internalState: SimDownloadStateInternal { state.internalState }
 }
 
-extension SimRadioDownload.DownloadableStation: DownloadStatusInternalProtocol {
+extension DefaultSimRadioDownload.DownloadableStation: DownloadStatusInternalProtocol {
     fileprivate var failedURLs: [URL] { status.failedURLs }
     fileprivate var internalState: SimDownloadStateInternal { status.state.internalState }
     var totalBytes: Int64 { status.totalBytes }
     var downloadedBytes: Int64 { status.downloadedBytes }
 }
 
-private extension SimRadioDownload.DownloadState {
+private extension SimRadioDownloadState {
     var failedURLs: [URL] {
         if case let .failed(urls) = self {
             return urls

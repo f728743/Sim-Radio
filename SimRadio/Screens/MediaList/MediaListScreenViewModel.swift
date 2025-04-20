@@ -44,15 +44,15 @@ class MediaListScreenViewModel {
     }
 
     func onSwipeActions(media: Media.ID, button: SwipeButton) {
-        switch button {
-        case .download:
-            Task {
+        Task {
+            switch button {
+            case .download:
                 await mediaState?.download(media)
+            case .delete:
+                await mediaState?.removeDownload(media)
+            case .pauseDownload:
+                await mediaState?.pauseDownload(media)
             }
-        case .delete:
-            print("Delete \(media)")
-        case .pauseDownload:
-            print("PauseDownload \(media)")
         }
     }
 

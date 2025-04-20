@@ -14,13 +14,6 @@ struct NowPlayingExpandProgressPreferenceKey: PreferenceKey {
     }
 }
 
-private struct NowPlayingExpandProgressEnvironmentKey: EnvironmentKey {
-    static let defaultValue: Double = .zero
-}
-
 extension EnvironmentValues {
-    var nowPlayingExpandProgress: CGFloat {
-        get { self[NowPlayingExpandProgressEnvironmentKey.self] }
-        set { self[NowPlayingExpandProgressEnvironmentKey.self] = newValue }
-    }
+    @Entry var nowPlayingExpandProgress = 0.0
 }

@@ -17,7 +17,7 @@ struct SimGameSeries {
     struct ID: Hashable { let value: String }
     var id: ID
     let meta: MediaList.Meta
-    let stations: [SimStation.ID]
+    let stationsIDs: [SimStation.ID]
 }
 
 struct SimFileGroup {
@@ -37,7 +37,7 @@ struct SimStation {
     struct ID: Hashable { let value: String }
     var id: ID
     let meta: Media.Meta
-    let fileGroups: [SimFileGroup.ID]
+    let fileGroupIDs: [SimFileGroup.ID]
     let playlistRules: SimRadioDTO.Playlist
 }
 
@@ -89,7 +89,7 @@ extension SimRadioMedia {
     }
 
     func stationFileGroups(_ id: SimStation.ID) -> [SimFileGroup] {
-        return stations[id]?.fileGroups.compactMap { fileGroups[$0] } ?? []
+        return stations[id]?.fileGroupIDs.compactMap { fileGroups[$0] } ?? []
     }
 
     func calculateStationLoacalStatus(_ id: SimStation.ID) async throws -> StationLoacalStatus {
@@ -113,6 +113,22 @@ extension SimRadioMedia {
         }
         return .missing
     }
+
+    func sharedFileGroups(of stationID: SimStation.ID, among stationIDs: [SimStation.ID]? = nil) -> [SimFileGroup.ID] {
+        guard let targetStation = stations[stationID], !targetStation.fileGroupIDs.isEmpty else {
+            return []
+        }
+
+        let frequencyPairs = stations
+            .filter { stationIDs?.contains($0.key) ?? true }
+            .values
+            .flatMap { $0.fileGroupIDs }.map { ($0, 1) }
+        let allFileGroupCounts = Dictionary(frequencyPairs, uniquingKeysWith: +)
+        let sharedGroupsForTarget = targetStation.fileGroupIDs.filter { fileGroupID in
+            (allFileGroupCounts[fileGroupID] ?? 0) > 0
+        }
+        return Array(sharedGroupsForTarget)
+    }
 }
 
 extension Collection where Element == URL {}
@@ -126,7 +142,7 @@ extension SimGameSeries {
                 title: dto.info.title,
                 subtitle: nil
             ),
-            stations: dto.stations.map { .init(origin: origin, stationTag: $0.tag) }
+            stationsIDs: dto.stations.map { .init(origin: origin, stationTag: $0.tag) }
         )
     }
 
@@ -147,11 +163,11 @@ extension SimStation {
             .appendingPathComponent(dto.info.logo)
         let fullFileGroupSet = Set(dto.playlist.fileGroupTags)
         let gameSeriesSharedFileGroupSet = Set(gameSeriesShared.fileGroups.map { $0.tag })
-        let stationFileGroups = fullFileGroupSet
+        let stationFileGroupIDs = fullFileGroupSet
             .subtracting(gameSeriesSharedFileGroupSet)
             .map { SimFileGroup.ID(origin: origin, pathTag: dto.tag, groupTag: $0) }
         let usedGameSeriesSharedFileGroupSet = fullFileGroupSet.intersection(gameSeriesSharedFileGroupSet)
-        let usedGameSeriesSharedFileGroups = usedGameSeriesSharedFileGroupSet.map {
+        let usedGameSeriesSharedFileGroupIDs = usedGameSeriesSharedFileGroupSet.map {
             SimFileGroup.ID(origin: origin, groupTag: $0)
         }
         self.init(
@@ -163,7 +179,7 @@ extension SimStation {
                 detailsSubtitle: dto.info.detailsSubtitle,
                 online: true
             ),
-            fileGroups: stationFileGroups + usedGameSeriesSharedFileGroups,
+            fileGroupIDs: stationFileGroupIDs + usedGameSeriesSharedFileGroupIDs,
             playlistRules: dto.playlist
         )
     }
@@ -194,6 +210,10 @@ extension SimRadioDTO.Playlist {
 extension SimStation.ID {
     init(origin: URL, stationTag: String) {
         self.init(value: "\(SimGameSeries.ID(origin: origin).value)/\(stationTag)")
+    }
+
+    var directoryURL: URL {
+        .documentsDirectory.appending(path: value, directoryHint: .isDirectory)
     }
 }
 

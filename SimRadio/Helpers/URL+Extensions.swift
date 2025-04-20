@@ -27,4 +27,44 @@ extension URL {
     var isFileExists: Bool {
         FileManager.default.fileExists(atPath: path)
     }
+
+    func isDirectoryEmpty() throws -> Bool {
+        let fileManager = FileManager.default
+        var isDirectory: ObjCBool = false
+        guard fileManager.fileExists(atPath: path, isDirectory: &isDirectory), isDirectory.boolValue else {
+            return false
+        }
+        return try fileManager.contentsOfDirectory(atPath: path).isEmpty
+    }
+
+    @discardableResult
+    func removeDirectoryIfEmpty() -> Bool {
+        let fileManager = FileManager.default
+        var isDirectory: ObjCBool = false
+        guard fileManager.fileExists(atPath: path, isDirectory: &isDirectory), isDirectory.boolValue else {
+            return false
+        }
+        do {
+            let contents = try fileManager.contentsOfDirectory(atPath: path)
+            if contents.isEmpty {
+                try fileManager.removeItem(at: self)
+                return true
+            } else {
+                return false
+            }
+        } catch {
+            return false
+        }
+    }
+
+    @discardableResult
+    func remove() -> Bool {
+        let fileManager = FileManager.default
+        do {
+            try fileManager.removeItem(at: self)
+            return true
+        } catch {
+            return false
+        }
+    }
 }

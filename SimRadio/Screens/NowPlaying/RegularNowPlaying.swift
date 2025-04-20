@@ -72,25 +72,26 @@ private extension RegularNowPlaying {
     }
 }
 
-//#Preview {
-//    @Previewable @State var model = NowPlayingController(player: MediaPlayer())
-//
-//    RegularNowPlaying(
-//        expanded: .constant(true),
-//        size: UIScreen.main.bounds.size,
-//        safeArea: (UIApplication.keyWindow?.safeAreaInsets ?? .zero).edgeInsets,
-//        animationNamespace: Namespace().wrappedValue
-//    )
-//    .onAppear {
-////        model.mediaList = .mockGta5
-//        model.onAppear()
-//    }
-//    .background {
-//        ColorfulBackground(
-//            colors: model.colors.map { Color($0.color) }
-//        )
-//        .overlay(Color(UIColor(white: 0.4, alpha: 0.5)))
-//    }
-//    .ignoresSafeArea()
-//    .environment(model)
-//}
+#Preview {
+    @Previewable @State var mediaState = MediaState.stub
+    @Previewable @State var playerController = NowPlayingController.stub
+
+    RegularNowPlaying(
+        expanded: .constant(true),
+        size: UIScreen.main.bounds.size,
+        safeArea: (UIApplication.keyWindow?.safeAreaInsets ?? .zero).edgeInsets,
+        animationNamespace: Namespace().wrappedValue
+    )
+    .onAppear {
+        playerController.items = mediaState.mediaList.first?.items ?? []
+        playerController.onAppear()
+    }
+    .background {
+        ColorfulBackground(
+            colors: playerController.colors.map { Color($0.color) }
+        )
+        .overlay(Color(UIColor(white: 0.4, alpha: 0.5)))
+    }
+    .ignoresSafeArea()
+    .environment(playerController)
+}

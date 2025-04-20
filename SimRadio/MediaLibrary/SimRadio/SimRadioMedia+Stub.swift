@@ -1,11 +1,49 @@
 //
-//  MockGTA5Radiostations.swift
+//  SimRadioMedia+Stub.swift
 //  SimRadio
 //
-//  Created by Alexey Vorobyov on 27.11.2024.
+//  Created by Alexey Vorobyov on 23.04.2025.
 //
 
 import Foundation
+
+extension SimRadioMedia {
+    static var stub: SimRadioMedia {
+        let stations: [SimStation] = gta5stations.map {
+            .init(
+                id: .init(value: $0.title),
+                meta: .init(
+                    artwork: stationImageUrl(String($0.logo.split(separator: ".")[0])),
+                    title: $0.title,
+                    listSubtitle: $0.genre,
+                    detailsSubtitle: $0.detailsSubtitle,
+                    online: false
+                ),
+                fileGroupIDs: [],
+                playlistRules: .init(
+                    firstFragment: .init(fragmentTag: "", probability: nil),
+                    fragments: []
+                )
+            )
+        }
+
+        return .init(
+            series: [
+                .init(value: "sample-gta5"): SimGameSeries(
+                    id: .init(value: "sample-gta5"),
+                    meta: .init(
+                        artwork: stationGroupImageUrl(),
+                        title: "GTA V Radio",
+                        subtitle: nil
+                    ),
+                    stationsIDs: stations.map { $0.id }
+                )
+            ],
+            fileGroups: [:],
+            stations: Dictionary(uniqueKeysWithValues: stations.map { ($0.id, $0) })
+        )
+    }
+}
 
 extension MediaList {
     static var mockGta5: Self {

@@ -92,16 +92,17 @@ extension PlayerButtonConfig {
     }
 }
 
-//#Preview {
-//    @Previewable @State var playerController = NowPlayingController(player: MediaPlayer())
-//
-//    CompactNowPlaying(
-//        expanded: .constant(false),
-//        animationNamespace: Namespace().wrappedValue
-//    )
-//    .onAppear {
-//        playerController.mediaList = .mockGta5
-//    }
-//    .background(.gray)
-//    .environment(playerController)
-//}
+#Preview {
+    @Previewable @State var mediaState = MediaState.stub
+    @Previewable @State var playerController = NowPlayingController.stub
+
+    CompactNowPlaying(
+        expanded: .constant(false),
+        animationNamespace: Namespace().wrappedValue
+    )
+    .onAppear {
+        playerController.items = mediaState.mediaList.first?.items ?? []
+    }
+    .background(.gray)
+    .environment(playerController)
+}

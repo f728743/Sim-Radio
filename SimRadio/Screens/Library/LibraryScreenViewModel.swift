@@ -11,9 +11,9 @@ import Observation
 class LibraryScreenViewModel {
     var mediaState: MediaState?
 
-    func populate() {
+    func testPopulate() {
         Task {
-            await mediaState?.populate()
+            await mediaState?.testPopulate()
         }
     }
 

@@ -81,15 +81,8 @@ extension View {
     }
 }
 
-private struct PlayerButtonConfigEnvironmentKey: EnvironmentKey {
-    static let defaultValue: PlayerButtonConfig = .init()
-}
-
 extension EnvironmentValues {
-    var playerButtonConfig: PlayerButtonConfig {
-        get { self[PlayerButtonConfigEnvironmentKey.self] }
-        set { self[PlayerButtonConfigEnvironmentKey.self] = newValue }
-    }
+    @Entry var playerButtonConfig = PlayerButtonConfig()
 }
 
 struct PlayerButtonConfig {

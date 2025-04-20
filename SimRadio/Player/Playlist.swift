@@ -51,10 +51,9 @@ class Playlist { // TODO: make it actor
 
         lastPlaying = (range: firstPlaylist.lastRange, day: day)
 
-        if firstPlaylist.depleted {
+        if firstPlaylist.depleted, let tomorrow = day.dayAfter?.startOfDay {
             let nextDayFrom = firstPlaylist.lastRange.end - dayLength
             let tomorrowsTo = to - dayLength
-            let tomorrow = day.dayAfter.startOfDay
             srand48(Int(tomorrow.timeIntervalSince1970))
             let playlistBuilder = PlaylistBuilder(
                 baseUrl: baseUrl,

@@ -23,9 +23,11 @@ struct RootView: View {
     }
 }
 
-// TODO:
-//    #Preview {
-//        @Previewable @StateObject var library = MediaLibrary()
-//        RootView()
-//            .environmentObject(library)
-//    }
+#Preview {
+    @Previewable @State var mediaState = MediaState.stub
+    @Previewable @State var playerController = NowPlayingController.stub
+
+    RootView()
+        .environment(mediaState)
+        .environment(playerController)
+}
