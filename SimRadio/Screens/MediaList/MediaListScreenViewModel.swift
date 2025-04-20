@@ -10,8 +10,10 @@ import SwiftUI
 
 @Observable @MainActor
 class MediaListScreenViewModel {
-    enum SwipeButton {
+    enum SwipeButton: Hashable {
         case download
+        case pauseDownload
+        case delete
     }
 
     var mediaState: MediaState?
@@ -32,13 +34,25 @@ class MediaListScreenViewModel {
         nowPlaying.onPlay(itemId: media)
     }
 
-    func swipeButton(media _: Media.ID) -> SwipeButton {
-        .download
+    func swipeButtons(media: Media.ID) -> [SwipeButton] {
+        switch downloadStatus(for: media)?.state {
+        case .completed: [.delete]
+        case .none: [.download]
+        case .downloading, .scheduled: [.pauseDownload, .delete]
+        case .paused: [.download, .delete]
+        }
     }
 
-    func onSwipeActions(media: Media.ID, button _: SwipeButton) {
-        Task {
-            await mediaState?.download(media)
+    func onSwipeActions(media: Media.ID, button: SwipeButton) {
+        switch button {
+        case .download:
+            Task {
+                await mediaState?.download(media)
+            }
+        case .delete:
+            print("Delete \(media)")
+        case .pauseDownload:
+            print("PauseDownload \(media)")
         }
     }
 
@@ -56,20 +70,26 @@ extension MediaListScreenViewModel.SwipeButton {
         switch self {
         case .download:
             return "arrow.down"
+        case .pauseDownload:
+            return "pause.fill"
+        case .delete:
+            return "minus.circle.fill"
         }
     }
 
     var label: String {
         switch self {
-        case .download:
-            return "Download"
+        case .download: "Download"
+        case .pauseDownload: "Pause"
+        case .delete: "Delete"
         }
     }
 
     var color: Color {
         switch self {
-        case .download:
-            return .init(.systemBlue)
+        case .download: Color(.systemBlue)
+        case .pauseDownload: Color(.systemGray)
+        case .delete: Color(.systemRed)
         }
     }
 }

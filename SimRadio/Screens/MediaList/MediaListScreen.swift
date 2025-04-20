@@ -123,40 +123,48 @@ private extension MediaListScreen {
     var list: some View {
         ForEach(Array(viewModel.items.enumerated()), id: \.offset) { offset, item in
             let isLastItem = offset == viewModel.items.count - 1
-            MediaItemView(
-                model: .init(
-                    artwork: item.meta.artwork,
-                    title: item.meta.title,
-                    subtitle: item.meta.listSubtitle,
-                    status: viewModel.downloadStatus(for: item.id)
+            media(item, isLastItem: isLastItem)
+        }
+    }
+
+    func media(_ item: Media, isLastItem: Bool) -> some View {
+        MediaItemView(
+            model: .init(
+                artwork: item.meta.artwork,
+                title: item.meta.title,
+                subtitle: item.meta.listSubtitle,
+                status: viewModel.downloadStatus(for: item.id)
+            )
+        )
+        .contentShape(.rect)
+        .listRowInsets(.screenInsets)
+        .listRowBackground(
+            item.id == selection
+                ? Color(uiColor: .systemGray4)
+                : Color(.palette.appBackground(expandProgress: expandProgress))
+        )
+        .alignmentGuide(.listRowSeparatorLeading) {
+            isLastItem ? $0[.leading] : $0[.leading] + 60
+        }
+        .swipeActions(edge: .trailing) {
+            ForEach(viewModel.swipeButtons(media: item.id), id: \.self) { button in
+                Button(
+                    action: { [weak viewModel] in
+                        viewModel?.onSwipeActions(media: item.id, button: button)
+                    },
+                    label: {
+                        Label(button.label, systemImage: button.systemImage)
+                    }
                 )
-            )
-            .contentShape(.rect)
-            .listRowInsets(.screenInsets)
-            .listRowBackground(
-                item.id == selection
-                    ? Color(uiColor: .systemGray4)
-                    : Color(.palette.appBackground(expandProgress: expandProgress))
-            )
-            .alignmentGuide(.listRowSeparatorLeading) {
-                isLastItem ? $0[.leading] : $0[.leading] + 60
+                .tint(button.color)
             }
-            .swipeActions(edge: .trailing) {
-                let swipeButton = viewModel.swipeButton(media: item.id)
-                Button {
-                    viewModel.onSwipeActions(media: item.id, button: swipeButton)
-                } label: {
-                    Label(swipeButton.label, systemImage: swipeButton.systemImage)
-                }
-                .tint(swipeButton.color)
-            }
-            .onTapGesture {
-                viewModel.onSelect(media: item.id)
-                selection = item.id
-                Task {
-                    try? await Task.sleep(for: .milliseconds(80))
-                    selection = nil
-                }
+        }
+        .onTapGesture {
+            viewModel.onSelect(media: item.id)
+            selection = item.id
+            Task {
+                try? await Task.sleep(for: .milliseconds(80))
+                selection = nil
             }
         }
     }
