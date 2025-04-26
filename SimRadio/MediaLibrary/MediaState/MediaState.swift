@@ -57,8 +57,9 @@ class MediaState {
     }
 
     func download(_ mediaID: MediaID) async {
-        guard !downloadStatus.keys.contains(mediaID) else { return }
-        downloadStatus[mediaID] = .init(state: .scheduled)
+        let current = downloadStatus[mediaID]
+        guard current == nil || current?.state == .paused else { return }
+//        downloadStatus[mediaID] = .initial
 
         switch mediaID {
         case let .simRadio(stationID):

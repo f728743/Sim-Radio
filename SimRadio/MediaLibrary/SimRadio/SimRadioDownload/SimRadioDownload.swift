@@ -16,15 +16,19 @@ struct SimRadioDownloadEvent: Sendable {
 /// Represents the download status, including state and progress.
 struct SimRadioDownloadStatus: Equatable, Sendable {
     let state: SimRadioDownloadState
-    let totalBytes: Int64
     let downloadedBytes: Int64
+    let totalBytes: Int64
 
     // Convenience initializer
-    init(state: SimRadioDownloadState, totalBytes: Int64 = 0, downloadedBytes: Int64 = 0) {
+    init(state: SimRadioDownloadState, downloadedBytes: Int64 = 0, totalBytes: Int64 = 0) {
         self.state = state
-        self.totalBytes = totalBytes
         self.downloadedBytes = downloadedBytes
+        self.totalBytes = totalBytes
     }
+}
+
+extension SimRadioDownloadStatus {
+    static var initial: Self { .init(state: .scheduled) }
 }
 
 /// Represents the possible states of a station's download.
@@ -32,9 +36,46 @@ enum SimRadioDownloadState: Equatable, Sendable {
     case scheduled
     case downloading
     case completed
-    case paused
+    case canceled
     case failed([URL]) // Keep track of failed URLs if needed
 }
+
+extension SimRadioDownloadState {
+    var isFailed: Bool {
+        if case .failed = self {
+            return true
+        }
+        return false
+    }
+
+    var failedURLs: [URL] {
+        if case let .failed(urls) = self {
+            return urls
+        } else {
+            return []
+        }
+    }
+
+    var isDone: Bool {
+        switch self {
+        case .completed, .canceled:
+            return true
+        default:
+            return false
+        }
+    }
+
+    var isInProgress: Bool {
+        switch self {
+        case .scheduled, .downloading:
+            return true
+        default:
+            return false
+        }
+    }
+}
+
+extension SimRadioDownloadStatus: DownloadProgressProtocol {}
 
 protocol SimRadioDownload: Actor {
     /// An asynchronous stream of download events for stations.
@@ -46,11 +87,7 @@ protocol SimRadioDownload: Actor {
     ///   - missing: Optionally, a dictionary specifying which files are known to be missing for partial downloads.
     func downloadStation(withID id: SimStation.ID, missing: [SimFileGroup.ID: [URL]]) async
 
-    /// Pauses the download for a specific station.
-    /// - Parameter id: The ID of the station download to pause.
-    func pauseDownloadStation(withID id: SimStation.ID) async
-
     /// Cancels the download for a specific station, potentially removing partially downloaded files.
     /// - Parameter id: The ID of the station download to cancel.
-    func cancelDownloadStation(withID id: SimStation.ID) async
+    func cancelDownloadStation(withID id: SimStation.ID) async -> Bool
 }

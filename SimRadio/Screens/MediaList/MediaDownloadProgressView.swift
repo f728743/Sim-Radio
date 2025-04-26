@@ -8,13 +8,14 @@
 import SwiftUI
 
 struct MediaDownloadProgressView: View {
-    var status: MediaDownloadStatus = .init(state: .scheduled)
+    var status: MediaDownloadStatus = .initial
     var size: CGFloat = 12.3
 
     var body: some View {
         Group {
             switch status.state {
             case .scheduled: spinner(progressValue: status.progress)
+            case .busy: spinner(progressValue: 0)
             case .downloading: downloading(value: status.progress)
             case .completed: arrowDown
             case .paused: pause
@@ -103,9 +104,9 @@ private extension MediaDownloadProgressView {
 }
 
 #Preview(traits: .sizeThatFitsLayout) {
-    MediaDownloadProgressView(status: .init(state: .scheduled))
-    MediaDownloadProgressView(status: .init(state: .scheduled, totalBytes: 100, downloadedBytes: 33))
-    MediaDownloadProgressView(status: .init(state: .downloading, totalBytes: 100, downloadedBytes: 33))
-    MediaDownloadProgressView(status: .init(state: .paused, totalBytes: 100, downloadedBytes: 33))
-    MediaDownloadProgressView(status: .init(state: .completed, totalBytes: 100, downloadedBytes: 100))
+    MediaDownloadProgressView(status: .initial)
+    MediaDownloadProgressView(status: .init(state: .scheduled, downloadedBytes: 33, totalBytes: 100))
+    MediaDownloadProgressView(status: .init(state: .downloading, downloadedBytes: 33, totalBytes: 100))
+    MediaDownloadProgressView(status: .init(state: .paused, downloadedBytes: 33, totalBytes: 100))
+    MediaDownloadProgressView(status: .init(state: .completed, downloadedBytes: 100, totalBytes: 100))
 }

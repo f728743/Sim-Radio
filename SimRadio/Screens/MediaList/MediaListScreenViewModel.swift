@@ -40,6 +40,7 @@ class MediaListScreenViewModel {
         case .none: [.download]
         case .downloading, .scheduled: [.pauseDownload, .delete]
         case .paused: [.download, .delete]
+        case .busy: []
         }
     }
 

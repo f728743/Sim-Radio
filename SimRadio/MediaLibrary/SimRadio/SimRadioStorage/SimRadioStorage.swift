@@ -9,6 +9,7 @@ enum StationStorageState: String {
     case downloadStarted
     case downloadPaused
     case downloaded
+    case removing
 }
 
 @MainActor

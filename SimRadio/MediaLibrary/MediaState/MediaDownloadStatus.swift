@@ -11,20 +11,34 @@ struct MediaDownloadStatus {
         case downloading
         case completed
         case paused
+        case busy
     }
 
     let state: DownloadState
-    let totalBytes: Int64
     let downloadedBytes: Int64
+    let totalBytes: Int64
 
-    init(state: DownloadState, totalBytes: Int64 = 0, downloadedBytes: Int64 = 0) {
+    init(state: DownloadState, downloadedBytes: Int64 = 0, totalBytes: Int64 = 0) {
         self.state = state
-        self.totalBytes = totalBytes
         self.downloadedBytes = downloadedBytes
+        self.totalBytes = totalBytes
     }
 }
 
 extension MediaDownloadStatus: DownloadProgressProtocol {}
+
+extension MediaDownloadStatus {
+    static var initial: Self { .init(state: .scheduled) }
+}
+
+extension MediaDownloadStatus.DownloadState {
+    var isPendingDownload: Bool {
+        switch self {
+        case .scheduled, .downloading, .paused: true
+        default: false
+        }
+    }
+}
 
 protocol DownloadProgressProtocol {
     var totalBytes: Int64 { get }
@@ -39,5 +53,5 @@ extension DownloadProgressProtocol {
 
     var percent: Double { progress * 100 }
     var percentString: String { String(format: "%.1f%%", percent) }
-    var progressString: String { "\(percentString) (\(downloadedBytes.bytesToMB) / \(totalBytes.bytesToMB))" }
+    var progressString: String { "\(percentString) (\(downloadedBytes) / \(totalBytes))" }
 }

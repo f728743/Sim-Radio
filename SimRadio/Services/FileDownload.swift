@@ -16,7 +16,7 @@ final class FileDownload: NSObject {
     enum Event {
         case progress(downloadedBytes: Int64, totalBytes: Int64)
         case completed
-        case canceled(data: Data?, pausing: Bool)
+        case canceled
         case failed(error: Error)
     }
 
@@ -40,7 +40,7 @@ final class FileDownload: NSObject {
         (events, continuation) = AsyncStream.makeStream(of: Event.self)
         super.init()
         continuation.onTermination = { @Sendable [weak self] _ in
-            self?.cancel(pausing: false)
+            self?.cancel()
         }
     }
 
@@ -49,21 +49,20 @@ final class FileDownload: NSObject {
         urlSessionTask.resume()
     }
 
-    func cancel(pausing: Bool) {
-        if pausing {
-            urlSessionTask.cancel { data in
-                self.continuation.yield(
-                    .canceled(
-                        data: pausing ? data : nil,
-                        pausing: true
-                    )
-                )
-                self.continuation.finish()
-            }
-        } else {
-            urlSessionTask.cancel()
-            continuation.yield(.canceled(data: nil, pausing: false))
-            continuation.finish()
+    func cancel() {
+        urlSessionTask.cancel()
+        continuation.yield(.canceled)
+        continuation.finish()
+    }
+}
+
+extension FileDownload.Event {
+    var isFinal: Bool {
+        switch self {
+        case .completed, .failed, .canceled:
+            return true
+        case .progress:
+            return false
         }
     }
 }
