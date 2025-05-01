@@ -37,10 +37,10 @@ extension DefaultSimRadioLibrary: SimRadioLibrary {
     func testPopulate() async {
         let baseUrl = "https://raw.githubusercontent.com/tmp-acc/"
         let simRadioURLs = [
-            "GTA-V-Radio-Stations-TestDownload/short/sim_radio_stations.json"
+            //            "GTA-V-Radio-Stations-TestDownload/short/sim_radio_stations.json"
 //            "GTA-V-Radio-Stations-TestDownload/long/sim_radio_stations.json"
 //            "GTA-IV-Radio-Stations/master/sim_radio_stations.json",
-//            "GTA-V-Radio-Stations/master/sim_radio_stations.json"
+            "GTA-V-Radio-Stations/master/sim_radio_stations.json"
         ].compactMap { URL(string: "\(baseUrl)\($0)") }
 
         await addSimRadio(urls: simRadioURLs)
@@ -51,7 +51,7 @@ extension DefaultSimRadioLibrary: SimRadioLibrary {
             await resumeDownloading(stationID)
         } else {
             storage.setStorageState(.downloadStarted, for: stationID)
-            await simRadioDownload.downloadStation(withID: stationID, missing: [:])
+            await simRadioDownload.downloadStation(withID: stationID)
         }
     }
 
@@ -265,7 +265,7 @@ private extension DefaultSimRadioLibrary {
             print(error)
         }
         notifyChangeStatus(status: .initial, for: stationID)
-        await simRadioDownload.downloadStation(withID: stationID, missing: [:])
+        await simRadioDownload.downloadStation(withID: stationID)
     }
 
     func updateStationsDownloadState() async {

@@ -7,6 +7,7 @@
 
 import Foundation
 
+// swiftlint:disable file_length
 private enum DownloadLog {
     case info(verbose: Bool), warning, error
 }
@@ -62,7 +63,7 @@ actor DefaultSimRadioDownload {
         eventContinuation?.finish()
     }
 
-    func downloadStation(withID id: SimStation.ID, missing: [SimFileGroup.ID: [URL]] = [:]) {
+    func downloadStation(withID id: SimStation.ID, missing: [SimFileGroup.ID: [URL]]?) {
         Task {
             await doDownloadStation(withID: id, missing: missing)
         }
@@ -88,7 +89,7 @@ private extension DefaultSimRadioDownload {
         eventContinuation = nil
     }
 
-    func doDownloadStation(withID id: SimStation.ID, missing: [SimFileGroup.ID: [URL]]) async {
+    func doDownloadStation(withID id: SimStation.ID, missing: [SimFileGroup.ID: [URL]]?) async {
         guard let mediaState = await mediaState else { return }
 
         // Access mediaState on the MainActor
@@ -100,7 +101,6 @@ private extension DefaultSimRadioDownload {
 
         guard !stationDownloads.keys.contains(id) else {
             log(warning: "Station \(id) already tracked for download.")
-            // Optionally: Re-evaluate state or publish current status?
             return
         }
 
@@ -108,29 +108,36 @@ private extension DefaultSimRadioDownload {
         await download(station: station, missing: missing)
     }
 
-    func download(station: SimStation, missing: [SimFileGroup.ID: [URL]]) async {
+    func download(station: SimStation, missing: [SimFileGroup.ID: [URL]]?) async {
         guard let mediaState = await mediaState else { return }
-        stationDownloads[station.id] = StationDownloadInfo(
-            status: .initial,
-            fileGroupIDs: station.fileGroupIDs
-        )
-
-        print("Download missing", missing)
-
+        stationDownloads[station.id] = StationDownloadInfo(status: .initial, fileGroupIDs: station.fileGroupIDs)
+        let isPartialDownload = missing != nil
         var groupURLs: [SimFileGroup.ID: [URL]] = [:]
-        let allFileGroups = await mediaState.simRadio.fileGroups // Access MainActor state
+        let allFileGroups = await mediaState.simRadio.fileGroups
+        let groupsToSkip = await alreadyDownloaded(of: station.fileGroupIDs)
         for groupID in station.fileGroupIDs {
-            guard groupDownloads[groupID] == nil else {
-                continue
+            guard !groupsToSkip.contains(groupID),
+                  let urls = allFileGroups[groupID]?.files.compactMap({ $0.url }) else { continue }
+
+            let missingFilesInGroup = Set(missing?[groupID] ?? [])
+
+            let files = urls.map {
+                FileDownloadInfo(
+                    url: $0,
+                    status: isPartialDownload
+                        ? missingFilesInGroup.contains($0) ? .initial : .init(state: .completed)
+                        : .initial
+                )
             }
 
-            guard let urls = allFileGroups[groupID]?.files.compactMap({ $0.url }) else {
-                continue
-            }
-
-            let files = urls.map { FileDownloadInfo(url: $0, status: .initial) }
-            let downloadableGroup = FileGroupDownloadInfo(id: groupID, status: .initial, files: files)
-            groupDownloads[groupID] = downloadableGroup
+            let groupInfo = FileGroupDownloadInfo(
+                id: groupID,
+                status: isPartialDownload ? .init(
+                    state: missing?.keys.contains(groupID) == true ? .downloading : .completed
+                ) : .initial,
+                files: files
+            )
+            groupDownloads[groupID] = groupInfo
             groupURLs[groupID] = urls
         }
 
@@ -140,15 +147,35 @@ private extension DefaultSimRadioDownload {
                 await updateFileSizes(for: urls, groupID: groupID) // Pass groupID here too
             }
         }
+
         let downloadRequest: [DownloadQueue.DownloadRequest] = groupURLs.flatMap { groupID, urls in
-            urls.map {
-                .init(
+            let missingFilesInGroup = Set(missing?[groupID] ?? [])
+            let groupRequests: [DownloadQueue.DownloadRequest] = urls.compactMap {
+                let request = DownloadQueue.DownloadRequest(
                     sourceURL: $0,
                     destinationDirectoryPath: groupID.value
                 )
+                return isPartialDownload
+                    ? missingFilesInGroup.contains($0) ? request : nil
+                    : request
             }
+            return groupRequests
         }
+        eventContinuation?.yield(.init(id: station.id, status: .initial))
         await downloadQueue.append(downloadRequest)
+    }
+
+    func alreadyDownloaded(of gtoupIDs: [SimFileGroup.ID]) async -> [SimFileGroup.ID] {
+        let allStations = await mediaState?.simRadio.stations ?? [:]
+        let downloadStatus = await mediaState?.simDownloadStatus ?? [:]
+
+        let downloadedGroups = Set(
+            downloadStatus
+                .filter { $0.value.state == .completed }
+                .compactMap { allStations[$0.key]?.fileGroupIDs }
+                .flatMap { $0 }
+        )
+        return gtoupIDs.filter { groupDownloads.keys.contains($0) || downloadedGroups.contains($0) }
     }
 
     func requestsOnlyForStation(withID id: SimStation.ID) -> [DownloadQueue.DownloadRequest]? {
@@ -306,7 +333,11 @@ private extension DefaultSimRadioDownload {
         let downloadInfo = groupInfo.files[fileIndex]
         groupInfo.files[fileIndex] = .init(
             url: downloadInfo.url,
-            status: .init(state: downloadInfo.status.state, totalBytes: size)
+            status: .init(
+                state: downloadInfo.status.state,
+                downloadedBytes: downloadInfo.status.state == .completed ? size : downloadInfo.downloadedBytes,
+                totalBytes: size
+            )
         )
         if let newGroupStatus = await groupInfo.files.overallStatus {
             groupInfo.status = newGroupStatus
@@ -319,18 +350,23 @@ private extension DefaultSimRadioDownload {
             guard logSettings.logInfo else { return }
             let overall = await Array(stationDownloads.values).overallStatus
             log(info: "--- Download Progress (\(Date().ISO8601Format())) ---")
-            log(info: "Overall: \(overall?.state) - \(overall?.progressString)")
+            if let overall {
+                log(info: "Overall: \(overall.state) - \(overall.progressString)")
+            }
 
             for (stationID, station) in stationDownloads {
                 log(info: "  Station \(stationID.value): \(station.status.state) - \(station.status.progressString)")
                 for groupID in station.fileGroupIDs {
                     let group = await groupStatus(groupID)
-                    log(info: "    Group \(groupID.value): \(group?.state) - \(group?.progressString)")
+                    if let group {
+                        log(info: "    Group \(groupID.value): \(group.state) - \(group.progressString)")
+                    }
                     // Optional: Print individual file status within group for detailed debug
                     if logSettings.logVerboseInfo, let group = groupDownloads[groupID] {
                         for file in group.files {
                             let fileName = file.url.lastPathComponent
-                            log(verboseInfo: "      File \(fileName): \(file.status.state) - \(file.status.progressString)")
+                            log(verboseInfo: "      File \(fileName): \(file.status.state) " +
+                                "- \(file.status.progressString)")
                         }
                     }
                 }
@@ -518,3 +554,5 @@ extension Collection where Element == DownloadLog {
         )
     }
 }
+
+// swiftlint:enable file_length

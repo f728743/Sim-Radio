@@ -85,9 +85,15 @@ protocol SimRadioDownload: Actor {
     /// - Parameters:
     ///   - id: The ID of the media to download.
     ///   - missing: Optionally, a dictionary specifying which files are known to be missing for partial downloads.
-    func downloadStation(withID id: SimStation.ID, missing: [SimFileGroup.ID: [URL]]) async
+    func downloadStation(withID id: SimStation.ID, missing: [SimFileGroup.ID: [URL]]?) async
 
     /// Cancels the download for a specific station, potentially removing partially downloaded files.
     /// - Parameter id: The ID of the station download to cancel.
     func cancelDownloadStation(withID id: SimStation.ID) async -> Bool
+}
+
+extension SimRadioDownload {
+    func downloadStation(withID id: SimStation.ID) async {
+        await downloadStation(withID: id, missing: nil)
+    }
 }
