@@ -19,125 +19,121 @@ struct SimRadioTests {
             station: series.stations.first!
         )
 
-        srand48(Int(100))
-        let playlist = try playlistBuilder.makePlaylist(duration: 3 * 60 * 60)
-
+        DRand48.srand48(100)
+        let playlist = try await playlistBuilder.makePlaylist(duration: 3 * 60 * 60)
+        print("##")
+        print(playlist.description)
+        print("##")
         #expect(playlist.description == playlistForSeed100)
     }
 }
 
 // swiftlint:disable line_length file_length
 let playlistForSeed100 = #"""
-(0.0..5.18): id/id_02.m4a
-(5.18..215.38): /radio_01_class_rock/big_log.m4a
-(215.38..433.04): /radio_01_class_rock/burning_heart.m4a
-  (221.73..227.92): intro/burning_heart_02.m4a
-(433.04..457.18): mono_solo/mono_solo_04.m4a
-(457.18..723.71): /radio_01_class_rock/black_velvet.m4a
-  (465.0..470.95): general/general_02.m4a
-  (713.24..715.79): to_news/to_news_03.m4a
-(723.71..826.98): news/mono_news_03.m4a
-(826.98..833.65): id/id_01.m4a
-(833.65..1083.19): /radio_01_class_rock/all_the_things_she_said.m4a
-  (841.1..842.5): general/general_04.m4a
-  (1073.21..1075.78): to_ad/to_ad_03.m4a
-(1083.19..1106.03): adverts/mono_ad008_up_n_atom.m4a
-(1106.03..1435.2): /radio_01_class_rock/baker_street.m4a
-  (1422.29..1425.42): to_ad/to_ad_01.m4a
-(1435.2..1467.45): adverts/mono_ad009_prop_43.m4a
-(1467.45..1685.11): /radio_01_class_rock/burning_heart.m4a
-  (1676.09..1678.66): to_ad/to_ad_03.m4a
-(1685.11..1712.29): adverts/mono_ad002_righteous_slaughter_nuke.m4a
-(1712.29..1961.83): /radio_01_class_rock/all_the_things_she_said.m4a
-  (1719.66..1723.42): general/general_01.m4a
-  (1952.31..1954.41): to_ad/to_ad_02.m4a
-(1961.83..1996.87): adverts/mono_ad007_sa_water_power.m4a
-(1996.87..2263.4): /radio_01_class_rock/black_velvet.m4a
-  (2004.72..2009.54): intro/black_velvet_02.m4a
-  (2252.91..2255.48): to_ad/to_ad_03.m4a
-(2263.4..2311.03): adverts/mono_ad004_righteous_slaughter_levels.m4a
-(2311.03..2528.69): /radio_01_class_rock/burning_heart.m4a
-  (2317.37..2323.56): intro/burning_heart_02.m4a
-(2528.69..2738.89): /radio_01_class_rock/big_log.m4a
-  (2534.92..2537.5): intro/big_log_01.m4a
-  (2729.31..2732.68): general/general_03.m4a
-(2738.89..2988.43): /radio_01_class_rock/all_the_things_she_said.m4a
-(2988.43..3317.6): /radio_01_class_rock/baker_street.m4a
-(3317.6..3342.22): mono_solo/mono_solo_03.m4a
-(3342.22..3559.88): /radio_01_class_rock/burning_heart.m4a
-(3559.88..3770.08): /radio_01_class_rock/big_log.m4a
-  (3759.83..3763.89): to_news/to_news_01.m4a
-(3770.08..3894.13): news/mono_news_09.m4a
-(3894.13..3899.33): id/id_03.m4a
-(3899.33..4228.5): /radio_01_class_rock/baker_street.m4a
-  (3909.02..3914.97): general/general_02.m4a
-  (4216.58..4218.68): to_ad/to_ad_02.m4a
-(4228.5..4264.78): adverts/mono_ad006_desert_tourism.m4a
-(4264.78..4531.31): /radio_01_class_rock/black_velvet.m4a
-(4531.31..4748.97): /radio_01_class_rock/burning_heart.m4a
-(4748.97..4766.25): mono_solo/mono_solo_01.m4a
-(4766.25..5095.42): /radio_01_class_rock/baker_street.m4a
-  (5081.9..5085.66): general/general_01.m4a
-(5095.42..5344.96): /radio_01_class_rock/all_the_things_she_said.m4a
-  (5334.04..5337.58): to_news/to_news_02.m4a
-(5344.96..5447.31): news/mono_news_10.m4a
-(5447.31..5453.79): id/id_04.m4a
-(5453.79..5663.99): /radio_01_class_rock/big_log.m4a
-  (5654.64..5657.78): to_ad/to_ad_01.m4a
-(5663.99..5712.31): adverts/ad082_alcoholia.m4a
-(5712.31..5978.84): /radio_01_class_rock/black_velvet.m4a
-(5978.84..6002.05): mono_solo/mono_solo_02.m4a
-(6002.05..6151.89): news/mono_news_02.m4a
-(6151.89..6159.25): id/id_05.m4a
-(6159.25..6376.91): /radio_01_class_rock/burning_heart.m4a
-  (6165.59..6171.78): intro/burning_heart_02.m4a
-(6376.91..6587.11): /radio_01_class_rock/big_log.m4a
-(6587.11..6916.28): /radio_01_class_rock/baker_street.m4a
-  (6596.88..6600.21): general/general_05.m4a
-  (6903.93..6906.48): to_news/to_news_03.m4a
-(6916.28..7036.47): news/mono_news_05.m4a
-(7036.47..7043.14): id/id_01.m4a
-(7043.14..7292.68): /radio_01_class_rock/all_the_things_she_said.m4a
-  (7050.47..7055.58): intro/all_the_things_she_said_02.m4a
-  (7281.76..7285.3): to_news/to_news_02.m4a
-(7292.68..7441.09): news/mono_news_01.m4a
-(7441.09..7446.29): id/id_03.m4a
-(7446.29..7712.82): /radio_01_class_rock/black_velvet.m4a
-(7712.82..7737.44): mono_solo/mono_solo_03.m4a
-(7737.44..7867.57): news/mono_news_08.m4a
-(7867.57..8085.23): /radio_01_class_rock/burning_heart.m4a
-  (8075.43..8078.8): general/general_03.m4a
-(8085.23..8109.37): mono_solo/mono_solo_04.m4a
-(8109.37..8319.57): /radio_01_class_rock/big_log.m4a
-  (8115.49..8121.44): general/general_02.m4a
-  (8311.22..8313.32): to_ad/to_ad_02.m4a
-(8319.57..8351.82): adverts/mono_ad009_prop_43.m4a
-(8351.82..8601.36): /radio_01_class_rock/all_the_things_she_said.m4a
-  (8359.19..8362.76): intro/all_the_things_she_said_01.m4a
-(8601.36..8867.89): /radio_01_class_rock/black_velvet.m4a
-  (8609.24..8612.99): general/general_01.m4a
-  (8856.85..8859.98): to_ad/to_ad_01.m4a
-(8867.89..8919.62): adverts/mono_ad005_sa_tourism_board.m4a
-(8919.62..9129.82): /radio_01_class_rock/big_log.m4a
-  (9121.47..9123.57): to_ad/to_ad_02.m4a
-(9129.82..9184.3): adverts/mono_ad003_righteous_slaughter_russian.m4a
-(9184.3..9401.96): /radio_01_class_rock/burning_heart.m4a
-  (9190.72..9194.09): general/general_03.m4a
-  (9392.38..9395.52): to_ad/to_ad_01.m4a
-(9401.96..9438.24): adverts/mono_ad006_desert_tourism.m4a
-(9438.24..9687.78): /radio_01_class_rock/all_the_things_she_said.m4a
-  (9676.36..9680.42): to_news/to_news_01.m4a
-(9687.78..9811.83): news/mono_news_09.m4a
-(9811.83..10078.36): /radio_01_class_rock/black_velvet.m4a
-  (9819.68..9824.5): intro/black_velvet_02.m4a
-(10078.36..10101.57): mono_solo/mono_solo_02.m4a
-(10101.57..10311.77): /radio_01_class_rock/big_log.m4a
-(10311.77..10329.05): mono_solo/mono_solo_01.m4a
-(10329.05..10578.59): /radio_01_class_rock/all_the_things_she_said.m4a
-(10578.59..10603.21): mono_solo/mono_solo_03.m4a
-(10603.21..10820.87): /radio_01_class_rock/burning_heart.m4a
-  (10609.64..10612.97): general/general_05.m4a
-  (10812.3..10814.4): to_ad/to_ad_02.m4a
+(0.0..6.67): id/id_01.m4a
+(6.67..256.21): radio_01_class_rock/all_the_things_she_said.m4a
+  (246.69..248.79): to_ad/to_ad_02.m4a
+(256.21..288.46): adverts/mono_ad009_prop_43.m4a
+(288.46..617.63): radio_01_class_rock/baker_street.m4a
+  (298.13..304.98): intro/baker_street_02.m4a
+(617.63..827.83): radio_01_class_rock/big_log.m4a
+  (623.86..626.44): intro/big_log_01.m4a
+  (818.09..821.63): to_news/to_news_02.m4a
+(827.83..931.1): news/mono_news_03.m4a
+(931.1..938.46): id/id_05.m4a
+(938.46..1204.99): radio_01_class_rock/black_velvet.m4a
+(1204.99..1228.2): mono_solo/mono_solo_02.m4a
+(1228.2..1348.39): news/mono_news_05.m4a
+(1348.39..1354.87): id/id_04.m4a
+(1354.87..1604.41): radio_01_class_rock/all_the_things_she_said.m4a
+(1604.41..1822.07): radio_01_class_rock/burning_heart.m4a
+  (1610.74..1617.23): intro/burning_heart_01.m4a
+(1822.07..2151.24): radio_01_class_rock/baker_street.m4a
+(2151.24..2400.78): radio_01_class_rock/all_the_things_she_said.m4a
+(2400.78..2423.71): mono_solo/heists_obh_briefcase_close_mt_thud.m4a
+(2423.71..2547.76): news/mono_news_09.m4a
+(2547.76..2552.94): id/id_02.m4a
+(2552.94..2763.14): radio_01_class_rock/big_log.m4a
+  (2559.17..2561.75): intro/big_log_01.m4a
+(2763.14..2787.76): mono_solo/mono_solo_03.m4a
+(2787.76..2936.17): news/mono_news_01.m4a
+(2936.17..2943.53): id/id_05.m4a
+(2943.53..3272.7): radio_01_class_rock/baker_street.m4a
+  (2953.3..2956.63): general/general_05.m4a
+  (3260.33..3262.9): to_ad/to_ad_03.m4a
+(3272.7..3321.02): adverts/ad082_alcoholia.m4a
+(3321.02..3587.55): radio_01_class_rock/black_velvet.m4a
+  (3328.85..3334.2): intro/black_velvet_01.m4a
+(3587.55..3611.69): mono_solo/mono_solo_04.m4a
+(3611.69..3861.23): radio_01_class_rock/all_the_things_she_said.m4a
+(3861.23..4190.4): radio_01_class_rock/baker_street.m4a
+  (4174.75..4180.7): general/general_02.m4a
+(4190.4..4207.67): mono_solo/mono_solo_01.m4a
+(4207.67..4357.51): news/mono_news_02.m4a
+(4357.51..4363.99): id/id_04.m4a
+(4363.99..4630.52): radio_01_class_rock/black_velvet.m4a
+(4630.52..4848.18): radio_01_class_rock/burning_heart.m4a
+(4848.18..4871.39): mono_solo/mono_solo_02.m4a
+(4871.39..4973.74): news/mono_news_10.m4a
+(4973.74..5183.94): radio_01_class_rock/big_log.m4a
+  (5175.16..5177.71): to_news/to_news_03.m4a
+(5183.94..5330.43): news/mono_news_04.m4a
+(5330.43..5579.97): radio_01_class_rock/all_the_things_she_said.m4a
+(5579.97..5909.14): radio_01_class_rock/baker_street.m4a
+  (5589.81..5591.21): general/general_04.m4a
+  (5896.23..5899.36): to_ad/to_ad_01.m4a
+(5909.14..5936.32): adverts/mono_ad002_righteous_slaughter_nuke.m4a
+(5936.32..6202.85): radio_01_class_rock/black_velvet.m4a
+  (5944.17..5948.99): intro/black_velvet_02.m4a
+(6202.85..6452.39): radio_01_class_rock/all_the_things_she_said.m4a
+  (6442.87..6444.97): to_ad/to_ad_02.m4a
+(6452.39..6488.68): adverts/mono_ad006_desert_tourism.m4a
+(6488.68..6698.88): radio_01_class_rock/big_log.m4a
+  (6689.3..6692.67): general/general_03.m4a
+(6698.88..6721.81): mono_solo/heists_obh_briefcase_close_mt_thud.m4a
+(6721.81..6939.47): radio_01_class_rock/burning_heart.m4a
+  (6728.14..6734.63): intro/burning_heart_01.m4a
+(6939.47..6964.08): mono_solo/mono_solo_03.m4a
+(6964.08..7062.9): news/mono_news_07.m4a
+(7062.9..7068.1): id/id_03.m4a
+(7068.1..7334.63): radio_01_class_rock/black_velvet.m4a
+(7334.63..7351.9): mono_solo/mono_solo_01.m4a
+(7351.9..7455.17): news/mono_news_03.m4a
+(7455.17..7461.84): id/id_01.m4a
+(7461.84..7791.01): radio_01_class_rock/baker_street.m4a
+(7791.01..7815.15): mono_solo/mono_solo_04.m4a
+(7815.15..8025.35): radio_01_class_rock/big_log.m4a
+  (8016.01..8019.14): to_ad/to_ad_01.m4a
+(8025.35..8048.19): adverts/mono_ad008_up_n_atom.m4a
+(8048.19..8314.72): radio_01_class_rock/black_velvet.m4a
+  (8304.69..8306.79): to_ad/to_ad_02.m4a
+(8314.72..8369.2): adverts/mono_ad003_righteous_slaughter_russian.m4a
+(8369.2..8698.37): radio_01_class_rock/baker_street.m4a
+  (8685.07..8688.61): to_news/to_news_02.m4a
+(8698.37..8838.48): news/mono_news_06.m4a
+(8838.48..8845.84): id/id_05.m4a
+(8845.84..9063.5): radio_01_class_rock/burning_heart.m4a
+  (9054.48..9057.05): to_ad/to_ad_03.m4a
+(9063.5..9111.82): adverts/ad082_alcoholia.m4a
+(9111.82..9378.35): radio_01_class_rock/black_velvet.m4a
+  (9364.59..9370.54): general/general_02.m4a
+(9378.35..9401.56): mono_solo/mono_solo_02.m4a
+(9401.56..9730.73): radio_01_class_rock/baker_street.m4a
+  (9411.32..9415.08): general/general_01.m4a
+  (9718.38..9720.93): to_news/to_news_03.m4a
+(9730.73..9860.86): news/mono_news_08.m4a
+(9860.86..10071.06): radio_01_class_rock/big_log.m4a
+  (9867.07..9870.4): general/general_05.m4a
+  (10062.72..10064.82): to_ad/to_ad_02.m4a
+(10071.06..10101.52): adverts/mono_ad001_life_invader.m4a
+(10101.52..10368.05): radio_01_class_rock/black_velvet.m4a
+  (10109.38..10114.2): intro/black_velvet_02.m4a
+  (10356.62..10360.16): to_news/to_news_02.m4a
+(10368.05..10517.89): news/mono_news_02.m4a
+(10517.89..10735.55): radio_01_class_rock/burning_heart.m4a
+  (10524.24..10530.43): intro/burning_heart_02.m4a
+(10735.55..10758.48): mono_solo/heists_obh_briefcase_close_mt_thud.m4a
+(10758.48..10860.83): news/mono_news_10.m4a
 
 """#
 

@@ -13,7 +13,7 @@ struct PlayingTime {
 }
 
 @MainActor
-class Playlist { // TODO: make it actor
+class Playlist {
     let baseUrl: URL
     let gameSeriesSharedFiles: [SimRadioDTO.FileGroup]
     let station: SimRadioDTO.Station
@@ -43,8 +43,8 @@ class Playlist { // TODO: make it actor
             gameSeriesSharedFiles: gameSeriesSharedFiles,
             station: station
         )
-        srand48(Int(day.timeIntervalSince1970))
-        let todaysPlaylist = try playlistBuilder.makePlaylist(duration: dayLength)
+        DRand48.srand48(Int(day.timeIntervalSince1970))
+        let todaysPlaylist = try await playlistBuilder.makePlaylist(duration: dayLength)
         let itemLoader = try PlayerItemLoaderInternal()
 
         let firstPlaylist = try await itemLoader.load(playlist: todaysPlaylist, from: from, to: to, withOffset: .zero)
@@ -54,13 +54,13 @@ class Playlist { // TODO: make it actor
         if firstPlaylist.depleted, let tomorrow = day.dayAfter?.startOfDay {
             let nextDayFrom = firstPlaylist.lastRange.end - dayLength
             let tomorrowsTo = to - dayLength
-            srand48(Int(tomorrow.timeIntervalSince1970))
+            DRand48.srand48(Int(tomorrow.timeIntervalSince1970))
             let playlistBuilder = PlaylistBuilder(
                 baseUrl: baseUrl,
                 gameSeriesSharedFiles: gameSeriesSharedFiles,
                 station: station
             )
-            let tomorrowsPlaylist = try playlistBuilder.makePlaylist(duration: dayLength)
+            let tomorrowsPlaylist = try await playlistBuilder.makePlaylist(duration: dayLength)
             let lastPlayingTime = calcPlayingTime(range: firstPlaylist.lastRange, starting: from, withOffset: .zero)
             let offset = lastPlayingTime.range.duration + lastPlayingTime.positionInComposition
             let insertResult = try await itemLoader.load(
@@ -185,8 +185,6 @@ private class PlayerItemLoaderInternal {
         var depleted = true
         var lastRange = TimeRange()
         for item in playlist {
-            //            print("item \(urlTail(item.url)) \(item.playing.start.seconds.rounded(toPlaces: 2))-" +
-            //                "\(item.playing.end.seconds.rounded(toPlaces: 2))")
             if item.playing.start > to {
                 depleted = false
                 break

@@ -34,7 +34,7 @@ extension SimRadioDTO.Condition: MixPlayingCondition {
 
     func isSatisfiedRandom() -> Bool? {
         guard let probability else { return nil }
-        return .rand48() <= probability
+        return probability >= .rand48
     }
 
     func isGroupAndSatisfied(nextFragment tag: String, starts sec: TimeInterval) -> Bool? {

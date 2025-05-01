@@ -45,7 +45,7 @@ struct ParticularFileSource: FileSource {
 struct AttachedFileSource: FileSource {
     func next(parentFile: AudioFile?) -> AudioFile? {
         if let file = parentFile, file.attaches.count > 0 {
-            return file.attaches[Int(.rand48() * Double(file.attaches.count))]
+            return file.attaches[Int(Double(file.attaches.count) * .rand48)]
         }
         return nil
     }
@@ -80,7 +80,7 @@ class RandomFilePicker {
     }
 
     func next() -> AudioFile {
-        let index = Int(.rand48() * Double(draw.count))
+        let index = Int(Double(draw.count) * .rand48)
         let res = draw[index]
 
         discardPile.append(res)

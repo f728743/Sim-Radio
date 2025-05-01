@@ -22,15 +22,20 @@ enum PlaylistError: Error {
 }
 
 extension Double {
-    // The legacy function drand48() is used here intentionally. This is because
-    // the playlist generation logic requires a Pseudo-Random Number Generator (PRNG)
-    // that can be explicitly seeded using srand48(). Seeding allows for reproducible
-    // playlist generation given the same seed derived from the current date for daily consistency
-    // Swift's standard random functions do not offer a straightforward global seeding mechanism like srand48.
-    static func rand48() -> Double {
-        // swiftlint:disable legacy_random
-        drand48()
-        // swiftlint:enable legacy_random
+    static var rand48: Double {
+        DRand48.drand48()
+    }
+}
+
+public actor DRand48 {
+    private static var state: UInt64 = 0
+    static func srand48(_ seed: Int) {
+        state = UInt64(seed) & 0xFFFF_FFFF_FFFF
+    }
+
+    static func drand48() -> Double {
+        state = (25_214_903_917 &* state + 11) & 0xFFFF_FFFF_FFFF
+        return Double(state) / Double(1 << 48)
     }
 }
 
@@ -49,17 +54,17 @@ class PlaylistBuilder {
         self.station = station
     }
 
-    func makePlaylist(duration: TimeInterval) throws -> [AudioComponent] {
-        let rules = try PlaylistRules(model: station.playlist, fileGroups: fileGroups)
+    func makePlaylist(duration: TimeInterval) async throws -> [AudioComponent] {
+        let rules = try await PlaylistRules(model: station.playlist, fileGroups: fileGroups)
 
         var result: [AudioComponent] = []
         var moment: Double = 0
         var fragmentTag = station.playlist.firstFragment.fragmentTag
 
-        var next = try nextFragmentTag(after: fragmentTag, rules: rules)
+        var next = try await nextFragmentTag(after: fragmentTag, rules: rules)
 
         while moment < duration {
-            let fragment = try makeFragment(
+            let fragment = try await makeFragment(
                 tag: fragmentTag,
                 nextTag: next,
                 starts: moment,
@@ -68,7 +73,7 @@ class PlaylistBuilder {
             result.append(fragment)
             moment += fragment.playing.duration
             fragmentTag = next
-            next = try nextFragmentTag(after: fragmentTag, rules: rules)
+            next = try await nextFragmentTag(after: fragmentTag, rules: rules)
         }
         return result
     }
@@ -76,13 +81,15 @@ class PlaylistBuilder {
 
 private extension PlaylistBuilder {
     var fileGroups: AudioFileGroups {
-        let stationBaseUrl: URL = baseUrl.appendingPathComponent(station.tag)
-        let stationFiles = convert(files: station.fileGroups, baseUrl: stationBaseUrl)
-        let gameSeriesSharedFiles = convert(files: gameSeriesSharedFiles, baseUrl: baseUrl)
-        return stationFiles.merging(gameSeriesSharedFiles, uniquingKeysWith: { first, _ in first })
+        get async {
+            let stationBaseUrl: URL = baseUrl.appendingPathComponent(station.tag)
+            let stationFiles = await convert(files: station.fileGroups, baseUrl: stationBaseUrl)
+            let gameSeriesSharedFiles = await convert(files: gameSeriesSharedFiles, baseUrl: baseUrl)
+            return stationFiles.merging(gameSeriesSharedFiles, uniquingKeysWith: { first, _ in first })
+        }
     }
 
-    func convert(files: [SimRadioDTO.FileGroup], baseUrl: URL) -> AudioFileGroups {
+    func convert(files: [SimRadioDTO.FileGroup], baseUrl: URL) async -> AudioFileGroups {
         Dictionary(
             uniqueKeysWithValues: files.map {
                 let fileList = $0.files.map {
@@ -93,11 +100,11 @@ private extension PlaylistBuilder {
         )
     }
 
-    func nextFragmentTag(after fragmentTag: String, rules: PlaylistRules) throws -> String {
+    func nextFragmentTag(after fragmentTag: String, rules: PlaylistRules) async throws -> String {
         guard let fragment = rules.fragments[fragmentTag] else {
             throw PlaylistError.fragmentNotFound(tag: fragmentTag)
         }
-        let rnd = Double.rand48()
+        let rnd = Double.rand48
         var p = 0.0
         for next in fragment.nextFragment {
             p += next.probability ?? 1.0
@@ -113,7 +120,7 @@ private extension PlaylistBuilder {
         nextTag: String,
         starts sec: Double,
         rules: PlaylistRules
-    ) throws -> AudioComponent {
+    ) async throws -> AudioComponent {
         guard let fragment = rules.fragments[tag] else {
             throw PlaylistError.fragmentNotFound(tag: tag)
         }
@@ -121,7 +128,7 @@ private extension PlaylistBuilder {
         guard let file = fragment.src.next(parentFile: nil) else {
             throw PlaylistError.wrongSource
         }
-        let mixes = try makeMixesForFragment(
+        let mixes = try await makeMixesForFragment(
             to: file,
             starts: sec,
             at: fragment.mixPositions,
@@ -141,7 +148,7 @@ private extension PlaylistBuilder {
         at positions: [String: Double],
         mixins: [PlaylistRules.Mix],
         nextTag: String
-    ) throws -> [AudioComponent] {
+    ) async throws -> [AudioComponent] {
         var usedPositions: Set<String> = []
         var res: [AudioComponent] = []
         for mix in mixins where mix.condition.isSatisfied(forNextFragment: nextTag, startingFrom: sec) == true {
@@ -176,22 +183,6 @@ extension Double {
     }
 }
 
-func urlTail(_ url: URL) -> String {
-    let pattern = #".+\/(.+\/.+)"#
-    let urlString = url.absoluteString
-    let regex = try? NSRegularExpression(pattern: pattern)
-    if let match = regex?.firstMatch(
-        in: urlString,
-        options: [],
-        range: NSRange(location: 0, length: urlString.utf16.count)
-    ) {
-        if let tailRange = Range(match.range(at: 1), in: urlString) {
-            return String(urlString[tailRange])
-        }
-    }
-    return urlString
-}
-
 struct TimeRange {
     var start: TimeInterval = 0
     var duration: TimeInterval = 0
@@ -201,7 +192,7 @@ struct TimeRange {
     }
 }
 
-struct AudioComponent {
+struct AudioComponent: Sendable {
     let url: URL
     let playing: TimeRange
     let mixes: [AudioComponent]
@@ -213,7 +204,7 @@ extension AudioComponent: CustomStringConvertible {
         let to = (playing.start + playing.duration).rounded(places: 2)
         let indent = String(repeating: "  ", count: nesting)
         return [
-            "\(indent)(\(from)..\(to)): \(urlTail(url))",
+            "\(indent)(\(from)..\(to)): \(url.pathComponents.suffix(2).joined(separator: "/"))",
             mixes.description(nesting: nesting + 1)
         ].joined(separator: "\n")
     }
