@@ -1,18 +1,20 @@
 //
-//  MediaPlayer.swift
+//  DefaultSimRadioMediaPlayer.swift
 //  SimRadio
 //
-//  Created by Alexey Vorobyov on 30.11.2024.
+//  Created by Alexey Vorobyov on 01.05.2025.
 //
 
 import AVFoundation
 import Foundation
 
-class MediaPlayer {
+class DefaultSimRadioMediaPlayer {
     var player: AVPlayer?
+}
 
-    func play(_ media: Media) {
-        print("Play \(media.meta.title)")
+extension DefaultSimRadioMediaPlayer: SimRadioMediaPlayer {
+    func playStation(withID stationID: SimStation.ID) {
+        print("Play \(stationID)")
     }
 
     func stop() {
@@ -20,7 +22,7 @@ class MediaPlayer {
     }
 }
 
-private extension MediaPlayer {
+private extension DefaultSimRadioMediaPlayer {
     func currentSecondOfDay() -> Double {
         let now = Date()
         let calendar = Calendar.current
@@ -39,13 +41,13 @@ private extension MediaPlayer {
 
         let nowSec = currentSecondOfDay()
         do {
-            let playlist = try Playlist(
+            let playlist = try PlayerItemBuilder(
                 baseUrl: baseUrl,
                 gameSeriesSharedFiles: series.gameSeriesShared.fileGroups,
                 station: station
             )
             Task {
-                let item = try await playlist.playerItem(
+                let item = try await playlist.makePlayerItem(
                     for: Date().startOfDay,
                     from: nowSec,
                     minDuration: 3 * 60

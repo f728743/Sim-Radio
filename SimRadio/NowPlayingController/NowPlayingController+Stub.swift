@@ -7,6 +7,8 @@
 
 extension NowPlayingController {
     static var stub: NowPlayingController {
-        .init(player: MediaPlayer())
+        let mediaPlayer = MediaPlayer()
+        mediaPlayer.simRadio = SimRadioMediaPlayerStub()
+        return .init(player: mediaPlayer)
     }
 }

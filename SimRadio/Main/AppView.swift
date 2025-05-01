@@ -12,7 +12,9 @@ struct AppView: View {
     @State private var mediaState: MediaState
 
     init() {
-        let nowPlaying = NowPlayingController(player: MediaPlayer())
+        let mediaPlayer = MediaPlayer()
+        mediaPlayer.simRadio = DefaultSimRadioMediaPlayer()
+        let nowPlaying = NowPlayingController(player: mediaPlayer)
         let simRadioDownload = DefaultSimRadioDownload()
 
         let simRadioLibrary = DefaultSimRadioLibrary(

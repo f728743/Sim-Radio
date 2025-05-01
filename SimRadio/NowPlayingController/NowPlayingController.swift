@@ -73,7 +73,7 @@ class NowPlayingController {
         guard let currentMedia else { return }
         state.toggle()
         if state == .playing {
-            player.play(currentMedia)
+            player.play(currentMedia.id)
         } else {
             player.stop()
         }

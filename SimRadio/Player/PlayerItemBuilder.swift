@@ -1,5 +1,5 @@
 //
-//  Playlist.swift
+//  PlayerItemBuilder.swift
 //  SimRadio
 //
 //  Created by Alexey Vorobyov on 29.01.2025.
@@ -13,13 +13,13 @@ struct PlayingTime {
 }
 
 @MainActor
-class Playlist {
+class PlayerItemBuilder {
     let baseUrl: URL
     let gameSeriesSharedFiles: [SimRadioDTO.FileGroup]
     let station: SimRadioDTO.Station
     let timescale: CMTimeScale = 1000
-    var nextPlayerItem: AVPlayerItem?
-    var lastPlaying: (range: TimeRange, day: Date)?
+    var nextPlayerItem: AVPlayerItem? // TODO: delete
+    var lastPlaying: (range: TimeRange, day: Date)? // TODO: delete
 
     init(
         baseUrl: URL,
@@ -31,7 +31,7 @@ class Playlist {
         self.station = station
     }
 
-    func playerItem(
+    func makePlayerItem(
         for day: Date,
         from: TimeInterval,
         minDuration: TimeInterval
@@ -61,7 +61,7 @@ class Playlist {
                 station: station
             )
             let tomorrowsPlaylist = try await playlistBuilder.makePlaylist(duration: dayLength)
-            let lastPlayingTime = calcPlayingTime(range: firstPlaylist.lastRange, starting: from, withOffset: .zero)
+            let lastPlayingTime = PlayingTime(range: firstPlaylist.lastRange, starting: from, withOffset: .zero)
             let offset = lastPlayingTime.range.duration + lastPlayingTime.positionInComposition
             let insertResult = try await itemLoader.load(
                 playlist: tomorrowsPlaylist,
@@ -74,27 +74,28 @@ class Playlist {
         return itemLoader.playerItem
     }
 
-    func prepareNextPlayerItem(minDuration: TimeInterval) async throws {
+    func prepareNextPlayerItem(minDuration: TimeInterval) async throws { // TODO: delete
         guard let lastPlayingEnd = lastPlaying?.range.end, let lastPlayingDay = lastPlaying?.day else {
             throw LibraryError.playlistError
         }
-        nextPlayerItem = try await playerItem(for: lastPlayingDay, from: lastPlayingEnd, minDuration: minDuration)
+        nextPlayerItem = try await makePlayerItem(for: lastPlayingDay, from: lastPlayingEnd, minDuration: minDuration)
     }
 }
 
-private func calcPlayingTime(
-    range: TimeRange,
-    starting from: TimeInterval,
-    withOffset offset: TimeInterval
-) -> PlayingTime {
-    var itemStart: TimeInterval = 0
-    if range.start < from {
-        itemStart = from - range.start
+extension PlayingTime {
+    init(
+        range: TimeRange,
+        starting from: TimeInterval,
+        withOffset offset: TimeInterval
+    ) {
+        var itemStart: TimeInterval = 0
+        if range.start < from {
+            itemStart = from - range.start
+        }
+        let playingRange = TimeRange(start: itemStart, duration: range.duration - itemStart)
+        let position = range.start - from + itemStart + offset
+        self.init(range: playingRange, positionInComposition: position)
     }
-    let playingRange = TimeRange(start: itemStart, duration: range.duration - itemStart)
-    let position = range.start - from + itemStart + offset
-
-    return PlayingTime(range: playingRange, positionInComposition: position)
 }
 
 @MainActor
@@ -144,7 +145,7 @@ private class PlayerItemLoaderInternal {
         params = AVMutableAudioMixInputParameters(track: mainTrack)
     }
 
-    func load(
+    private func load(
         _ item: AudioComponent,
         starting from: TimeInterval,
         to destination: Destination,
@@ -153,7 +154,7 @@ private class PlayerItemLoaderInternal {
         if item.playing.end <= from {
             return
         }
-        let playingTime = calcPlayingTime(range: item.playing, starting: from, withOffset: offset)
+        let playingTime = PlayingTime(range: item.playing, starting: from, withOffset: offset)
 
         let destTrack = destination == .main ? mainTrack : mixTrack
         let asset = AVURLAsset(url: item.url)
