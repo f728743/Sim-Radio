@@ -12,8 +12,9 @@ struct AppView: View {
     @State private var mediaState: MediaState
 
     init() {
+        let simRadioPlayer = DefaultSimRadioMediaPlayer()
         let mediaPlayer = MediaPlayer()
-        mediaPlayer.simRadio = DefaultSimRadioMediaPlayer()
+        mediaPlayer.simRadio = simRadioPlayer
         let nowPlaying = NowPlayingController(player: mediaPlayer)
         let simRadioDownload = DefaultSimRadioDownload()
 
@@ -28,6 +29,8 @@ struct AppView: View {
         simRadioLibrary.delegate = mediaState
         simRadioLibrary.mediaState = mediaState
         simRadioDownload.mediaState = mediaState
+        simRadioPlayer.mediaState = mediaState
+
         Task {
             await mediaState.load()
         }

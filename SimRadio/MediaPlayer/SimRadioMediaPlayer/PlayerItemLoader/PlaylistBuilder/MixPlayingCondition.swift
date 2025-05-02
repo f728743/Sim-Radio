@@ -8,20 +8,28 @@
 import Foundation
 
 protocol MixPlayingCondition {
-    func isSatisfied(forNextFragment tag: String, startingFrom second: TimeInterval) -> Bool?
+    func isSatisfied(
+        forNextFragment tag: String,
+        startingFrom second: TimeInterval,
+        rnd: inout RandomNumberGenerator
+    ) -> Bool?
 }
 
 extension SimRadioDTO.Condition: MixPlayingCondition {
-    func isSatisfied(forNextFragment tag: String, startingFrom second: TimeInterval) -> Bool? {
+    func isSatisfied(
+        forNextFragment tag: String,
+        startingFrom second: TimeInterval,
+        rnd: inout RandomNumberGenerator
+    ) -> Bool? {
         switch type {
         case .nextFragment:
             isSatisfied(nextFragment: tag)
         case .random:
-            isSatisfiedRandom()
+            isSatisfiedRandom(rnd: &rnd)
         case .groupAnd:
-            isGroupAndSatisfied(nextFragment: tag, starts: second)
+            isGroupAndSatisfied(nextFragment: tag, starts: second, rnd: &rnd)
         case .groupOr:
-            isGroupOrSatisfied(nextFragment: tag, starts: second)
+            isGroupOrSatisfied(nextFragment: tag, starts: second, rnd: &rnd)
         case .timeInterval:
             isSatisfiedForTimeInterval(starts: second)
         }
@@ -32,19 +40,31 @@ extension SimRadioDTO.Condition: MixPlayingCondition {
         return next == tag
     }
 
-    func isSatisfiedRandom() -> Bool? {
+    func isSatisfiedRandom(rnd: inout RandomNumberGenerator) -> Bool? {
         guard let probability else { return nil }
-        return probability >= .rand48
+        return probability >= Double.random(in: 0 ... 1, using: &rnd)
     }
 
-    func isGroupAndSatisfied(nextFragment tag: String, starts sec: TimeInterval) -> Bool? {
+    func isGroupAndSatisfied(
+        nextFragment tag: String,
+        starts sec: TimeInterval,
+        rnd: inout RandomNumberGenerator
+    ) -> Bool? {
         guard let condition, condition.count > 1 else { return nil }
-        return condition.firstIndex { $0.isSatisfied(forNextFragment: tag, startingFrom: sec) == false } == nil
+        return condition.firstIndex {
+            $0.isSatisfied(forNextFragment: tag, startingFrom: sec, rnd: &rnd) == false
+        } == nil
     }
 
-    func isGroupOrSatisfied(nextFragment tag: String, starts sec: TimeInterval) -> Bool? {
+    func isGroupOrSatisfied(
+        nextFragment tag: String,
+        starts sec: TimeInterval,
+        rnd: inout RandomNumberGenerator
+    ) -> Bool? {
         guard let condition, condition.count > 1 else { return nil }
-        return condition.firstIndex { $0.isSatisfied(forNextFragment: tag, startingFrom: sec) == true } != nil
+        return condition.firstIndex {
+            $0.isSatisfied(forNextFragment: tag, startingFrom: sec, rnd: &rnd) == true
+        } != nil
     }
 
     func isSatisfiedForTimeInterval(starts sec: TimeInterval) -> Bool? {

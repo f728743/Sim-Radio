@@ -59,7 +59,6 @@ class MediaState {
     func download(_ mediaID: MediaID) async {
         let current = downloadStatus[mediaID]
         guard current == nil || current?.state == .paused else { return }
-//        downloadStatus[mediaID] = .initial
 
         switch mediaID {
         case let .simRadio(stationID):

@@ -8,56 +8,42 @@
 import AVFoundation
 import Foundation
 
+@MainActor
 class DefaultSimRadioMediaPlayer {
     var player: AVPlayer?
+    weak var mediaState: SimRadioMediaState?
 }
 
 extension DefaultSimRadioMediaPlayer: SimRadioMediaPlayer {
     func playStation(withID stationID: SimStation.ID) {
-        print("Play \(stationID)")
+        Task {
+            do {
+                try await doPlayStation(withID: stationID)
+            } catch {
+                print(error)
+            }
+        }
     }
 
     func stop() {
         print("Stop")
+        player = nil
     }
 }
 
 private extension DefaultSimRadioMediaPlayer {
-    func currentSecondOfDay() -> Double {
-        let now = Date()
-        let calendar = Calendar.current
+    func doPlayStation(withID stationID: SimStation.ID) async throws {
+        print("Play \(stationID)")
+        guard let mediaState else { return }
 
-        let h = calendar.component(.hour, from: now)
-        let m = calendar.component(.minute, from: now)
-        let s = calendar.component(.second, from: now)
-        return Double(h * 60 * 60 + m * 60 + s)
-    }
+        guard let stationData = mediaState.stationData(for: stationID) else { return }
+        let playlistBuilder = PlaylistBuilder(stationData: stationData)
+        let playlist = try await playlistBuilder.makePlaylist(startingAt: Date(), duration: 30)
 
-    @MainActor func testBuildPlaylist(baseUrlStr: String, series: SimRadioDTO.GameSeries) {
-        guard
-            let baseUrl = URL(string: baseUrlStr),
-            let station = series.stations.first
-        else { return }
-
-        let nowSec = currentSecondOfDay()
-        do {
-            let playlist = try PlayerItemBuilder(
-                baseUrl: baseUrl,
-                gameSeriesSharedFiles: series.gameSeriesShared.fileGroups,
-                station: station
-            )
-            Task {
-                let item = try await playlist.makePlayerItem(
-                    for: Date().startOfDay,
-                    from: nowSec,
-                    minDuration: 3 * 60
-                )
-                let player = AVPlayer(playerItem: item)
-                player.play()
-                self.player = player
-            }
-        } catch {
-            print(error)
-        }
+        let loader = PlayerItemLoader()
+        let playerItem = try await loader.loadPlayerItem(playlist: playlist)
+        let player = AVPlayer(playerItem: playerItem)
+        player.play()
+        self.player = player
     }
 }

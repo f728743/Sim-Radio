@@ -1,3 +1,4 @@
 --disable trailingCommas
 --ifdef no-indent
 --swiftversion 5
+--rules indent,braces

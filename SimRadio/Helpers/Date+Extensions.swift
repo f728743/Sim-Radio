@@ -8,11 +8,21 @@
 import Foundation
 
 extension Date {
+    var currentSecondOfDay: Double {
+        let calendar = Calendar.current
+        let h = calendar.component(.hour, from: self)
+        let m = calendar.component(.minute, from: self)
+        let s = calendar.component(.second, from: self)
+        return Double(h * 60 * 60 + m * 60 + s)
+    }
+
     var startOfDay: Date {
         return Calendar.current.startOfDay(for: self)
     }
 
-    static var tomorrow: Date? { Date().dayAfter }
+    static var tomorrow: Date? {
+        Date().dayAfter
+    }
 
     var dayAfter: Date? {
         guard let noon else { return nil }

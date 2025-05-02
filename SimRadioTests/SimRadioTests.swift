@@ -9,133 +9,76 @@ import Foundation
 @testable import SimRadio
 import Testing
 
-struct SimRadioTests {
-    @Test func testMakePlaylist() async throws {
-        let series = try JSONDecoder().decode(SimRadioDTO.GameSeries.self, from: radioJson.data(using: .utf8)!)
+// swiftlint:disable all
 
-        let playlistBuilder = PlaylistBuilder(
-            baseUrl: URL(string: "/")!,
-            gameSeriesSharedFiles: series.gameSeriesShared.fileGroups,
-            station: series.stations.first!
+struct SimRadioTests {
+    @Test func testMakePlaylistForEndOfDay() async throws {
+        let playlistBuilder = PlaylistBuilder(stationData: stationData)
+        let playlist = try await playlistBuilder.makePlaylist(
+            startingAt: Date("03.05.2025 23:55:29"),
+            duration: 10 * 60
         )
 
-        DRand48.srand48(100)
-        let playlist = try await playlistBuilder.makePlaylist(duration: 3 * 60 * 60)
-        print("##")
-        print(playlist.description)
-        print("##")
-        #expect(playlist.description == playlistForSeed100)
+        let playlistDescription = #"""
+        0.0:(52.09..214.44), radio_01_class_rock/black_velvet.m4a
+        214.44:(0.0..17.28), mono_solo/mono_solo_01.m4a
+        231.71:(0.0..39.29), news/mono_news_09.m4a
+        271.0:(0.0..5.2), id/id_03.m4a
+        276.2:(0.0..249.54), radio_01_class_rock/all_the_things_she_said.m4a
+          283.53:(0.0..5.11), intro/all_the_things_she_said_02.m4a
+          514.61:(0.0..3.75), general/general_01.m4a
+        525.74:(0.0..74.26), radio_01_class_rock/big_log.m4a
+          531.97:(0.0..2.58), intro/big_log_01.m4a
+
+        """#
+        #expect(playlist.description == playlistDescription)
+    }
+
+    @Test func testMakePlaylistForStartOfDay() async throws {
+        let playlistBuilder = PlaylistBuilder(stationData: stationData)
+        let playlist = try await playlistBuilder.makePlaylist(
+            startingAt: Date("03.05.2025 00:1:40"),
+            duration: 10 * 60
+        )
+
+        let playlistDescription = #"""
+        0.0:(93.33..116.87), radio_01_class_rock/big_log.m4a
+          107.52:(0.0..3.13), to_ad/to_ad_01.m4a
+        116.87:(0.0..32.25), adverts/mono_ad009_prop_43.m4a
+        149.12:(0.0..266.53), radio_01_class_rock/black_velvet.m4a
+          156.96:(0.0..5.35), intro/black_velvet_01.m4a
+        415.65:(0.0..17.28), mono_solo/mono_solo_01.m4a
+        432.93:(0.0..149.84), news/mono_news_02.m4a
+        582.77:(0.0..6.48), id/id_04.m4a
+        589.25:(0.0..10.75), radio_01_class_rock/burning_heart.m4a
+          595.59:(0.0..4.41), intro/burning_heart_02.m4a
+
+        """#
+
+        #expect(playlist.description == playlistDescription)
+    }
+
+    var stationData: SimRadioStationData {
+        let series = try! JSONDecoder().decode(SimRadioDTO.GameSeries.self, from: radioJson.data(using: .utf8)!)
+        let media = SimRadioMedia(dto: series, origin: URL(string: "/")!)
+        let stationData = media.stationData(for: .init(value: "683434/radio_01_class_rock"))
+
+        return .init(
+            station: stationData!.station,
+            fileGroups: stationData!.fileGroups,
+            isDownloaded: false
+        )
     }
 }
 
-// swiftlint:disable line_length file_length
-let playlistForSeed100 = #"""
-(0.0..6.67): id/id_01.m4a
-(6.67..256.21): radio_01_class_rock/all_the_things_she_said.m4a
-  (246.69..248.79): to_ad/to_ad_02.m4a
-(256.21..288.46): adverts/mono_ad009_prop_43.m4a
-(288.46..617.63): radio_01_class_rock/baker_street.m4a
-  (298.13..304.98): intro/baker_street_02.m4a
-(617.63..827.83): radio_01_class_rock/big_log.m4a
-  (623.86..626.44): intro/big_log_01.m4a
-  (818.09..821.63): to_news/to_news_02.m4a
-(827.83..931.1): news/mono_news_03.m4a
-(931.1..938.46): id/id_05.m4a
-(938.46..1204.99): radio_01_class_rock/black_velvet.m4a
-(1204.99..1228.2): mono_solo/mono_solo_02.m4a
-(1228.2..1348.39): news/mono_news_05.m4a
-(1348.39..1354.87): id/id_04.m4a
-(1354.87..1604.41): radio_01_class_rock/all_the_things_she_said.m4a
-(1604.41..1822.07): radio_01_class_rock/burning_heart.m4a
-  (1610.74..1617.23): intro/burning_heart_01.m4a
-(1822.07..2151.24): radio_01_class_rock/baker_street.m4a
-(2151.24..2400.78): radio_01_class_rock/all_the_things_she_said.m4a
-(2400.78..2423.71): mono_solo/heists_obh_briefcase_close_mt_thud.m4a
-(2423.71..2547.76): news/mono_news_09.m4a
-(2547.76..2552.94): id/id_02.m4a
-(2552.94..2763.14): radio_01_class_rock/big_log.m4a
-  (2559.17..2561.75): intro/big_log_01.m4a
-(2763.14..2787.76): mono_solo/mono_solo_03.m4a
-(2787.76..2936.17): news/mono_news_01.m4a
-(2936.17..2943.53): id/id_05.m4a
-(2943.53..3272.7): radio_01_class_rock/baker_street.m4a
-  (2953.3..2956.63): general/general_05.m4a
-  (3260.33..3262.9): to_ad/to_ad_03.m4a
-(3272.7..3321.02): adverts/ad082_alcoholia.m4a
-(3321.02..3587.55): radio_01_class_rock/black_velvet.m4a
-  (3328.85..3334.2): intro/black_velvet_01.m4a
-(3587.55..3611.69): mono_solo/mono_solo_04.m4a
-(3611.69..3861.23): radio_01_class_rock/all_the_things_she_said.m4a
-(3861.23..4190.4): radio_01_class_rock/baker_street.m4a
-  (4174.75..4180.7): general/general_02.m4a
-(4190.4..4207.67): mono_solo/mono_solo_01.m4a
-(4207.67..4357.51): news/mono_news_02.m4a
-(4357.51..4363.99): id/id_04.m4a
-(4363.99..4630.52): radio_01_class_rock/black_velvet.m4a
-(4630.52..4848.18): radio_01_class_rock/burning_heart.m4a
-(4848.18..4871.39): mono_solo/mono_solo_02.m4a
-(4871.39..4973.74): news/mono_news_10.m4a
-(4973.74..5183.94): radio_01_class_rock/big_log.m4a
-  (5175.16..5177.71): to_news/to_news_03.m4a
-(5183.94..5330.43): news/mono_news_04.m4a
-(5330.43..5579.97): radio_01_class_rock/all_the_things_she_said.m4a
-(5579.97..5909.14): radio_01_class_rock/baker_street.m4a
-  (5589.81..5591.21): general/general_04.m4a
-  (5896.23..5899.36): to_ad/to_ad_01.m4a
-(5909.14..5936.32): adverts/mono_ad002_righteous_slaughter_nuke.m4a
-(5936.32..6202.85): radio_01_class_rock/black_velvet.m4a
-  (5944.17..5948.99): intro/black_velvet_02.m4a
-(6202.85..6452.39): radio_01_class_rock/all_the_things_she_said.m4a
-  (6442.87..6444.97): to_ad/to_ad_02.m4a
-(6452.39..6488.68): adverts/mono_ad006_desert_tourism.m4a
-(6488.68..6698.88): radio_01_class_rock/big_log.m4a
-  (6689.3..6692.67): general/general_03.m4a
-(6698.88..6721.81): mono_solo/heists_obh_briefcase_close_mt_thud.m4a
-(6721.81..6939.47): radio_01_class_rock/burning_heart.m4a
-  (6728.14..6734.63): intro/burning_heart_01.m4a
-(6939.47..6964.08): mono_solo/mono_solo_03.m4a
-(6964.08..7062.9): news/mono_news_07.m4a
-(7062.9..7068.1): id/id_03.m4a
-(7068.1..7334.63): radio_01_class_rock/black_velvet.m4a
-(7334.63..7351.9): mono_solo/mono_solo_01.m4a
-(7351.9..7455.17): news/mono_news_03.m4a
-(7455.17..7461.84): id/id_01.m4a
-(7461.84..7791.01): radio_01_class_rock/baker_street.m4a
-(7791.01..7815.15): mono_solo/mono_solo_04.m4a
-(7815.15..8025.35): radio_01_class_rock/big_log.m4a
-  (8016.01..8019.14): to_ad/to_ad_01.m4a
-(8025.35..8048.19): adverts/mono_ad008_up_n_atom.m4a
-(8048.19..8314.72): radio_01_class_rock/black_velvet.m4a
-  (8304.69..8306.79): to_ad/to_ad_02.m4a
-(8314.72..8369.2): adverts/mono_ad003_righteous_slaughter_russian.m4a
-(8369.2..8698.37): radio_01_class_rock/baker_street.m4a
-  (8685.07..8688.61): to_news/to_news_02.m4a
-(8698.37..8838.48): news/mono_news_06.m4a
-(8838.48..8845.84): id/id_05.m4a
-(8845.84..9063.5): radio_01_class_rock/burning_heart.m4a
-  (9054.48..9057.05): to_ad/to_ad_03.m4a
-(9063.5..9111.82): adverts/ad082_alcoholia.m4a
-(9111.82..9378.35): radio_01_class_rock/black_velvet.m4a
-  (9364.59..9370.54): general/general_02.m4a
-(9378.35..9401.56): mono_solo/mono_solo_02.m4a
-(9401.56..9730.73): radio_01_class_rock/baker_street.m4a
-  (9411.32..9415.08): general/general_01.m4a
-  (9718.38..9720.93): to_news/to_news_03.m4a
-(9730.73..9860.86): news/mono_news_08.m4a
-(9860.86..10071.06): radio_01_class_rock/big_log.m4a
-  (9867.07..9870.4): general/general_05.m4a
-  (10062.72..10064.82): to_ad/to_ad_02.m4a
-(10071.06..10101.52): adverts/mono_ad001_life_invader.m4a
-(10101.52..10368.05): radio_01_class_rock/black_velvet.m4a
-  (10109.38..10114.2): intro/black_velvet_02.m4a
-  (10356.62..10360.16): to_news/to_news_02.m4a
-(10368.05..10517.89): news/mono_news_02.m4a
-(10517.89..10735.55): radio_01_class_rock/burning_heart.m4a
-  (10524.24..10530.43): intro/burning_heart_02.m4a
-(10735.55..10758.48): mono_solo/heists_obh_briefcase_close_mt_thud.m4a
-(10758.48..10860.83): news/mono_news_10.m4a
-
-"""#
+private extension Date {
+    init(_ string: String) {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "dd.MM.yyyy HH:mm:ss"
+        let someDateTime = formatter.date(from: string)
+        self = someDateTime!
+    }
+}
 
 let radioJson = #"""
 {
@@ -401,4 +344,4 @@ let radioJson = #"""
   ] 
 }
 """#
-// swiftlint:enable line_length file_length
+// swiftlint:enable all

@@ -66,5 +66,12 @@ private struct CompactNowPlayingReplacement: View {
 }
 
 #Preview {
-    AppView()
+    @Previewable @State var mediaState = MediaState.stub
+    @Previewable @State var playerController = NowPlayingController.stub
+
+    OverlayableRootView {
+        OverlaidRootView()
+            .environment(playerController)
+            .environment(mediaState)
+    }
 }

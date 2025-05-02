@@ -62,12 +62,33 @@ private extension URL {
 extension SimRadioDTO.GameSeries {
     func simFileGroups(origin: URL) -> [SimFileGroup.ID: SimFileGroup] {
         let shared = gameSeriesShared.fileGroups.map { SimFileGroup(dto: $0, origin: origin) }
-        let stations = stations.flatMap { station in
-            station.fileGroups.map { SimFileGroup(dto: $0, origin: origin, pathTag: station.tag) }
+        let stations: [SimFileGroup] = stations.flatMap { station in
+            let stationGroups: [SimFileGroup] = station.fileGroups.flatMap {
+                let groups: [SimFileGroup] = [
+                    SimFileGroup(dto: $0, origin: origin, pathTag: station.tag),
+                    attachesGroup(
+                        origin: origin,
+                        files: $0.files
+                            .flatMap { $0.attaches?.files ?? [] }
+                            .map {
+                                .init(dto: $0, baseUrl: origin.simRadioBaseURL, pathTag: "\(station.tag)")
+                            },
+                        pathTag: station.tag,
+                        groupTag: SimRadioMedia.attachesGroupTag
+                    )
+                ].compactMap { $0 }
+                return groups
+            }
+            return stationGroups
         }
         return Dictionary(
             uniqueKeysWithValues: (shared + stations).map { ($0.id, $0) }
         )
+    }
+
+    func attachesGroup(origin: URL, files: [SimFile], pathTag: String? = nil, groupTag: String) -> SimFileGroup? {
+        guard !files.isEmpty else { return nil }
+        return .init(id: .init(origin: origin, pathTag: pathTag, groupTag: groupTag) , files: files)
     }
 }
 
@@ -81,6 +102,8 @@ extension SimRadioMedia {
             stations: Dictionary(uniqueKeysWithValues: stations.map { ($0.id, $0) })
         )
     }
+
+    static let attachesGroupTag: String = "intro"
 
     enum StationLoacalStatus {
         case completed
@@ -201,9 +224,12 @@ extension SimGameSeries.ID {
 
 extension SimRadioDTO.Playlist {
     var fileGroupTags: [String] {
-        fragments.flatMap { [$0.src] + ($0.mixins?.mix ?? []).map { $0.src } }
-            .filter { $0.type == SimRadioDTO.SrcType.group || $0.type == SimRadioDTO.SrcType.file }
+        let sources = fragments.flatMap { [$0.src] + ($0.mixins?.mix ?? []).map { $0.src } }
+        let attachGroupTags: [String] = sources.contains { $0.type == .attach } ? [SimRadioMedia.attachesGroupTag] : []
+        return sources
+            .filter { $0.type == .group || $0.type == .file }
             .compactMap { $0.groupTag }
+            + attachGroupTags
     }
 }
 
@@ -214,6 +240,10 @@ extension SimStation.ID {
 
     var directoryURL: URL {
         .documentsDirectory.appending(path: value, directoryHint: .isDirectory)
+    }
+
+    var seriesID: SimGameSeries.ID {
+        .init(value: String(value.split(separator: "/").first ?? ""))
     }
 }
 
