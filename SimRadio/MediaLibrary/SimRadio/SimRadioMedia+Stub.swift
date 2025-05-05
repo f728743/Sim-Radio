@@ -36,7 +36,7 @@ extension SimRadioMedia {
                         title: "GTA V Radio",
                         subtitle: nil
                     ),
-                    stationsIDs: stations.map { $0.id }
+                    stationsIDs: stations.map(\.id)
                 )
             ],
             fileGroups: [:],

@@ -5,6 +5,7 @@
 //  Created by Alexey Vorobyov on 30.01.2025.
 //
 
+import CoreMedia
 import Foundation
 @testable import SimRadio
 import Testing
@@ -14,21 +15,25 @@ import Testing
 struct SimRadioTests {
     @Test func testMakePlaylistForEndOfDay() async throws {
         let playlistBuilder = PlaylistBuilder(stationData: stationData)
+        let date = Date("03.05.2025 23:55:29")
+        let time: CMTime = .init(seconds: date.currentSecondOfDay)
         let playlist = try await playlistBuilder.makePlaylist(
-            startingAt: Date("03.05.2025 23:55:29"),
-            duration: 10 * 60
+            startingOn: date,
+            at: time,
+            duration: .init(seconds: 10 * 60),
+            trimLastItem: true
         )
 
         let playlistDescription = #"""
-        0.0:(52.09..214.44), radio_01_class_rock/black_velvet.m4a
-        214.44:(0.0..17.28), mono_solo/mono_solo_01.m4a
-        231.71:(0.0..39.29), news/mono_news_09.m4a
-        271.0:(0.0..5.2), id/id_03.m4a
-        276.2:(0.0..249.54), radio_01_class_rock/all_the_things_she_said.m4a
-          283.53:(0.0..5.11), intro/all_the_things_she_said_02.m4a
-          514.61:(0.0..3.75), general/general_01.m4a
-        525.74:(0.0..74.26), radio_01_class_rock/big_log.m4a
-          531.97:(0.0..2.58), intro/big_log_01.m4a
+        Play [0.0...214.24] from File (52.28 + 214.24), radio_01_class_rock/black_velvet.m4a
+        Play [214.24...231.52] from File (0.0 + 17.28), mono_solo/mono_solo_01.m4a
+        Play [231.52...271.0] from File (0.0 + 39.48), news/mono_news_09.m4a
+        Play [271.0...276.2] from File (0.0 + 5.2), id/id_03.m4a
+        Play [276.2...525.74] from File (0.0 + 249.54), radio_01_class_rock/all_the_things_she_said.m4a
+          Play [283.53...288.64] from File (0.0 + 5.11), intro/all_the_things_she_said_02.m4a
+          Play [514.61...518.36] from File (0.0 + 3.75), general/general_01.m4a
+        Play [525.74...600.0] from File (0.0 + 74.26), radio_01_class_rock/big_log.m4a
+          Play [531.97...534.55] from File (0.0 + 2.58), intro/big_log_01.m4a
 
         """#
         #expect(playlist.description == playlistDescription)
@@ -36,22 +41,27 @@ struct SimRadioTests {
 
     @Test func testMakePlaylistForStartOfDay() async throws {
         let playlistBuilder = PlaylistBuilder(stationData: stationData)
+        let date = Date("03.05.2025 00:1:40")
+        let time: CMTime = .init(seconds: date.currentSecondOfDay)
+
         let playlist = try await playlistBuilder.makePlaylist(
-            startingAt: Date("03.05.2025 00:1:40"),
-            duration: 10 * 60
+            startingOn: date,
+            at: time,
+            duration: .init(seconds: 10 * 60),
+            trimLastItem: true
         )
 
         let playlistDescription = #"""
-        0.0:(93.33..116.87), radio_01_class_rock/big_log.m4a
-          107.52:(0.0..3.13), to_ad/to_ad_01.m4a
-        116.87:(0.0..32.25), adverts/mono_ad009_prop_43.m4a
-        149.12:(0.0..266.53), radio_01_class_rock/black_velvet.m4a
-          156.96:(0.0..5.35), intro/black_velvet_01.m4a
-        415.65:(0.0..17.28), mono_solo/mono_solo_01.m4a
-        432.93:(0.0..149.84), news/mono_news_02.m4a
-        582.77:(0.0..6.48), id/id_04.m4a
-        589.25:(0.0..10.75), radio_01_class_rock/burning_heart.m4a
-          595.59:(0.0..4.41), intro/burning_heart_02.m4a
+        Play [0.0...116.87] from File (93.33 + 116.87), radio_01_class_rock/big_log.m4a
+          Play [107.52...110.66] from File (0.0 + 3.13), to_ad/to_ad_01.m4a
+        Play [116.87...149.12] from File (0.0 + 32.25), adverts/mono_ad009_prop_43.m4a
+        Play [149.12...415.65] from File (0.0 + 266.53), radio_01_class_rock/black_velvet.m4a
+          Play [156.96...162.3] from File (0.0 + 5.35), intro/black_velvet_01.m4a
+        Play [415.65...432.92] from File (0.0 + 17.28), mono_solo/mono_solo_01.m4a
+        Play [432.92...582.76] from File (0.0 + 149.84), news/mono_news_02.m4a
+        Play [582.76...589.24] from File (0.0 + 6.48), id/id_04.m4a
+        Play [589.24...600.0] from File (0.0 + 10.76), radio_01_class_rock/burning_heart.m4a
+          Play [595.59...600.0] from File (0.0 + 4.41), intro/burning_heart_02.m4a
 
         """#
 

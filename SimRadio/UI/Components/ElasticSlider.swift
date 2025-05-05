@@ -59,7 +59,7 @@ private extension ElasticSlider {
     }
 
     @ViewBuilder
-    func styled<Content: View>(_ content: Content) -> some View {
+    func styled(_ content: some View) -> some View {
         if config.syncLabelsStyle {
             ZStack {
                 content

@@ -49,7 +49,7 @@ struct PressGesture: ViewModifier {
                     }
             )
             .onReceive(timePublisher) { timer in
-                if let startTimestamp = startTimestamp {
+                if let startTimestamp {
                     onPressing(timer.timeIntervalSince(startTimestamp))
                 }
             }

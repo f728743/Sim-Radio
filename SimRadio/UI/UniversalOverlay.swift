@@ -9,10 +9,10 @@ import SwiftUI
 
 extension View {
     @ViewBuilder
-    func universalOverlay<Content: View>(
+    func universalOverlay(
         animation: Animation? = .snappy,
         show: Binding<Bool>,
-        @ViewBuilder content: @escaping () -> Content
+        @ViewBuilder content: @escaping () -> some View
     ) -> some View {
         modifier(
             UniversalOverlayModifier(
@@ -87,7 +87,7 @@ private struct UniversalOverlayModifier<ViewContent: View>: ViewModifier {
     }
 
     private func addView() {
-        if properties.window != nil && viewID == nil {
+        if properties.window != nil, viewID == nil {
             viewID = UUID().uuidString
             guard let viewID else { return }
 

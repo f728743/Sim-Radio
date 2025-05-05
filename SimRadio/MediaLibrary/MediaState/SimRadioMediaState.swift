@@ -28,7 +28,7 @@ extension SimRadioMedia {
 
 extension MediaState: SimRadioMediaState {
     var simDownloadStatus: [SimStation.ID: MediaDownloadStatus] {
-        return Dictionary(uniqueKeysWithValues: downloadStatus.compactMap {
+        Dictionary(uniqueKeysWithValues: downloadStatus.compactMap {
             if case let .simRadio(id) = $0.key {
                 return (id, $0.value)
             }

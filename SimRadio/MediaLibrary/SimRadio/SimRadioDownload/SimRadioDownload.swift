@@ -50,27 +50,27 @@ extension SimRadioDownloadState {
 
     var failedURLs: [URL] {
         if case let .failed(urls) = self {
-            return urls
+            urls
         } else {
-            return []
+            []
         }
     }
 
     var isDone: Bool {
         switch self {
         case .completed, .canceled:
-            return true
+            true
         default:
-            return false
+            false
         }
     }
 
     var isInProgress: Bool {
         switch self {
         case .scheduled, .downloading:
-            return true
+            true
         default:
-            return false
+            false
         }
     }
 }

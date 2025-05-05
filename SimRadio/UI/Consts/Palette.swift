@@ -87,11 +87,11 @@ extension UIColor {
 }
 
 @inline(__always)
-func lerp<V: BinaryFloatingPoint, T: BinaryFloatingPoint>(_ v0: V, _ v1: V, _ t: T) -> V {
-    return v0 + V(t) * (v1 - v0)
+func lerp<V: BinaryFloatingPoint>(_ v0: V, _ v1: V, _ t: some BinaryFloatingPoint) -> V {
+    v0 + V(t) * (v1 - v0)
 }
 
-func lerp<T: BinaryFloatingPoint>(_ v0: UIColor, _ v1: UIColor, _ t: T) -> UIColor? {
+func lerp(_ v0: UIColor, _ v1: UIColor, _ t: some BinaryFloatingPoint) -> UIColor? {
     var red0: CGFloat = 0
     var green0: CGFloat = 0
     var blue0: CGFloat = 0

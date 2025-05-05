@@ -42,11 +42,11 @@ class PlaylistRules {
                 fileGroups: fileGroups,
                 rnd: rnd
             ) else {
-                throw PlaylistError.wrongSource
+                throw PlaylistGenerationError.wrongSource
             }
             self.src = src
             condition = model.condition
-            positions = model.posVariant.map { $0.posTag }
+            positions = model.posVariant.map(\.posTag)
         }
     }
 
@@ -68,7 +68,7 @@ class PlaylistRules {
                 fileGroups: fileGroups,
                 rnd: rnd
             ) else {
-                throw PlaylistError.wrongSource
+                throw PlaylistGenerationError.wrongSource
             }
             self.src = src
             nextFragment = model.nextFragment

@@ -19,7 +19,7 @@ class DownloadedScreenViewModel {
 private extension MediaState {
     var donloadedMedia: [Media] {
         downloadStatus
-            .map { $0 }
+            .map(\.self)
             .filter { $0.value.state == .completed }
             .compactMap {
                 guard case let .simRadio(id) = $0.key,

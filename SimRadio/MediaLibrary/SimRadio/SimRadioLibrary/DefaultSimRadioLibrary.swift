@@ -27,7 +27,7 @@ class DefaultSimRadioLibrary {
             guard let self else { return }
             let stream = await self.simRadioDownload.events
             for await event in stream {
-                await self.handleDownloaderEvent(event)
+                await handleDownloaderEvent(event)
             }
         }
     }

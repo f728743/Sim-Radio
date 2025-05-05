@@ -46,7 +46,7 @@ class UserDefaultsRadioStorage: SimRadioStorage {
     }
 
     private func saveSeriesIDs(_ ids: [SimGameSeries.ID]) {
-        let stringIDs = ids.map { $0.value }
+        let stringIDs = ids.map(\.value)
         userDefaults.set(stringIDs, forKey: Key.addedSeriesIDs.rawValue)
     }
 
@@ -84,7 +84,7 @@ class UserDefaultsRadioStorage: SimRadioStorage {
     }
 
     private func loadStoredStatesDictionary() -> [String: String] {
-        return userDefaults.dictionary(forKey: Key.stationStorageStates.rawValue) as? [String: String] ?? [:]
+        userDefaults.dictionary(forKey: Key.stationStorageStates.rawValue) as? [String: String] ?? [:]
     }
 
     private func saveStoredStatesDictionary(_ dictionary: [String: String]) {

@@ -19,14 +19,14 @@ extension UIImage {
             space: CGColorSpaceCreateDeviceRGB(),
             bitmapInfo: UInt32(bitmapInfo.rawValue)
         )
-        guard let context = context, let cgImage = cgImage else { return nil }
+        guard let context, let cgImage else { return nil }
         context.draw(cgImage, in: CGRect(origin: CGPoint.zero, size: size))
         guard let convertedImage = context.makeImage() else { return nil }
         return UIImage(cgImage: convertedImage)
     }
 
     var resolution: CGSize {
-        return CGSize(width: size.width * scale, height: size.height * scale)
+        CGSize(width: size.width * scale, height: size.height * scale)
     }
 
     func resize(to targetSize: CGSize) -> UIImage {
@@ -56,8 +56,8 @@ extension CGBitmapInfo {
 
         var count: Int {
             switch self {
-            case .bgr, .rgb: return 3
-            default: return 4
+            case .bgr, .rgb: 3
+            default: 4
             }
         }
     }

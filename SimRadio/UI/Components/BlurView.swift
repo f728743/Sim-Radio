@@ -47,7 +47,7 @@ final class CustomVisualEffectView: UIVisualEffectView {
         effect = nil
         animator?.stopAnimation(true)
         animator = UIViewPropertyAnimator(duration: 1, curve: .linear) { [unowned self] in
-            self.effect = theEffect
+            effect = theEffect
         }
         animator?.fractionComplete = intensity
     }

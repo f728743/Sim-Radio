@@ -9,16 +9,17 @@
 
 @MainActor
 class PlayerItemLoader {
-    let timescale: CMTimeScale = 1000
+    private var playerItemStatusObserver: NSKeyValueObservation?
 
     func loadPlayerItem(
-        playlist: [PlaylistComponent]
-    ) async throws -> AVPlayerItem {        
+        playlist: [PlaylistItem]
+    ) async throws -> AVPlayerItem {
         let composition = AVMutableComposition()
         let audioMix = AVMutableAudioMix()
         guard let mainTrack = composition.addAudioTrack(),
-              let mixTrack = composition.addAudioTrack() else {
-            throw LibraryError.compositionCreatingError
+              let mixTrack = composition.addAudioTrack()
+        else {
+            throw PlayerItemLoadingError.playerItemCreatingError
         }
         let params = AVMutableAudioMixInputParameters(track: mainTrack)
         for item in playlist {
@@ -29,8 +30,7 @@ class PlayerItemLoader {
                     range: .init(
                         start: mix.startTime,
                         duration: mix.playing.duration
-                    ),
-                    timescale: timescale
+                    )
                 )
             }
         }
@@ -43,17 +43,17 @@ class PlayerItemLoader {
 
 private extension PlayerItemLoader {
     func load(
-        _ audio: AudioFile,
+        _ audio: AudioSegment,
         track: AVMutableCompositionTrack
     ) async throws {
         let asset = AVURLAsset(url: audio.url)
-        guard let assetTrack = try await asset.loadTracks(withMediaType: AVMediaType.audio).first else {
-            throw LibraryError.fileNotFound(url: audio.url)
+        guard let assetTrack = try await asset.loadTracks(withMediaType: .audio).first else {
+            throw PlayerItemLoadingError.fileNotFound(url: audio.url)
         }
         try track.insertTimeRange(
-            .init(range: audio.timeRange, scale: timescale),
+            audio.timeRange,
             of: assetTrack,
-            at: .init(seconds: audio.startTime, preferredTimescale: timescale)
+            at: audio.startTime
         )
     }
 }
@@ -67,22 +67,21 @@ extension AVMutableComposition {
 struct VolumeDipParams {
     let normalVolume: Float
     let lowVolume: Float
-    let fadingDuration: TimeInterval
+    let fadingDuration: CMTime
 }
 
 extension VolumeDipParams {
     static let `default` = VolumeDipParams(
         normalVolume: 1,
         lowVolume: 0.3,
-        fadingDuration: 1
+        fadingDuration: .init(seconds: 1)
     )
 }
 
 extension AVMutableAudioMixInputParameters {
     func setVolumeDip(
-        range: TimeRange,
-        params: VolumeDipParams = .default,
-        timescale: CMTimeScale
+        range: CMTimeRange,
+        params: VolumeDipParams = .default
     ) {
         let fadeOutEnd = range.start
         let fadeOutStart = fadeOutEnd - params.fadingDuration
@@ -92,28 +91,13 @@ extension AVMutableAudioMixInputParameters {
         setVolumeRamp(
             fromStartVolume: params.normalVolume,
             toEndVolume: params.lowVolume,
-            timeRange: CMTimeRange(
-                start: CMTime(seconds: fadeOutStart, preferredTimescale: timescale),
-                end: CMTime(seconds: fadeOutEnd, preferredTimescale: timescale)
-            )
+            timeRange: CMTimeRange(start: fadeOutStart, end: fadeOutEnd)
         )
 
         setVolumeRamp(
             fromStartVolume: params.lowVolume,
             toEndVolume: params.normalVolume,
-            timeRange: CMTimeRange(
-                start: CMTime(seconds: fadeInStart, preferredTimescale: timescale),
-                end: CMTime(seconds: fadeInEnd, preferredTimescale: timescale)
-            )
-        )
-    }
-}
-
-extension CMTimeRange {
-    init(range: TimeRange, scale: CMTimeScale) {
-        self.init(
-            start: CMTime(seconds: range.start, preferredTimescale: scale),
-            duration: CMTime(seconds: range.duration, preferredTimescale: scale)
+            timeRange: CMTimeRange(start: fadeInStart, end: fadeInEnd)
         )
     }
 }

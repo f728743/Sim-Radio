@@ -106,7 +106,7 @@ private struct ForwardLabel: View {
     }
 
     var rightShrinkProgress: Double {
-        return linear ? linearRightShrinkProgress : linearRightShrinkProgress * linearRightShrinkProgress
+        linear ? linearRightShrinkProgress : linearRightShrinkProgress * linearRightShrinkProgress
     }
 
     var rightProtrusionProgress: Double {

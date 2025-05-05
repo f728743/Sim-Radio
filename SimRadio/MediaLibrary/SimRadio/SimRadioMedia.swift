@@ -76,7 +76,7 @@ extension SimRadioDTO.GameSeries {
                         pathTag: station.tag,
                         groupTag: SimRadioMedia.attachesGroupTag
                     )
-                ].compactMap { $0 }
+                ].compactMap(\.self)
                 return groups
             }
             return stationGroups
@@ -88,7 +88,7 @@ extension SimRadioDTO.GameSeries {
 
     func attachesGroup(origin: URL, files: [SimFile], pathTag: String? = nil, groupTag: String) -> SimFileGroup? {
         guard !files.isEmpty else { return nil }
-        return .init(id: .init(origin: origin, pathTag: pathTag, groupTag: groupTag) , files: files)
+        return .init(id: .init(origin: origin, pathTag: pathTag, groupTag: groupTag), files: files)
     }
 }
 
@@ -112,7 +112,7 @@ extension SimRadioMedia {
     }
 
     func stationFileGroups(_ id: SimStation.ID) -> [SimFileGroup] {
-        return stations[id]?.fileGroupIDs.compactMap { fileGroups[$0] } ?? []
+        stations[id]?.fileGroupIDs.compactMap { fileGroups[$0] } ?? []
     }
 
     func calculateStationLoacalStatus(_ id: SimStation.ID) async throws -> StationLoacalStatus {
@@ -121,7 +121,7 @@ extension SimRadioMedia {
         for fileGroup in stationFileGroups(id) {
             let missingFiles = fileGroup
                 .files
-                .map { $0.url }
+                .map(\.url)
                 .filter { !fileGroup.id.localFileURL(for: $0).isFileExists }
             if fileGroup.files.count > missingFiles.count {
                 haveAny = true
@@ -145,7 +145,7 @@ extension SimRadioMedia {
         let frequencyPairs = stations
             .filter { stationIDs?.contains($0.key) ?? true }
             .values
-            .flatMap { $0.fileGroupIDs }.map { ($0, 1) }
+            .flatMap(\.fileGroupIDs).map { ($0, 1) }
         let allFileGroupCounts = Dictionary(frequencyPairs, uniquingKeysWith: +)
         let sharedGroupsForTarget = targetStation.fileGroupIDs.filter { fileGroupID in
             (allFileGroupCounts[fileGroupID] ?? 0) > 0
@@ -154,7 +154,7 @@ extension SimRadioMedia {
     }
 }
 
-extension Collection where Element == URL {}
+extension Collection<URL> {}
 
 extension SimGameSeries {
     init(dto: SimRadioDTO.GameSeries, origin: URL) {
@@ -185,7 +185,7 @@ extension SimStation {
             .appendingPathComponent(dto.tag)
             .appendingPathComponent(dto.info.logo)
         let fullFileGroupSet = Set(dto.playlist.fileGroupTags)
-        let gameSeriesSharedFileGroupSet = Set(gameSeriesShared.fileGroups.map { $0.tag })
+        let gameSeriesSharedFileGroupSet = Set(gameSeriesShared.fileGroups.map(\.tag))
         let stationFileGroupIDs = fullFileGroupSet
             .subtracting(gameSeriesSharedFileGroupSet)
             .map { SimFileGroup.ID(origin: origin, pathTag: dto.tag, groupTag: $0) }
@@ -224,11 +224,11 @@ extension SimGameSeries.ID {
 
 extension SimRadioDTO.Playlist {
     var fileGroupTags: [String] {
-        let sources = fragments.flatMap { [$0.src] + ($0.mixins?.mix ?? []).map { $0.src } }
+        let sources = fragments.flatMap { [$0.src] + ($0.mixins?.mix ?? []).map(\.src) }
         let attachGroupTags: [String] = sources.contains { $0.type == .attach } ? [SimRadioMedia.attachesGroupTag] : []
         return sources
             .filter { $0.type == .group || $0.type == .file }
-            .compactMap { $0.groupTag }
+            .compactMap(\.groupTag)
             + attachGroupTags
     }
 }
@@ -273,7 +273,7 @@ extension SimFileGroup {
 
 extension SimFile {
     init(dto: SimRadioDTO.File, baseUrl: URL, pathTag: String?) {
-        let url = [pathTag, dto.path].compactMap { $0 }.reduce(baseUrl) { $0.appendingPathComponent($1) }
+        let url = [pathTag, dto.path].compactMap(\.self).reduce(baseUrl) { $0.appendingPathComponent($1) }
         self.init(
             url: url,
             tag: dto.tag,

@@ -70,11 +70,11 @@ extension MediaListScreenViewModel.SwipeButton {
     var systemImage: String {
         switch self {
         case .download:
-            return "arrow.down"
+            "arrow.down"
         case .pauseDownload:
-            return "pause.fill"
+            "pause.fill"
         case .delete:
-            return "minus.circle.fill"
+            "minus.circle.fill"
         }
     }
 

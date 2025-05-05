@@ -5,15 +5,17 @@
 //  Created by Alexey Vorobyov on 02.05.2025.
 //
 
-import Foundation
+import AVFoundation
 
-enum LibraryError: Error {
+enum PlayerItemLoadingError: Error {
     case playlistError
     case fileNotFound(url: URL)
-    case compositionCreatingError
+    case playerItemCreatingError
 }
 
-enum PlaylistError: Error {
+enum PlaylistGenerationError: Error {
+    case makeDailyPlaylistError(date: Date)
+    case makePlaylistError
     case wrongCondition
     case fragmentNotFound(tag: String)
     case notExhaustiveFragment(tag: String)
@@ -32,113 +34,116 @@ class PlaylistBuilder {
 
     /// Generates a playlist of the specified duration (`duration`),
     /// starting from the given date/time (`playlistStart`).
-    /// Correctly handles trimming and time-shifting of components and their mixes.
+    /// Correctly handles trimming and time-shifting of items and their mixes.
     /// Assumes that the startTime of mixes from `makeDailyPlaylist` are absolute within the context of the day.
     /// - Parameters:
     ///   - playlistStart: Exact date and time for the playlist to start.
     ///   - duration: Total desired duration of the playlist in seconds.
-    /// - Returns: An array of `AudioComponent` forming the requested playlist.
+    /// - Returns: An array of `PlaylistItem` forming the requested playlist.
     /// - Throws: Errors related to playlist generation.
     func makePlaylist(
-        startingAt playlistStart: Date,
-        duration: TimeInterval
-    ) async throws -> [PlaylistComponent] {
-        guard duration > 0 else { return [] }
-        let fullDayDuration: TimeInterval = 24 * 60 * 60
-        var resultPlaylist: [PlaylistComponent] = []
-        var accumulatedDuration: TimeInterval = 0.0
-        var currentDate = playlistStart.startOfDay
-        let timeOffsetInFirstDay = playlistStart.timeIntervalSince(currentDate)
+        startingOn playlistStartDate: Date,
+        at timeOffsetInFirstDay: CMTime,
+        duration: CMTime,
+        trimLastItem: Bool
+    ) async throws -> [PlaylistItem] {
+        guard duration > .zero else { return [] }
+        let fullDayDuration = CMTime(seconds: 24 * 60 * 60)
+        var resultPlaylist: [PlaylistItem] = []
+        var accumulatedDuration: CMTime = .zero
+        var currentDate = playlistStartDate.startOfDay
 
-        var dailyComponents = try await makeDailyPlaylist(for: currentDate)
-        var currentDayIndex = 0
+        var dailyItems = try await makeDailyPlaylist(for: currentDate)
 
-        // Find the index of the first relevant component
-        while currentDayIndex < dailyComponents.count,
-              dailyComponents[currentDayIndex].track.playing.end <= timeOffsetInFirstDay {
-            currentDayIndex += 1
+        // Find the index of the first relevant item
+        guard let firstRelevantItem = dailyItems.firstIndex(
+            where: { $0.track.playing.end > timeOffsetInFirstDay }
+        ) else {
+            throw PlaylistGenerationError.makeDailyPlaylistError(date: currentDate)
         }
+
+        var index = firstRelevantItem
 
         while accumulatedDuration < duration {
             // Move to the next day if necessary
-            if currentDayIndex >= dailyComponents.count {
+            if index >= dailyItems.count {
                 guard let nextDay = currentDate.dayAfter else {
-                    print("Error: failed to calculate next day for \(currentDate)")
-                    break
+                    throw PlaylistGenerationError.makePlaylistError
                 }
                 currentDate = nextDay
-                dailyComponents = try await makeDailyPlaylist(for: currentDate)
-                currentDayIndex = 0
-                if dailyComponents.isEmpty {
-                    print("Warning: makeDailyPlaylist returned an empty list for \(currentDate)")
-                    break
+                dailyItems = try await makeDailyPlaylist(for: currentDate)
+                index = 0
+                guard !dailyItems.isEmpty else {
+                    throw PlaylistGenerationError.makeDailyPlaylistError(date: currentDate)
                 }
                 continue
             }
 
-            let component = dailyComponents[currentDayIndex]
+            let item = dailyItems[index]
 
-            var componentFileTimeRange = component.track.timeRange
-            var componentPlayableDuration = component.track.timeRange.duration
-            let componentStartTimeInOutput = accumulatedDuration // Start time in the output playlist
+            var itemFileTimeRange = item.track.timeRange
+            var itemPlayableDuration = item.track.timeRange.duration
+            let itemStartTimeInOutput = accumulatedDuration // Start time in the output playlist
 
-            let parentOriginalStartTimeInDay = component.track.startTime
-            // Adjustment for start offset (only for the first component)
-            if accumulatedDuration == 0.0 {
-                let offsetIntoComponent = timeOffsetInFirstDay - parentOriginalStartTimeInDay
-                if offsetIntoComponent > 0 {
-                    let newDuration = component.track.timeRange.duration - offsetIntoComponent
-                    if newDuration <= 0 {
-                        currentDayIndex += 1
-                        continue // Component is entirely before the playlist start
+            let parentOriginalStartTimeInDay = item.track.startTime
+            // Adjustment for start offset (only for the first item)
+            if accumulatedDuration == .zero {
+                let offsetIntoItem = timeOffsetInFirstDay - parentOriginalStartTimeInDay
+                if offsetIntoItem > .zero {
+                    let newDuration = item.track.timeRange.duration - offsetIntoItem
+                    if newDuration <= .zero {
+                        index += 1
+                        continue // Item is entirely before the playlist start
                     }
-                    componentPlayableDuration = newDuration
-                    componentFileTimeRange = TimeRange(
-                        start: component.track.timeRange.start + offsetIntoComponent,
-                        duration: componentPlayableDuration
+                    itemPlayableDuration = newDuration
+                    itemFileTimeRange = CMTimeRange(
+                        start: item.track.timeRange.start + offsetIntoItem,
+                        duration: itemPlayableDuration
                     )
                 }
             }
 
             let remainingNeededDuration = duration - accumulatedDuration
-            let remainingInDayDuration = max(0, fullDayDuration - parentOriginalStartTimeInDay)
-            let actualDurationToAdd = min(componentPlayableDuration, remainingNeededDuration, remainingInDayDuration)
+            let remainingInDayDuration = max(.zero, fullDayDuration - parentOriginalStartTimeInDay)
+            let actualDurationToAdd = trimLastItem
+                ? min(min(itemPlayableDuration, remainingNeededDuration), remainingInDayDuration)
+                : min(itemPlayableDuration, remainingInDayDuration)
 
-            if actualDurationToAdd <= 0 {
-                break // Desired duration reached or component has no playable duration
+            if actualDurationToAdd <= .zero {
+                break // Desired duration reached or item has no playable duration
             }
 
-            if actualDurationToAdd < componentPlayableDuration {
-                componentFileTimeRange = TimeRange(
-                    start: componentFileTimeRange.start,
+            if actualDurationToAdd < itemPlayableDuration {
+                itemFileTimeRange = CMTimeRange(
+                    start: itemFileTimeRange.start,
                     duration: actualDurationToAdd
                 )
             }
 
             let parentActualStartTimeInDay = parentOriginalStartTimeInDay +
-                (componentFileTimeRange.start - component.track.timeRange.start)
+                (itemFileTimeRange.start - item.track.timeRange.start)
 
-            let parentActualEndTimeInDay = parentActualStartTimeInDay + componentFileTimeRange.duration
+            let parentActualEndTimeInDay = parentActualStartTimeInDay + itemFileTimeRange.duration
 
-            let adjustedMixes: [AudioFile] = component.mixes.compactMap { originalMix in
+            let adjustedMixes: [AudioSegment] = item.mixes.compactMap { originalMix in
                 originalMix.adjustedMix(
                     parentActualStartTimeInDay: parentActualStartTimeInDay,
                     parentActualEndTimeInDay: parentActualEndTimeInDay,
-                    componentStartTimeInOutput: componentStartTimeInOutput
+                    itemStartTimeInOutput: itemStartTimeInOutput
                 )
             }
 
-            let newComponent = PlaylistComponent(
-                track: AudioFile(
-                    url: component.track.url,
-                    timeRange: componentFileTimeRange,
-                    startTime: componentStartTimeInOutput
+            let newItem = PlaylistItem(
+                track: AudioSegment(
+                    url: item.track.url,
+                    timeRange: itemFileTimeRange,
+                    startTime: itemStartTimeInOutput
                 ),
                 mixes: adjustedMixes // List of processed and filtered mixes
             )
-            resultPlaylist.append(newComponent)
+            resultPlaylist.append(newItem)
             accumulatedDuration += actualDurationToAdd
-            currentDayIndex += 1
+            index += 1
         }
         return resultPlaylist
     }
@@ -156,16 +161,19 @@ private extension PlaylistBuilder {
 
     func makeDailyPlaylist(
         for date: Date,
-    ) async throws -> [PlaylistComponent] {
+    ) async throws -> [PlaylistItem] {
         var rnd: any RandomNumberGenerator = SplitMix64(seed: UInt64(date.startOfDay.timeIntervalSince1970))
         let fullDayDuration: TimeInterval = 24 * 60 * 60
-        return try await makePlaylist(duration: fullDayDuration, rnd: &rnd)
+        return try await makePlaylist(
+            duration: .init(seconds: fullDayDuration),
+            rnd: &rnd
+        )
     }
 
     func makePlaylist(
-        duration: TimeInterval,
+        duration: CMTime,
         rnd: inout RandomNumberGenerator
-    ) async throws -> [PlaylistComponent] {
+    ) async throws -> [PlaylistItem] {
         let rules = try PlaylistRules(
             stationID: stationData.station.id,
             model: station.playlistRules,
@@ -173,8 +181,8 @@ private extension PlaylistBuilder {
             rnd: rnd
         )
 
-        var result: [PlaylistComponent] = []
-        var moment: Double = 0
+        var result: [PlaylistItem] = []
+        var moment: CMTime = .zero
         var fragmentTag = station.playlistRules.firstFragment.fragmentTag
 
         var next = try await nextFragmentTag(
@@ -184,15 +192,15 @@ private extension PlaylistBuilder {
         )
 
         while moment < duration {
-            let playlistComponent = try await makePlaylistComponent(
+            let playlistItem = try await makePlaylistItem(
                 tag: fragmentTag,
                 nextTag: next,
                 starts: moment,
                 rules: rules,
                 rnd: &rnd
             )
-            result.append(playlistComponent)
-            moment += playlistComponent.track.playing.duration
+            result.append(playlistItem)
+            moment += playlistItem.track.playing.duration
             fragmentTag = next
             next = try await nextFragmentTag(
                 after: fragmentTag,
@@ -209,7 +217,7 @@ private extension PlaylistBuilder {
         rnd: inout RandomNumberGenerator
     ) async throws -> String {
         guard let fragment = rules.fragments[fragmentTag] else {
-            throw PlaylistError.fragmentNotFound(tag: fragmentTag)
+            throw PlaylistGenerationError.fragmentNotFound(tag: fragmentTag)
         }
         let rnd = Double.random(in: 0 ... 1, using: &rnd)
         var p = 0.0
@@ -219,22 +227,22 @@ private extension PlaylistBuilder {
                 return next.fragmentTag
             }
         }
-        throw PlaylistError.notExhaustiveFragment(tag: fragmentTag)
+        throw PlaylistGenerationError.notExhaustiveFragment(tag: fragmentTag)
     }
 
-    func makePlaylistComponent(
+    func makePlaylistItem(
         tag: String,
         nextTag: String,
-        starts sec: Double,
+        starts sec: CMTime,
         rules: PlaylistRules,
         rnd: inout RandomNumberGenerator
-    ) async throws -> PlaylistComponent {
+    ) async throws -> PlaylistItem {
         guard let fragment = rules.fragments[tag] else {
-            throw PlaylistError.fragmentNotFound(tag: tag)
+            throw PlaylistGenerationError.fragmentNotFound(tag: tag)
         }
 
         guard let file = fragment.src.next(parentFile: nil, rnd: &rnd) else {
-            throw PlaylistError.wrongSource
+            throw PlaylistGenerationError.wrongSource
         }
         let mixes = try await makeMixesForFragment(
             to: file,
@@ -244,10 +252,13 @@ private extension PlaylistBuilder {
             nextTag: nextTag,
             rnd: &rnd
         )
-        return  PlaylistComponent(
-            track: AudioFile(
+        return PlaylistItem(
+            track: AudioSegment(
                 url: file.url(local: stationData.isDownloaded),
-                timeRange: .init(start: 0, duration: file.file.duration),
+                timeRange: .init(
+                    start: .zero,
+                    duration: .init(seconds: file.file.duration)
+                ),
                 startTime: sec
             ),
             mixes: mixes
@@ -257,14 +268,14 @@ private extension PlaylistBuilder {
     // swiftlint:disable:next function_parameter_count
     func makeMixesForFragment(
         to file: FileFromGrpup,
-        starts sec: Double,
+        starts sec: CMTime,
         at positions: [String: Double],
         mixins: [PlaylistRules.Mix],
         nextTag: String,
         rnd: inout RandomNumberGenerator
-    ) async throws -> [AudioFile] {
+    ) async throws -> [AudioSegment] {
         var usedPositions: Set<String> = []
-        var res: [AudioFile] = []
+        var res: [AudioSegment] = []
         for mix in mixins where mix.condition.isSatisfied(
             forNextFragment: nextTag,
             startingFrom: sec,
@@ -275,14 +286,14 @@ private extension PlaylistBuilder {
                     continue
                 }
                 guard let pos = positions[posTag] else {
-                    throw PlaylistError.wrongPositionTag(tag: posTag)
+                    throw PlaylistGenerationError.wrongPositionTag(tag: posTag)
                 }
                 if let mixFile = mix.src.next(parentFile: file, rnd: &rnd) {
                     let t = file.file.duration - mixFile.file.duration
-                    let mixStartsSec = sec + t * pos
-                    res.append(AudioFile(
+                    let mixStartsSec = sec + .init(seconds: t * pos)
+                    res.append(AudioSegment(
                         url: mixFile.url(local: stationData.isDownloaded),
-                        timeRange: .init(start: 0, duration: mixFile.file.duration),
+                        timeRange: .init(start: .zero, duration: .init(seconds: mixFile.file.duration)),
                         startTime: mixStartsSec
                     ))
                     usedPositions.insert(posTag)
@@ -294,12 +305,12 @@ private extension PlaylistBuilder {
     }
 }
 
-private extension AudioFile {
+private extension AudioSegment {
     func adjustedMix(
-        parentActualStartTimeInDay: TimeInterval,
-        parentActualEndTimeInDay: TimeInterval,
-        componentStartTimeInOutput: TimeInterval
-    ) -> AudioFile? {
+        parentActualStartTimeInDay: CMTime,
+        parentActualEndTimeInDay: CMTime,
+        itemStartTimeInOutput: CMTime
+    ) -> AudioSegment? {
         // Check for overlap: the mix must start before the end of the parent AND end after the start of the parent
         guard startTime < parentActualEndTimeInDay,
               playing.end > parentActualStartTimeInDay else { return nil }
@@ -310,17 +321,17 @@ private extension AudioFile {
         let overlapDuration = overlapEndInDay - overlapStartInDay
 
         // Only include if overlap has a positive duration
-        guard overlapDuration > 0 else { return nil }
+        guard overlapDuration > .zero else { return nil }
 
-        let offsetIntoMixOriginal = max(0, overlapStartInDay - startTime)
+        let offsetIntoMixOriginal = max(.zero, overlapStartInDay - startTime)
 
-        let adjustedMix = AudioFile(
+        let adjustedMix = AudioSegment(
             url: url,
-            timeRange: TimeRange(
+            timeRange: CMTimeRange(
                 start: timeRange.start + offsetIntoMixOriginal,
                 duration: overlapDuration
             ),
-            startTime: componentStartTimeInOutput + (overlapStartInDay - parentActualStartTimeInDay)
+            startTime: itemStartTimeInOutput + (overlapStartInDay - parentActualStartTimeInDay)
         )
         return adjustedMix
     }

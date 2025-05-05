@@ -26,13 +26,13 @@ struct ParticularFileSource: FileSource {
     let file: FileFromGrpup
 
     func next(parentFile _: FileFromGrpup?, rnd _: inout RandomNumberGenerator) -> FileFromGrpup? {
-        return file
+        file
     }
 }
 
 struct AttachedFileSource: FileSource {
     func next(parentFile: FileFromGrpup?, rnd: inout RandomNumberGenerator) -> FileFromGrpup? {
-        if let parentFile = parentFile, parentFile.file.attaches.count > 0 {
+        if let parentFile, parentFile.file.attaches.count > 0 {
             let attachGroupID: SimFileGroup.ID = .init(
                 value: parentFile
                     .groupID
@@ -68,7 +68,7 @@ struct GroupFileSource: FileSource {
     }
 
     func next(parentFile _: FileFromGrpup?, rnd _: inout RandomNumberGenerator) -> FileFromGrpup? {
-        return .init(groupID: groupID, file: randomFiles.next())
+        .init(groupID: groupID, file: randomFiles.next())
     }
 }
 

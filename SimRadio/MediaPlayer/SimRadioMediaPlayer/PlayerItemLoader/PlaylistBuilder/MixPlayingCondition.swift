@@ -5,12 +5,12 @@
 //  Created by Alexey Vorobyov on 28.01.2025.
 //
 
-import Foundation
+import CoreMedia
 
 protocol MixPlayingCondition {
     func isSatisfied(
         forNextFragment tag: String,
-        startingFrom second: TimeInterval,
+        startingFrom second: CMTime,
         rnd: inout RandomNumberGenerator
     ) -> Bool?
 }
@@ -18,7 +18,7 @@ protocol MixPlayingCondition {
 extension SimRadioDTO.Condition: MixPlayingCondition {
     func isSatisfied(
         forNextFragment tag: String,
-        startingFrom second: TimeInterval,
+        startingFrom second: CMTime,
         rnd: inout RandomNumberGenerator
     ) -> Bool? {
         switch type {
@@ -47,7 +47,7 @@ extension SimRadioDTO.Condition: MixPlayingCondition {
 
     func isGroupAndSatisfied(
         nextFragment tag: String,
-        starts sec: TimeInterval,
+        starts sec: CMTime,
         rnd: inout RandomNumberGenerator
     ) -> Bool? {
         guard let condition, condition.count > 1 else { return nil }
@@ -58,7 +58,7 @@ extension SimRadioDTO.Condition: MixPlayingCondition {
 
     func isGroupOrSatisfied(
         nextFragment tag: String,
-        starts sec: TimeInterval,
+        starts sec: CMTime,
         rnd: inout RandomNumberGenerator
     ) -> Bool? {
         guard let condition, condition.count > 1 else { return nil }
@@ -67,13 +67,14 @@ extension SimRadioDTO.Condition: MixPlayingCondition {
         } != nil
     }
 
-    func isSatisfiedForTimeInterval(starts sec: TimeInterval) -> Bool? {
+    func isSatisfiedForTimeInterval(starts sec: CMTime) -> Bool? {
         guard let from = from.map({ secOfDay(hhmm: $0) }) ?? nil,
               let to = to.map({ secOfDay(hhmm: $0) }) ?? nil
         else {
             return nil
         }
-        return from <= sec && sec <= to
+        return CMTime(seconds: from) <= sec
+            && sec <= CMTime(seconds: to)
     }
 }
 

@@ -60,9 +60,9 @@ extension FileDownload.Event {
     var isFinal: Bool {
         switch self {
         case .completed, .failed, .canceled:
-            return true
+            true
         case .progress:
-            return false
+            false
         }
     }
 }

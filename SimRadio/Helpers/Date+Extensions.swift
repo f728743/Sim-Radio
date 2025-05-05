@@ -17,7 +17,7 @@ extension Date {
     }
 
     var startOfDay: Date {
-        return Calendar.current.startOfDay(for: self)
+        Calendar.current.startOfDay(for: self)
     }
 
     static var tomorrow: Date? {

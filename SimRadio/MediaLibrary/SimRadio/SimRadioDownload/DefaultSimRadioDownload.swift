@@ -51,11 +51,11 @@ actor DefaultSimRadioDownload {
 
         Task { [weak self] in
             guard let self else { return }
-            let stream = self.downloadQueue.events
+            let stream = downloadQueue.events
             for await event in stream {
-                await self.handleDownloaderEvent(event)
+                await handleDownloaderEvent(event)
             }
-            await self.finishEventStream()
+            await finishEventStream()
         }
     }
 
@@ -117,7 +117,7 @@ private extension DefaultSimRadioDownload {
         let groupsToSkip = await alreadyDownloaded(of: station.fileGroupIDs)
         for groupID in station.fileGroupIDs {
             guard !groupsToSkip.contains(groupID),
-                  let urls = allFileGroups[groupID]?.files.compactMap({ $0.url }) else { continue }
+                  let urls = allFileGroups[groupID]?.files.compactMap(\.url) else { continue }
 
             let missingFilesInGroup = Set(missing?[groupID] ?? [])
 
@@ -173,7 +173,7 @@ private extension DefaultSimRadioDownload {
             downloadStatus
                 .filter { $0.value.state == .completed }
                 .compactMap { allStations[$0.key]?.fileGroupIDs }
-                .flatMap { $0 }
+                .flatMap(\.self)
         )
         return gtoupIDs.filter { groupDownloads.keys.contains($0) || downloadedGroups.contains($0) }
     }
@@ -184,7 +184,7 @@ private extension DefaultSimRadioDownload {
             return nil
         }
 
-        let otherGroupIDs = Set(stationDownloads.values.flatMap { $0.fileGroupIDs })
+        let otherGroupIDs = Set(stationDownloads.values.flatMap(\.fileGroupIDs))
         let stationOnlyGroupIDs = stationInfo.fileGroupIDs.filter { !otherGroupIDs.contains($0) }
 
         return stationOnlyGroupIDs.flatMap { groupID in
@@ -262,7 +262,7 @@ private extension DefaultSimRadioDownload {
         guard let stationInfo = stationDownloads.removeValue(forKey: stationID) else {
             return
         }
-        let groupIDsToKeep = Set(stationDownloads.values.flatMap { $0.fileGroupIDs })
+        let groupIDsToKeep = Set(stationDownloads.values.flatMap(\.fileGroupIDs))
         stationInfo
             .fileGroupIDs
             .filter { !groupIDsToKeep.contains($0) }
@@ -311,8 +311,8 @@ private extension DefaultSimRadioDownload {
             }
 
             // Collect results as they complete
-            for await(url, size) in group {
-                if let size = size {
+            for await (url, size) in group {
+                if let size {
                     await update(fileURL: url, groupID: groupID, size: size)
                 }
             }
@@ -393,34 +393,33 @@ extension Sequence {
 
 extension DefaultSimRadioDownload.FileDownloadInfo {
     func updated(queueState: DownloadQueue.DownloadState) -> DefaultSimRadioDownload.FileDownloadInfo {
-        let newStatus: SimRadioDownloadStatus
-        switch queueState {
+        let newStatus: SimRadioDownloadStatus = switch queueState {
         case .queued:
-            newStatus = .init(
+            .init(
                 state: .scheduled,
                 downloadedBytes: status.downloadedBytes,
                 totalBytes: status.totalBytes
             )
         case let .progress(downloadedBytes, totalBytes):
-            newStatus = .init(
+            .init(
                 state: .downloading,
                 downloadedBytes: downloadedBytes,
                 totalBytes: totalBytes == 0 ? status.totalBytes : totalBytes
             )
         case .completed:
-            newStatus = .init(
+            .init(
                 state: .completed,
                 downloadedBytes: status.totalBytes,
                 totalBytes: status.totalBytes
             )
         case .canceled:
-            newStatus = .init(
+            .init(
                 state: .canceled,
                 downloadedBytes: status.downloadedBytes,
                 totalBytes: status.totalBytes
             )
         case .failed:
-            newStatus = .init(
+            .init(
                 state: .failed([url]),
                 downloadedBytes: status.downloadedBytes,
                 totalBytes: status.totalBytes
@@ -467,8 +466,8 @@ extension Collection where Element: SimRadioDownloadStatusProtocol {
                 return .canceled
             }
 
-            if incomplete.contains(where: { $0.state.isDone }) {
-                return .failed(flatMap { $0.state.failedURLs })
+            if incomplete.contains(where: \.state.isDone) {
+                return .failed(flatMap(\.state.failedURLs))
             }
             return isEmpty ? nil : .scheduled
         }
@@ -499,7 +498,7 @@ extension Int64 {
     }()
 
     var bytesToMB: String {
-        return Self.formatter.string(fromByteCount: Swift.max(0, self))
+        Self.formatter.string(fromByteCount: Swift.max(0, self))
     }
 }
 
@@ -533,7 +532,7 @@ private func log(error: String) {
     print(error)
 }
 
-extension Collection where Element == DownloadLog {
+extension Collection<DownloadLog> {
     var logVerboseInfo: Bool {
         contains(
             where: {

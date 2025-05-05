@@ -14,15 +14,15 @@ enum TabBarItem: Hashable, CaseIterable {
 extension TabBarItem {
     var title: String {
         switch self {
-        case .home: return "Home"
-        case .search: return "Search"
+        case .home: "Home"
+        case .search: "Search"
         }
     }
 
     var image: Image {
         switch self {
-        case .home: return Image("img_home")
-        case .search: return Image(systemName: "magnifyingglass")
+        case .home: Image("img_home")
+        case .search: Image(systemName: "magnifyingglass")
         }
     }
 }

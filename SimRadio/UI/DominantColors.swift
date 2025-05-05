@@ -151,7 +151,7 @@ private func mergeSimilar(colors: [ColorCount], diffThreshold: CGFloat = 10.0, m
                 bestMatchColor = dominantColor
             }
         }
-        if let bestMatchScore = bestMatchScore, bestMatchScore < diffThreshold {
+        if let bestMatchScore, bestMatchScore < diffThreshold {
             bestMatchColor = bestMatchColor.map {
                 ColorCount(color: $0.color, count: $0.count + 1)
             }
@@ -183,15 +183,15 @@ private struct ColorCount {
 extension DominantColorQuality {
     var prefferedPixelCount: CGFloat? {
         switch self {
-        case .low: return 1000
-        case .fair: return 10000
-        case .high: return 100_000
-        case .best: return nil
+        case .low: 1000
+        case .fair: 10000
+        case .high: 100_000
+        case .best: nil
         }
     }
 
     func targetSize(for size: CGSize) -> CGSize {
-        guard let prefferedPixelCount = prefferedPixelCount else {
+        guard let prefferedPixelCount else {
             return size
         }
         guard size.pixelCount > prefferedPixelCount else {
@@ -277,13 +277,13 @@ extension XYZ {
 
 private extension CGFloat {
     func rounded(_ rule: FloatingPointRoundingRule, precision: Int) -> CGFloat {
-        return (self * CGFloat(precision)).rounded(rule) / CGFloat(precision)
+        (self * CGFloat(precision)).rounded(rule) / CGFloat(precision)
     }
 }
 
 private extension CGSize {
     var pixelCount: CGFloat {
-        return width * height
+        width * height
     }
 
     /// Returns a new size of the target area, keeping the same aspect ratio.
