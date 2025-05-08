@@ -7,31 +7,31 @@
 
 import Foundation
 
-struct FileFromGrpup {
+struct FileFromGroup {
     let groupID: SimFileGroup.ID
     let file: SimFile
 }
 
-extension FileFromGrpup {
+extension FileFromGroup {
     func url(local: Bool) -> URL {
         local ? groupID.localFileURL(for: file.url) : file.url
     }
 }
 
 protocol FileSource {
-    func next(parentFile: FileFromGrpup?, rnd: inout RandomNumberGenerator) -> FileFromGrpup?
+    func next(parentFile: FileFromGroup?, rnd: inout RandomNumberGenerator) -> FileFromGroup?
 }
 
 struct ParticularFileSource: FileSource {
-    let file: FileFromGrpup
+    let file: FileFromGroup
 
-    func next(parentFile _: FileFromGrpup?, rnd _: inout RandomNumberGenerator) -> FileFromGrpup? {
+    func next(parentFile _: FileFromGroup?, rnd _: inout RandomNumberGenerator) -> FileFromGroup? {
         file
     }
 }
 
 struct AttachedFileSource: FileSource {
-    func next(parentFile: FileFromGrpup?, rnd: inout RandomNumberGenerator) -> FileFromGrpup? {
+    func next(parentFile: FileFromGroup?, rnd: inout RandomNumberGenerator) -> FileFromGroup? {
         if let parentFile, parentFile.file.attaches.count > 0 {
             let attachGroupID: SimFileGroup.ID = .init(
                 value: parentFile
@@ -41,7 +41,7 @@ struct AttachedFileSource: FileSource {
                     .dropLast()
                     .joined(separator: "/") + "/\(SimRadioMedia.attachesGroupTag)"
             )
-            return FileFromGrpup(
+            return FileFromGroup(
                 groupID: attachGroupID,
                 file: parentFile.file.attaches[
                     Int(Double(parentFile.file.attaches.count) * Double.random(in: 0 ... 1, using: &rnd))
@@ -67,7 +67,7 @@ struct GroupFileSource: FileSource {
         randomFiles = files
     }
 
-    func next(parentFile _: FileFromGrpup?, rnd _: inout RandomNumberGenerator) -> FileFromGrpup? {
+    func next(parentFile _: FileFromGroup?, rnd _: inout RandomNumberGenerator) -> FileFromGroup? {
         .init(groupID: groupID, file: randomFiles.next())
     }
 }

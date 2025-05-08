@@ -105,7 +105,7 @@ extension SimRadioMedia {
 
     static let attachesGroupTag: String = "intro"
 
-    enum StationLoacalStatus {
+    enum StationLocalStatus {
         case completed
         case partial(missing: [SimFileGroup.ID: [URL]])
         case missing
@@ -115,7 +115,7 @@ extension SimRadioMedia {
         stations[id]?.fileGroupIDs.compactMap { fileGroups[$0] } ?? []
     }
 
-    func calculateStationLoacalStatus(_ id: SimStation.ID) async throws -> StationLoacalStatus {
+    func calculateStationLocalStatus(_ id: SimStation.ID) async throws -> StationLocalStatus {
         var missing: [SimFileGroup.ID: [URL]] = [:]
         var haveAny = false
         for fileGroup in stationFileGroups(id) {

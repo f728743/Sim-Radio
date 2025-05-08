@@ -39,7 +39,7 @@ struct PlayerButton<Content: View>: View {
             .clipShape(Ellipse())
             .scaleEffect(pressed ? 0.85 : 1)
             .onPressGesture(
-                interval: config.updateUnterval,
+                interval: config.updateInterval,
                 onPressed: {
                     guard isEnabled else { return }
                     withAnimation {
@@ -86,7 +86,7 @@ extension EnvironmentValues {
 }
 
 struct PlayerButtonConfig {
-    let updateUnterval: TimeInterval
+    let updateInterval: TimeInterval
     let size: CGFloat
     let labelColor: Color
     let tint: Color
@@ -94,14 +94,14 @@ struct PlayerButtonConfig {
     let disabledColor: Color
 
     init(
-        updateUnterval: TimeInterval = 0.1,
+        updateInterval: TimeInterval = 0.1,
         size: CGFloat = 68,
         labelColor: Color = .init(UIColor.label),
         tint: Color = .init(UIColor.tintColor),
         pressedColor: Color = .init(UIColor.secondaryLabel),
         disabledColor: Color = .init(UIColor.secondaryLabel)
     ) {
-        self.updateUnterval = updateUnterval
+        self.updateInterval = updateInterval
         self.size = size
         self.labelColor = labelColor
         self.tint = tint

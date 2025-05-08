@@ -181,7 +181,7 @@ private struct ColorCount {
 }
 
 extension DominantColorQuality {
-    var prefferedPixelCount: CGFloat? {
+    var preferredPixelCount: CGFloat? {
         switch self {
         case .low: 1000
         case .fair: 10000
@@ -191,13 +191,13 @@ extension DominantColorQuality {
     }
 
     func targetSize(for size: CGSize) -> CGSize {
-        guard let prefferedPixelCount else {
+        guard let preferredPixelCount else {
             return size
         }
-        guard size.pixelCount > prefferedPixelCount else {
+        guard size.pixelCount > preferredPixelCount else {
             return size
         }
-        return size.transformToFit(in: prefferedPixelCount)
+        return size.transformToFit(in: preferredPixelCount)
     }
 }
 

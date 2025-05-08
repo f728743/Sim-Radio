@@ -249,9 +249,9 @@ private extension DefaultSimRadioLibrary {
     func resumeDownloading(_ stationID: SimStation.ID) async {
         do {
             guard let mediaState else { return }
-            let curren = mediaState.simRadio
-            let currntStatus = try await curren.calculateStationLoacalStatus(stationID)
-            switch currntStatus {
+            let current = mediaState.simRadio
+            let currentStatus = try await current.calculateStationLocalStatus(stationID)
+            switch currentStatus {
             case .completed:
                 storage.setStorageState(.downloaded, for: stationID)
                 notifyChangeStatus(status: .init(state: .completed), for: stationID)

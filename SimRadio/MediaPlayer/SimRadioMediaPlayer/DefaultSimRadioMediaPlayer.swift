@@ -19,7 +19,7 @@ class DefaultSimRadioMediaPlayer {
         /// - Typically longer than initial playlists to maintain playback buffer
         let bufferedPlaylistMinDuration: TimeInterval
     }
-    
+
     /// Represents the next media item to be queued for playback
     struct NextPlayableItem {
         let stationID: SimStation.ID
@@ -32,7 +32,7 @@ class DefaultSimRadioMediaPlayer {
         /// - Value represents seconds since start of day (00:00)
         let startTimeInDay: CMTime
     }
-    
+
     weak var mediaState: SimRadioMediaState?
 
     private let queuePlayer = AVQueuePlayer()

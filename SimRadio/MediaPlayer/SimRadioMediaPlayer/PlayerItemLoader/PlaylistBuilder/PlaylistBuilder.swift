@@ -267,7 +267,7 @@ private extension PlaylistBuilder {
 
     // swiftlint:disable:next function_parameter_count
     func makeMixesForFragment(
-        to file: FileFromGrpup,
+        to file: FileFromGroup,
         starts sec: CMTime,
         at positions: [String: Double],
         mixins: [PlaylistRules.Mix],

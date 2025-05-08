@@ -16,14 +16,14 @@ class ColorfulBackgroundModel {
     private var colors: [Color] = []
     private var shown = false
     private var animatedData: ColorPoints = .zero
-    private var animatioTimerCancellable: AnyCancellable?
+    private var animationTimerCancellable: AnyCancellable?
 
     func onAppear() {
         shown = true
         animate()
         animatedData = points
 
-        animatioTimerCancellable = Timer
+        animationTimerCancellable = Timer
             .publish(every: Self.animationDuration * 0.9, on: .main, in: .common)
             .autoconnect()
             .sink { [weak self] _ in

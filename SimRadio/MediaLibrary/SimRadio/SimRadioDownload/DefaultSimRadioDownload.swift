@@ -165,7 +165,7 @@ private extension DefaultSimRadioDownload {
         await downloadQueue.append(downloadRequest)
     }
 
-    func alreadyDownloaded(of gtoupIDs: [SimFileGroup.ID]) async -> [SimFileGroup.ID] {
+    func alreadyDownloaded(of groupIDs: [SimFileGroup.ID]) async -> [SimFileGroup.ID] {
         let allStations = await mediaState?.simRadio.stations ?? [:]
         let downloadStatus = await mediaState?.simDownloadStatus ?? [:]
 
@@ -175,7 +175,7 @@ private extension DefaultSimRadioDownload {
                 .compactMap { allStations[$0.key]?.fileGroupIDs }
                 .flatMap(\.self)
         )
-        return gtoupIDs.filter { groupDownloads.keys.contains($0) || downloadedGroups.contains($0) }
+        return groupIDs.filter { groupDownloads.keys.contains($0) || downloadedGroups.contains($0) }
     }
 
     func requestsOnlyForStation(withID id: SimStation.ID) -> [DownloadQueue.DownloadRequest]? {

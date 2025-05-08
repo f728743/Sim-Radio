@@ -12,12 +12,12 @@ import SwiftUI
 class DownloadedScreenViewModel {
     var mediaState: MediaState?
     var items: [Media] {
-        mediaState?.donloadedMedia ?? []
+        mediaState?.downloadedMedia ?? []
     }
 }
 
 private extension MediaState {
-    var donloadedMedia: [Media] {
+    var downloadedMedia: [Media] {
         downloadStatus
             .map(\.self)
             .filter { $0.value.state == .completed }
