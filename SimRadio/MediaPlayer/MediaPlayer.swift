@@ -14,6 +14,12 @@ enum MediaPlayerState {
 class MediaPlayer {
     var simRadio: SimRadioMediaPlayer?
     private var state: MediaPlayerState = .stopped
+    private var audioSession: AudioSession
+
+    init() {
+        audioSession = AudioSession()
+        audioSession.delegate = self
+    }
 
     func play(_ mediaID: MediaID) {
         switch state {
@@ -39,5 +45,15 @@ class MediaPlayer {
         case .stopped:
             break
         }
+    }
+}
+
+extension MediaPlayer: AudioSessionDelegate {
+    func audioSessionInterruptionBegan() {
+        // TODO:
+    }
+
+    func audioSessionInterruptionEnded(shouldResume _: Bool) {
+        // TODO:
     }
 }

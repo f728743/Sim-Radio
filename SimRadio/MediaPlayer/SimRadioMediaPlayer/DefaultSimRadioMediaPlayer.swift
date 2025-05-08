@@ -6,35 +6,52 @@
 //
 
 import AVFoundation
-import Combine
-
-struct PlayContinuation {
-    let stationID: SimStation.ID
-    let item: AVPlayerItem
-    let playingEndDate: Date
-    let playingEndTime: CMTime
-}
 
 @MainActor
 class DefaultSimRadioMediaPlayer {
+    struct Config {
+        /// Minimum duration (in seconds) required for the initial playlist
+        /// - Note: This playlist is optimized for fast loading to minimize playback startup latency
+        /// - The actual duration might be longer depending on available tracks
+        let initialPlaylistMinDuration: TimeInterval
+        /// Minimum duration (in seconds) required for subsequent buffered playlists
+        /// - Note: These playlists are loaded in the background during playback to ensure seamless continuation
+        /// - Typically longer than initial playlists to maintain playback buffer
+        let bufferedPlaylistMinDuration: TimeInterval
+    }
+    
+    /// Represents the next media item to be queued for playback
+    struct NextPlayableItem {
+        let stationID: SimStation.ID
+        let item: AVPlayerItem
+        /// Reference date used to calculate the day boundary for playback scheduling
+        /// - Important: Calendar operations should use this date's startOfDay
+        let day: Date
+        /// Precise time offset within the day for playback scheduling
+        /// - Note: Uses CMTime for frame-accurate scheduling and AVFoundation compatibility
+        /// - Value represents seconds since start of day (00:00)
+        let startTimeInDay: CMTime
+    }
+    
     weak var mediaState: SimRadioMediaState?
 
     private let queuePlayer = AVQueuePlayer()
-    private var playContinuation: PlayContinuation?
+    private var nextPlayableItem: NextPlayableItem?
     private let config: DefaultSimRadioMediaPlayer.Config = .default
     private var observer: NSObjectProtocol?
-    private var playToEndTrackingСancellable: AnyCancellable?
+    private var playToEndTask: Task<Void, Never>?
 }
 
 extension DefaultSimRadioMediaPlayer.Config {
     static let `default` = DefaultSimRadioMediaPlayer.Config(
-        staringPlaylistMinDuration: 60,
-        continuationPlaylistMinDuration: 10 * 60
+        initialPlaylistMinDuration: 60,
+        bufferedPlaylistMinDuration: 10 * 60
     )
 }
 
 extension DefaultSimRadioMediaPlayer: SimRadioMediaPlayer {
     func playStation(withID stationID: SimStation.ID) {
+        print("Play \(stationID)")
         Task {
             do {
                 try await doPlayStation(withID: stationID)
@@ -47,17 +64,13 @@ extension DefaultSimRadioMediaPlayer: SimRadioMediaPlayer {
     func stop() {
         print("Stop")
         queuePlayer.removeAllItems()
+        playToEndTask?.cancel()
+        playToEndTask = nil
     }
 }
 
 private extension DefaultSimRadioMediaPlayer {
-    struct Config {
-        let staringPlaylistMinDuration: TimeInterval
-        let continuationPlaylistMinDuration: TimeInterval
-    }
-
     func doPlayStation(withID stationID: SimStation.ID) async throws {
-        print("Play \(stationID)")
         guard let mediaState else { return }
 
         guard let stationData = mediaState.stationData(for: stationID) else { return }
@@ -67,7 +80,7 @@ private extension DefaultSimRadioMediaPlayer {
         let playlist = try await playlistBuilder.makePlaylist(
             startingOn: startingDate,
             at: .init(seconds: startingDate.currentSecondOfDay),
-            duration: .init(seconds: config.staringPlaylistMinDuration)
+            duration: .init(seconds: config.initialPlaylistMinDuration)
         )
         let loader = PlayerItemLoader()
         let playerItem = try await loader.loadPlayerItem(playlist: playlist)
@@ -75,61 +88,66 @@ private extension DefaultSimRadioMediaPlayer {
         queuePlayer.play()
         addDidPlayToEndObserver(to: playerItem)
 
-        guard let playContinuation = try await makePlayContinuation(
+        guard let nextPlayableItem = try await makeNextPlayableItem(
             stationID: stationID,
             date: startingDate + playlist.duration.seconds,
             time: startingTime + playlist.duration
         ) else {
             throw PlayerItemLoadingError.playerItemCreatingError
         }
-        self.playContinuation = playContinuation
-        queuePlayer.insert(playContinuation.item, after: nil)
+        self.nextPlayableItem = nextPlayableItem
+        queuePlayer.insert(nextPlayableItem.item, after: nil)
     }
 
     func onPlayerItemDidPlayToEndTime() {
-        guard let playContinuation else { return }
-        addDidPlayToEndObserver(to: playContinuation.item)
+        guard let nextPlayableItem else { return }
+        addDidPlayToEndObserver(to: nextPlayableItem.item)
         Task {
-            guard let newPlayContinuation = try await makePlayContinuation(
-                stationID: playContinuation.stationID,
-                date: playContinuation.playingEndDate,
-                time: playContinuation.playingEndTime
+            guard let newNextPlayableItem = try await makeNextPlayableItem(
+                stationID: nextPlayableItem.stationID,
+                date: nextPlayableItem.day,
+                time: nextPlayableItem.startTimeInDay
             ) else { return }
-            queuePlayer.insert(newPlayContinuation.item, after: nil)
-            self.playContinuation = newPlayContinuation
+            queuePlayer.insert(newNextPlayableItem.item, after: nil)
+            self.nextPlayableItem = newNextPlayableItem
         }
     }
 
     func addDidPlayToEndObserver(to item: AVPlayerItem) {
-        playToEndTrackingСancellable = NotificationCenter.default.publisher(
-            for: .AVPlayerItemDidPlayToEndTime,
-            object: item
-        )
-        .sink { [weak self] _ in
-            self?.onPlayerItemDidPlayToEndTime()
+        playToEndTask?.cancel()
+        playToEndTask = Task { [weak self] in
+            let notifications = NotificationCenter.default.notifications(
+                named: .AVPlayerItemDidPlayToEndTime,
+                object: item
+            )
+
+            for await _ in notifications {
+                guard !Task.isCancelled else { break }
+                self?.onPlayerItemDidPlayToEndTime()
+            }
         }
     }
 
-    func makePlayContinuation(
+    func makeNextPlayableItem(
         stationID: SimStation.ID,
         date: Date,
         time: CMTime
-    ) async throws -> PlayContinuation? {
+    ) async throws -> NextPlayableItem? {
         guard let stationData = mediaState?.stationData(for: stationID) else { return nil }
         let playlistBuilder = PlaylistBuilder(stationData: stationData)
         let playlist = try await playlistBuilder.makePlaylist(
             startingOn: date,
             at: time,
-            duration: .init(seconds: config.continuationPlaylistMinDuration)
+            duration: .init(seconds: config.bufferedPlaylistMinDuration)
         )
 
         let loader = PlayerItemLoader()
         let playerItem = try await loader.loadPlayerItem(playlist: playlist)
-        return PlayContinuation(
+        return NextPlayableItem(
             stationID: stationID,
             item: playerItem,
-            playingEndDate: date + playlist.duration.seconds,
-            playingEndTime: time + playlist.duration
+            day: date + playlist.duration.seconds,
+            startTimeInDay: time + playlist.duration
         )
     }
 }
