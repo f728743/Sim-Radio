@@ -45,7 +45,7 @@ class PlaylistBuilder {
         startingOn playlistStartDate: Date,
         at timeOffsetInFirstDay: CMTime,
         duration: CMTime,
-        trimLastItem: Bool
+        trimLastItem: Bool = false
     ) async throws -> [PlaylistItem] {
         guard duration > .zero else { return [] }
         let fullDayDuration = CMTime(seconds: 24 * 60 * 60)
