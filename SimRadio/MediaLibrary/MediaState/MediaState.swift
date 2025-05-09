@@ -41,7 +41,13 @@ class MediaState {
                     guard let station = simRadio.stations[$0] else { return nil }
                     return Media(
                         id: .simRadio(station.id),
-                        meta: station.meta
+                        meta: .init(
+                            artwork: station.meta.artwork,
+                            title: station.meta.title,
+                            listSubtitle: station.meta.genre,
+                            detailsSubtitle: station.meta.detailsSubtitle,
+                            isLiveStream: true
+                        )
                     )
                 }
             )

@@ -33,10 +33,17 @@ struct SimFile: Sendable {
     let attaches: [SimFile]
 }
 
+struct SimStationMeta: Codable {
+    let title: String
+    let artwork: URL?
+    let genre: String
+    let host: String?
+}
+
 struct SimStation {
     struct ID: Hashable { let value: String }
     var id: ID
-    let meta: Media.Meta
+    let meta: SimStationMeta
     let fileGroupIDs: [SimFileGroup.ID]
     let playlistRules: SimRadioDTO.Playlist
 }
@@ -47,6 +54,24 @@ extension SimRadioMedia {
         fileGroups: [:],
         stations: [:]
     )
+}
+
+extension SimStationMeta {
+    var detailsSubtitle: String {
+        host.map { "Hosted by \($0) – \(genre)" } ?? genre
+    }
+}
+
+extension Media.Meta {
+    init(_ meta: SimStationMeta) {
+        self.init(
+            artwork: meta.artwork,
+            title: meta.title,
+            listSubtitle: meta.genre,
+            detailsSubtitle: meta.detailsSubtitle,
+            isLiveStream: true
+        )
+    }
 }
 
 private extension URL {
@@ -173,12 +198,6 @@ extension SimGameSeries {
     static let userDefaultsKey: String = "sim_series_ids"
 }
 
-extension SimRadioDTO.StationInfo {
-    var detailsSubtitle: String {
-        dj.map { "Hosted by \($0) – \(genre)" } ?? genre
-    }
-}
-
 extension SimStation {
     init(dto: SimRadioDTO.Station, gameSeriesShared: SimRadioDTO.GameSeriesShared, origin: URL) {
         let artwork = origin.simRadioBaseURL
@@ -196,11 +215,10 @@ extension SimStation {
         self.init(
             id: .init(origin: origin, stationTag: dto.tag),
             meta: .init(
-                artwork: artwork,
                 title: dto.info.title,
-                listSubtitle: dto.info.genre,
-                detailsSubtitle: dto.info.detailsSubtitle,
-                online: true
+                artwork: artwork,
+                genre: dto.info.genre,
+                host: dto.info.dj
             ),
             fileGroupIDs: stationFileGroupIDs + usedGameSeriesSharedFileGroupIDs,
             playlistRules: dto.playlist

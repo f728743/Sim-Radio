@@ -15,6 +15,7 @@ struct AppView: View {
         let simRadioPlayer = DefaultSimRadioMediaPlayer()
         let mediaPlayer = MediaPlayer()
         mediaPlayer.simRadio = simRadioPlayer
+        simRadioPlayer.delegate = mediaPlayer
         let nowPlaying = NowPlayingController(player: mediaPlayer)
         let simRadioDownload = DefaultSimRadioDownload()
 

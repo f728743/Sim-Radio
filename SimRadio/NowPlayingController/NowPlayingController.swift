@@ -47,7 +47,7 @@ class NowPlayingController {
 
     var playPauseButton: ButtonType {
         switch state {
-        case .playing: currentMedia.map(\.meta.online) ?? false ? .stop : .pause
+        case .playing: currentMedia.map(\.meta.isLiveStream) ?? false ? .stop : .pause
         case .paused: .play
         }
     }
@@ -180,7 +180,7 @@ extension Media {
                 title: "---",
                 listSubtitle: "---",
                 detailsSubtitle: "---",
-                online: false
+                isLiveStream: false
             )
         )
     }

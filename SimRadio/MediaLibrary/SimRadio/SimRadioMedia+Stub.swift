@@ -13,11 +13,10 @@ extension SimRadioMedia {
             .init(
                 id: .init(value: $0.title),
                 meta: .init(
-                    artwork: stationImageUrl(String($0.logo.split(separator: ".")[0])),
                     title: $0.title,
-                    listSubtitle: $0.genre,
-                    detailsSubtitle: $0.detailsSubtitle,
-                    online: false
+                    artwork: stationImageUrl(String($0.logo.split(separator: ".")[0])),
+                    genre: $0.genre,
+                    host: $0.dj
                 ),
                 fileGroupIDs: [],
                 playlistRules: .init(
@@ -62,7 +61,7 @@ extension MediaList {
                         title: $0.title,
                         listSubtitle: $0.genre,
                         detailsSubtitle: $0.detailsSubtitle,
-                        online: false
+                        isLiveStream: false
                     )
                 )
             }

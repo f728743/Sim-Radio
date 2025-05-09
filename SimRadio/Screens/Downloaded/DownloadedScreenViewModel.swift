@@ -26,7 +26,7 @@ private extension MediaState {
                       let station = simRadio.stations[id] else { return nil }
                 return Media(
                     id: .simRadio(station.id),
-                    meta: station.meta
+                    meta: .init(station.meta)
                 )
             }
     }

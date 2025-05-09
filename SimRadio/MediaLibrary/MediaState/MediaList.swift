@@ -28,7 +28,7 @@ struct Media: Identifiable, Hashable, Equatable {
         let title: String
         let listSubtitle: String?
         let detailsSubtitle: String?
-        let online: Bool
+        let isLiveStream: Bool
     }
 }
 
