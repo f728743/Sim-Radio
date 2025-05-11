@@ -22,7 +22,7 @@ struct NowPlayingBackground: View {
                 .fill(.thickMaterial)
             if canBeExpanded {
                 ColorfulBackground(colors: colors)
-                    .overlay(Color(UIColor(white: 0.4, alpha: 0.5)))
+                    .overlay(Color(UIColor(white: 0.4, alpha: 0.4)))
                     .opacity(expanded ? 1 : 0)
             }
         }

@@ -6,17 +6,13 @@
 //
 
 import AVFoundation
-import Kingfisher
-import UIKit
 
 @MainActor
 class DefaultSimRadioMediaPlayer {
     weak var mediaState: SimRadioMediaState?
-    weak var delegate: SimRadioMediaPlayerDelegate?
 
     private let queuePlayer = AVQueuePlayer()
     private var nextPlayableItem: NextPlayableItem?
-    private var stationNowPlayingInfo: StationNowPlayingInfo?
     private let config: DefaultSimRadioMediaPlayer.Config = .default
     private var observer: NSObjectProtocol?
     private var playToEndTask: Task<Void, Never>?
@@ -31,7 +27,6 @@ extension DefaultSimRadioMediaPlayer.Config {
 
 extension DefaultSimRadioMediaPlayer: SimRadioMediaPlayer {
     func playStation(withID stationID: SimStation.ID) {
-        print("Play \(stationID)")
         Task {
             do {
                 try await doPlayStation(withID: stationID)
@@ -42,11 +37,9 @@ extension DefaultSimRadioMediaPlayer: SimRadioMediaPlayer {
     }
 
     func stop() {
-        print("Stop")
         queuePlayer.removeAllItems()
         playToEndTask?.cancel()
         playToEndTask = nil
-        stationNowPlayingInfo = nil
     }
 }
 
@@ -73,15 +66,6 @@ private extension DefaultSimRadioMediaPlayer {
         /// - Note: Uses CMTime for frame-accurate scheduling and AVFoundation compatibility
         /// - Value represents seconds since start of day (00:00)
         let startTimeInDay: CMTime
-    }
-
-    struct StationNowPlayingInfo {
-        let title: String
-        let artwork: UIImage
-        let artist: String?
-        let genre: String?
-        let index: Int
-        let count: Int
     }
 
     func doPlayStation(withID stationID: SimStation.ID) async throws {
@@ -111,12 +95,6 @@ private extension DefaultSimRadioMediaPlayer {
         }
         self.nextPlayableItem = nextPlayableItem
         queuePlayer.insert(nextPlayableItem.item, after: nil)
-        stationNowPlayingInfo = await makeStationNowPlayingInfo(
-            meta: stationData.station.meta,
-            index: 0, // TODO:
-            count: 10 // TODO:
-        )
-        updateNowPlayingInfo()
     }
 
     func onPlayerItemDidPlayToEndTime() {
@@ -168,44 +146,6 @@ private extension DefaultSimRadioMediaPlayer {
             item: playerItem,
             day: date + playlist.duration.seconds,
             startTimeInDay: time + playlist.duration
-        )
-    }
-
-    func updateNowPlayingInfo() {
-        guard let info = stationNowPlayingInfo else { return }
-        delegate?.simRadioMediaPlayer(
-            self,
-            didUpdateNowPlayingInfo: .init(
-                isLiveStream: true,
-                title: info.title,
-                artwork: info.artwork,
-                artist: info.artist,
-                genre: info.genre,
-                queue: .init(index: info.index, count: info.count),
-            )
-        )
-    }
-
-    func makeStationNowPlayingInfo(
-        meta: SimStationMeta,
-        index: Int,
-        count: Int
-    ) async -> StationNowPlayingInfo {
-        let image: UIImage = if let artworkURL = meta.artwork,
-                                let artwork = try? await KingfisherManager.shared.retrieveImage(with: artworkURL).image
-        {
-            artwork
-        } else {
-            UIImage()
-        }
-
-        return .init(
-            title: meta.title,
-            artwork: image,
-            artist: meta.host,
-            genre: meta.genre,
-            index: index,
-            count: count
         )
     }
 }

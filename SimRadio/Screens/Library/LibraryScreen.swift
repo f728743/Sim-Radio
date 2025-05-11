@@ -11,7 +11,8 @@ import SwiftUI
 struct LibraryScreen: View {
     @Environment(\.nowPlayingExpandProgress) var expandProgress
     @Environment(Router.self) var router
-    @Environment(MediaState.self) var mediaState
+//    @Environment(MediaState.self) var mediaState
+    @Environment(Dependencies.self) var dependencies
     @State private var viewModel = LibraryScreenViewModel()
 
     var body: some View {
@@ -36,7 +37,7 @@ struct LibraryScreen: View {
                 label: { ProfileToolbarButton() }
         }
         .task {
-            viewModel.mediaState = mediaState
+            viewModel.mediaState = dependencies.mediaState
         }
     }
 }
@@ -113,10 +114,10 @@ private struct RecentlyAddedItem: View {
 
 #Preview {
     @Previewable @State var mediaState = MediaState.stub
-    @Previewable @State var playerController = NowPlayingController.stub
+//    @Previewable @State var playerController = PlayerController.stub
 
     LibraryScreen()
         .withRouter()
         .environment(mediaState)
-        .environment(playerController)
+//        .environment(playerController) // TODO: remove
 }

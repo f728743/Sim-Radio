@@ -8,43 +8,18 @@
 import SwiftUI
 
 struct AppView: View {
-    @State private var playerController: NowPlayingController
-    @State private var mediaState: MediaState
-
-    init() {
-        let simRadioPlayer = DefaultSimRadioMediaPlayer()
-        let mediaPlayer = MediaPlayer()
-        mediaPlayer.simRadio = simRadioPlayer
-        simRadioPlayer.delegate = mediaPlayer
-        let nowPlaying = NowPlayingController(player: mediaPlayer)
-        let simRadioDownload = DefaultSimRadioDownload()
-
-        let simRadioLibrary = DefaultSimRadioLibrary(
-            storage: UserDefaultsRadioStorage(),
-            simRadioDownload: simRadioDownload
-        )
-
-        let mediaState = MediaState(
-            simRadioLibrary: simRadioLibrary
-        )
-        simRadioLibrary.delegate = mediaState
-        simRadioLibrary.mediaState = mediaState
-        simRadioDownload.mediaState = mediaState
-        simRadioPlayer.mediaState = mediaState
-
-        Task {
-            await mediaState.load()
-        }
-
-        _playerController = State(wrappedValue: nowPlaying)
-        _mediaState = State(wrappedValue: mediaState)
+    @State private var playerController: PlayerController
+    init(dependencies: Dependencies?) {
+        let playerController = PlayerController()
+        playerController.player = dependencies?.mediaPlayer
+        playerController.mediaState = dependencies?.mediaState
+        _playerController = State(wrappedValue: playerController)
     }
 
     var body: some View {
         OverlayableRootView {
             OverlaidRootView()
                 .environment(playerController)
-                .environment(mediaState)
         }
     }
 }

@@ -17,9 +17,10 @@ class MediaListScreenViewModel {
     }
 
     var mediaState: MediaState?
-    var nowPlaying: NowPlayingController?
     let items: [Media]
     let listMeta: MediaList.Meta?
+
+    weak var player: MediaPlayer?
 
     init(items: [Media], listMeta: MediaList.Meta?) {
         self.items = items
@@ -27,11 +28,8 @@ class MediaListScreenViewModel {
     }
 
     func onSelect(media: Media.ID) {
-        guard let nowPlaying else { return }
-        if nowPlaying.items != items {
-            nowPlaying.items = items
-        }
-        nowPlaying.onPlay(itemId: media)
+        guard let player else { return }
+        player.play(media, of: items.map(\.id))
     }
 
     func swipeButtons(media: Media.ID) -> [SwipeButton] {

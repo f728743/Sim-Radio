@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct PlayerControls: View {
-    @Environment(NowPlayingController.self) var model
+    @Environment(PlayerController.self) var model
     @State private var volume: Double = 0.5
 
     var body: some View {
@@ -47,17 +47,17 @@ private extension PlayerControls {
             VStack(alignment: .leading, spacing: 4) {
                 let fade = ViewConst.playerCardPaddings
                 let cfg = MarqueeText.Config(leftFade: fade, rightFade: fade)
-                MarqueeText(model.display.meta.title, config: cfg)
+                MarqueeText(model.display.title, config: cfg)
                     .transformEffect(.identity)
                     .font(.title3)
                     .fontWeight(.semibold)
                     .foregroundStyle(Color(palette.opaque))
-                    .id(model.display.id)
-                MarqueeText(model.display.meta.detailsSubtitle ?? "", config: cfg)
+                    .id(model.state)
+                MarqueeText(model.display.subtitle ?? "", config: cfg)
                     .transformEffect(.identity)
                     .foregroundStyle(Color(palette.opaque))
                     .blendMode(.overlay)
-                    .id(model.display.id)
+                    .id(model.state)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
         }
@@ -99,7 +99,7 @@ private extension PlayerControls {
 }
 
 #Preview {
-    @Previewable @State var playerController = NowPlayingController(player: MediaPlayer())
+    @Previewable @State var playerController = PlayerController()
     ZStack(alignment: .bottom) {
         PreviewBackground()
         PlayerControls()

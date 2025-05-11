@@ -9,9 +9,12 @@ import SwiftUI
 
 @main
 struct SimRadioApp: App {
+    @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
+
     var body: some Scene {
         WindowGroup {
-            AppView()
+            AppView(dependencies: appDelegate.dependencies)
+                .environment(appDelegate.dependencies)
         }
     }
 }

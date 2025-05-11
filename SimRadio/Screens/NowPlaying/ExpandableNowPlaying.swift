@@ -14,7 +14,7 @@ enum PlayerMatchedGeometry {
 struct ExpandableNowPlaying: View {
     @Binding var show: Bool
     @Binding var expanded: Bool
-    @Environment(NowPlayingController.self) var model
+    @Environment(PlayerController.self) var model
     @State private var offsetY: CGFloat = 0.0
     @State private var mainWindow: UIWindow?
     @State private var needRestoreProgressOnActive: Bool = false
@@ -30,7 +30,6 @@ struct ExpandableNowPlaying: View {
                 if let window = UIApplication.keyWindow {
                     mainWindow = window
                 }
-                model.onAppear()
             }
             .onChange(of: expanded) {
                 if expanded {
@@ -55,7 +54,7 @@ private extension ExpandableNowPlaying {
 
             ZStack(alignment: .top) {
                 NowPlayingBackground(
-                    colors: model.colors.map { Color($0.color) },
+                    colors: model.colors.map { Color($0) },
                     expanded: expanded,
                     isFullExpanded: isFullExpanded
                 )
@@ -201,7 +200,7 @@ private extension UIWindow {
 
 #Preview {
     @Previewable @State var mediaState = MediaState.stub
-    @Previewable @State var playerController = NowPlayingController.stub
+    @Previewable @State var playerController = PlayerController.stub
 
     OverlayableRootView {
         OverlaidRootView()

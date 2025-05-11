@@ -150,7 +150,7 @@ private class PassthroughWindow: UIWindow {
 
 #Preview {
     @Previewable @State var mediaState = MediaState.stub
-    @Previewable @State var playerController = NowPlayingController.stub
+    @Previewable @State var playerController = PlayerController.stub
 
     OverlayableRootView {
         OverlaidRootView()

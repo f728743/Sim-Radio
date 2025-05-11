@@ -10,8 +10,8 @@ import SwiftUI
 
 struct MediaListScreen: View {
     @Environment(\.nowPlayingExpandProgress) var expandProgress
-    @Environment(NowPlayingController.self) var nowPlaying
-    @Environment(MediaState.self) var mediaState
+    @Environment(Dependencies.self) var dependencies
+//    @Environment(MediaState.self) var mediaState
     @State private var selection: Media.ID?
     @State private var viewModel: MediaListScreenViewModel
 
@@ -31,8 +31,8 @@ struct MediaListScreen: View {
                     label: { ProfileToolbarButton() }
             }
             .task {
-                viewModel.mediaState = mediaState
-                viewModel.nowPlaying = nowPlaying
+                viewModel.mediaState = dependencies.mediaState
+                viewModel.player = dependencies.mediaPlayer
             }
     }
 }
@@ -189,12 +189,12 @@ private extension EdgeInsets {
 
 #Preview {
     @Previewable @State var mediaState = MediaState.stub
-    @Previewable @State var playerController = NowPlayingController.stub
+    @Previewable @State var dependencies = Dependencies.stub
 
     MediaListScreen(
         items: mediaState.mediaList.first?.items ?? [],
         listMeta: mediaState.mediaList.first?.meta
     )
     .environment(mediaState)
-    .environment(playerController)
+    .environment(dependencies)
 }

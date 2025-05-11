@@ -23,6 +23,14 @@ class AudioSession {
         setupAudioInterruptionObserver()
     }
 
+    func setActive(_ active: Bool) {
+        do {
+            try AVAudioSession.sharedInstance().setActive(active)
+        } catch {
+            print("AVAudioSession setActive Error: \(error.localizedDescription)")
+        }
+    }
+
     deinit {
         interruptionTask?.cancel()
     }
@@ -32,8 +40,7 @@ private extension AudioSession {
     func setupAudioSession() {
         do {
             let audioSession = AVAudioSession.sharedInstance()
-            try audioSession.setCategory(.playback, mode: .default, options: [.allowBluetoothA2DP, .allowAirPlay])
-            try audioSession.setActive(true)
+            try audioSession.setCategory(.playback, mode: .default, options: [])
         } catch {
             print("AVAudioSession configuring Error: \(error.localizedDescription)")
         }

@@ -21,7 +21,7 @@ class DefaultSimRadioLibrary {
     ) {
         self.storage = storage
         self.simRadioDownload = simRadioDownload
-        print(URL.documentsDirectory)
+        print("documentsDirectory: ", URL.documentsDirectory)
 
         Task { [weak self] in
             guard let self else { return }

@@ -16,20 +16,20 @@ protocol SystemMediaInterfaceDelegate: AnyObject {
 class SystemMediaInterface {
     weak var delegate: SystemMediaInterfaceDelegate?
 
-    func configureRemoteCommands(isLiveStream: Bool, isSwitchTrackEnabled: Bool) {
-        let commands: [RemoteCommand] = isLiveStream ? [
+    func setRemoteCommandProfile(_ profile: CommandProfile) {
+        let commands: [RemoteCommand] = profile.isLiveStream ? [
             .play, .stop, .nextTrack, .previousTrack
         ] : [
             .play, .pause, .stop, .togglePausePlay, .nextTrack, .previousTrack
         ]
         configureRemoteCommands(
             commands,
-            disabledCommands: isSwitchTrackEnabled ? [] : [.nextTrack, .previousTrack]
+            disabledCommands: profile.isSwitchTrackEnabled ? [] : [.nextTrack, .previousTrack]
         )
     }
 
-    func set(nowPlayingInfo: NowPlayingInfo) {
-        MPNowPlayingInfoCenter.default().nowPlayingInfo = nowPlayingInfo.mpNowPlayingInfo
+    func setNowPlayingInfo(_ info: NowPlayingInfo?) {
+        MPNowPlayingInfoCenter.default().nowPlayingInfo = info?.mpNowPlayingInfo
     }
 }
 
@@ -52,7 +52,6 @@ private extension SystemMediaInterface {
 extension RemoteCommand {
     var mpRemoteCommand: MPRemoteCommand {
         let commandCenter = MPRemoteCommandCenter.shared()
-
         switch self {
         case .pause:
             return commandCenter.pauseCommand
@@ -84,21 +83,21 @@ extension RemoteCommand {
 
 extension NowPlayingInfo {
     var mpNowPlayingInfo: [String: Any] {
-        var nowPlayingInfo = [String: Any]()
-        nowPlayingInfo[MPNowPlayingInfoPropertyMediaType] = MPNowPlayingInfoMediaType.audio.rawValue
-        nowPlayingInfo[MPNowPlayingInfoPropertyIsLiveStream] = isLiveStream
-        nowPlayingInfo[MPMediaItemPropertyTitle] = title
-        nowPlayingInfo[MPMediaItemPropertyArtist] = artist
-        nowPlayingInfo[MPMediaItemPropertyArtwork] = MPMediaItemArtwork(boundsSize: artwork.size) { _ in artwork }
+        var info = [String: Any]()
+        info[MPNowPlayingInfoPropertyMediaType] = MPNowPlayingInfoMediaType.audio.rawValue
+        info[MPNowPlayingInfoPropertyIsLiveStream] = meta.isLiveStream
+        info[MPMediaItemPropertyTitle] = meta.title
+        info[MPMediaItemPropertyArtist] = meta.artist
+        info[MPMediaItemPropertyArtwork] = MPMediaItemArtwork(boundsSize: meta.artwork.size) { _ in meta.artwork }
         if let queue {
-            nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackQueueIndex] = queue.index
-            nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackQueueCount] = queue.count
+            info[MPNowPlayingInfoPropertyPlaybackQueueIndex] = queue.index
+            info[MPNowPlayingInfoPropertyPlaybackQueueCount] = queue.count
         }
-        if let playback {
-            nowPlayingInfo[MPMediaItemPropertyPlaybackDuration] = CMTime(seconds: playback.duration)
-            nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = CMTime(seconds: playback.elapsedTime)
-            nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = 0
+        if let progress {
+            info[MPMediaItemPropertyPlaybackDuration] = CMTime(seconds: progress.duration)
+            info[MPNowPlayingInfoPropertyElapsedPlaybackTime] = CMTime(seconds: progress.elapsedTime)
         }
-        return nowPlayingInfo
+        info[MPNowPlayingInfoPropertyPlaybackRate] = isPlaying ? 1.0 : 0.0
+        return info
     }
 }

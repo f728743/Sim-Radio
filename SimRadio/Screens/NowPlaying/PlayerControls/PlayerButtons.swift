@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct PlayerButtons: View {
-    @Environment(NowPlayingController.self) var model
+    @Environment(PlayerController.self) var model
     let spacing: CGFloat
     let imageSize: CGFloat = 34
     @State var backwardAnimationTrigger: PlayerButtonTrigger = .one(bouncing: false)
@@ -72,7 +72,7 @@ extension PlayerButtonConfig {
 }
 
 #Preview {
-    @Previewable @State var playerController = NowPlayingController(player: MediaPlayer())
+    @Previewable @State var playerController = PlayerController()
     ZStack(alignment: .top) {
         PreviewBackground()
         VStack {

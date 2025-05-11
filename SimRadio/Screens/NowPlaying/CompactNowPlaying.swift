@@ -9,7 +9,7 @@ import Kingfisher
 import SwiftUI
 
 struct CompactNowPlaying: View {
-    @Environment(NowPlayingController.self) var model
+    @Environment(PlayerController.self) var model
     @Binding var expanded: Bool
     var hideArtworkOnExpanded: Bool = true
     var animationNamespace: Namespace.ID
@@ -20,7 +20,7 @@ struct CompactNowPlaying: View {
             artwork
                 .frame(width: 40, height: 40)
 
-            Text(model.title)
+            Text(model.display.title)
                 .lineLimit(1)
                 .font(.appFont.miniPlayerTitle)
                 .padding(.trailing, -18)
@@ -70,7 +70,7 @@ private extension CompactNowPlaying {
     @ViewBuilder
     var artwork: some View {
         if !hideArtworkOnExpanded || !expanded {
-            KFImage.url(model.display.meta.artwork)
+            KFImage.url(model.display.artwork)
                 .resizable()
                 .aspectRatio(contentMode: .fill)
                 .background(Color(UIColor.systemGray4))
@@ -94,15 +94,15 @@ extension PlayerButtonConfig {
 
 #Preview {
     @Previewable @State var mediaState = MediaState.stub
-    @Previewable @State var playerController = NowPlayingController.stub
+    @Previewable @State var playerController = PlayerController.stub
 
     CompactNowPlaying(
         expanded: .constant(false),
         animationNamespace: Namespace().wrappedValue
     )
-    .onAppear {
-        playerController.items = mediaState.mediaList.first?.items ?? []
-    }
+//    .onAppear {
+//        playerController.setItems(mediaState.mediaList.first?.items ?? [])
+//    }
     .background(.gray)
     .environment(playerController)
 }

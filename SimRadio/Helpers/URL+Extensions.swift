@@ -6,8 +6,16 @@
 //
 
 import Foundation
+import Kingfisher
+import UIKit
 
 extension URL {
+    var image: UIImage? {
+        get async {
+            try? await KingfisherManager.shared.retrieveImage(with: self).image
+        }
+    }
+
     func ensureDirectoryExists() throws {
         if !FileManager.default.fileExists(atPath: path) {
             try FileManager.default.createDirectory(

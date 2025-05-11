@@ -9,7 +9,7 @@ import Kingfisher
 import SwiftUI
 
 struct RegularNowPlaying: View {
-    @Environment(NowPlayingController.self) var model
+    @Environment(PlayerController.self) var model
     @Binding var expanded: Bool
     var size: CGSize
     var safeArea: EdgeInsets
@@ -54,8 +54,8 @@ private extension RegularNowPlaying {
     var artwork: some View {
         GeometryReader {
             let size = $0.size
-            let small = model.state == .paused
-            KFImage.url(model.display.meta.artwork)
+            let small = !model.state.isPlaying
+            KFImage.url(model.display.artwork)
                 .resizable()
                 .aspectRatio(contentMode: .fill)
                 .background(Color(UIColor.palette.playerCard.artworkBackground))
@@ -74,7 +74,7 @@ private extension RegularNowPlaying {
 
 #Preview {
     @Previewable @State var mediaState = MediaState.stub
-    @Previewable @State var playerController = NowPlayingController.stub
+    @Previewable @State var playerController = PlayerController.stub
 
     RegularNowPlaying(
         expanded: .constant(true),
@@ -82,13 +82,13 @@ private extension RegularNowPlaying {
         safeArea: (UIApplication.keyWindow?.safeAreaInsets ?? .zero).edgeInsets,
         animationNamespace: Namespace().wrappedValue
     )
-    .onAppear {
-        playerController.items = mediaState.mediaList.first?.items ?? []
-        playerController.onAppear()
-    }
+//    .onAppear {
+//        playerController.setItems(mediaState.mediaList.first?.items ?? [])
+//        playerController.onAppear()
+//    }
     .background {
         ColorfulBackground(
-            colors: playerController.colors.map { Color($0.color) }
+            colors: playerController.colors.map { Color($0) }
         )
         .overlay(Color(UIColor(white: 0.4, alpha: 0.5)))
     }

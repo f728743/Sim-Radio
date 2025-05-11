@@ -69,8 +69,6 @@ class MediaState {
         switch mediaID {
         case let .simRadio(stationID):
             await simRadioLibrary.downloadStation(stationID)
-        case .emptyMediaID:
-            break
         }
     }
 
@@ -80,8 +78,6 @@ class MediaState {
         switch mediaID {
         case let .simRadio(stationID):
             await simRadioLibrary.removeDownload(stationID)
-        case .emptyMediaID:
-            break
         }
     }
 
@@ -91,8 +87,6 @@ class MediaState {
         switch mediaID {
         case let .simRadio(stationID):
             await simRadioLibrary.pauseDownload(stationID)
-        case .emptyMediaID:
-            break
         }
     }
 }

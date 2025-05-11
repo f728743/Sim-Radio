@@ -8,7 +8,8 @@
 import SwiftUI
 
 struct DownloadedScreen: View {
-    @Environment(MediaState.self) var mediaState
+//    @Environment(MediaState.self) var mediaState
+    @Environment(Dependencies.self) var dependencies
     @State private var viewModel: DownloadedScreenViewModel
 
     init() {
@@ -29,7 +30,7 @@ struct DownloadedScreen: View {
             }
         }
         .task {
-            viewModel.mediaState = mediaState
+            viewModel.mediaState = dependencies.mediaState
         }
     }
 }

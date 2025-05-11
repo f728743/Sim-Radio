@@ -8,30 +8,29 @@
 import UIKit
 
 struct NowPlayingInfo {
-    let isLiveStream: Bool
-    let title: String
-    let artwork: UIImage
-    let artist: String?
-    let genre: String?
+    let meta: Meta
+    let isPlaying: Bool
     let queue: Queue?
-    let playback: Playback?
+    let progress: Progress?
 
     init(
-        isLiveStream: Bool,
-        title: String,
-        artwork: UIImage,
-        artist: String? = nil,
-        genre: String? = nil,
+        meta: Meta,
+        isPlaying: Bool,
         queue: Queue? = nil,
-        playback: Playback? = nil
+        progress: Progress? = nil,
     ) {
-        self.isLiveStream = isLiveStream
-        self.title = title
-        self.artwork = artwork
-        self.artist = artist
-        self.genre = genre
+        self.meta = meta
+        self.isPlaying = isPlaying
         self.queue = queue
-        self.playback = playback
+        self.progress = progress
+    }
+
+    struct Meta {
+        let title: String
+        let artwork: UIImage
+        let artist: String?
+        let genre: String?
+        let isLiveStream: Bool
     }
 
     struct Queue {
@@ -39,8 +38,34 @@ struct NowPlayingInfo {
         let count: Int
     }
 
-    struct Playback {
-        let duration: TimeInterval
+    struct Progress {
         let elapsedTime: TimeInterval
+        let duration: TimeInterval
+    }
+}
+
+extension NowPlayingInfo {
+    func playing(_ playing: Bool) -> NowPlayingInfo {
+        .init(
+            meta: meta,
+            isPlaying: playing,
+            queue: queue,
+            progress: progress,
+        )
+    }
+
+    func progress(
+        elapsedTime: TimeInterval,
+        duration: TimeInterval? = nil
+    ) -> NowPlayingInfo {
+        guard let duration = duration ?? progress?.duration else {
+            return self
+        }
+        return .init(
+            meta: meta,
+            isPlaying: isPlaying,
+            queue: queue,
+            progress: .init(elapsedTime: elapsedTime, duration: duration),
+        )
     }
 }

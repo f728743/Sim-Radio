@@ -38,7 +38,6 @@ enum MediaListID: Hashable, Equatable {
 }
 
 enum MediaID: Hashable {
-    case emptyMediaID
     case simRadio(SimStation.ID)
 }
 

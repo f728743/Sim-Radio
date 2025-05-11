@@ -12,7 +12,7 @@ struct OverlaidRootView: View {
     @State private var showOverlayingNowPlayng: Bool = false
     @State private var expandedNowPlaying: Bool = false
     @State private var showNowPlayingReplacement: Bool = false
-    @Environment(NowPlayingController.self) var playerController
+    @Environment(PlayerController.self) var playerController
 
     var body: some View {
         ZStack(alignment: .bottom) {
@@ -67,7 +67,7 @@ private struct CompactNowPlayingReplacement: View {
 
 #Preview {
     @Previewable @State var mediaState = MediaState.stub
-    @Previewable @State var playerController = NowPlayingController.stub
+    @Previewable @State var playerController = PlayerController.stub
 
     OverlayableRootView {
         OverlaidRootView()

@@ -8,11 +8,6 @@
 import Foundation
 
 @MainActor
-protocol SimRadioMediaPlayerDelegate: AnyObject {
-    func simRadioMediaPlayer(_ simRadioMediaPlayer: SimRadioMediaPlayer, didUpdateNowPlayingInfo info: NowPlayingInfo)
-}
-
-@MainActor
 protocol SimRadioMediaPlayer {
     func playStation(withID stationID: SimStation.ID)
     func stop()

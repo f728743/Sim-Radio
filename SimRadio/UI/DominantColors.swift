@@ -106,11 +106,11 @@ enum DominantColorQuality {
 extension UIImage {
     func dominantColorFrequencies(
         with quality: DominantColorQuality = .fair
-    ) -> [ColorFrequency]? {
+    ) async -> [ColorFrequency]? {
         let image = cgImage?.colorSpace?.model == .rgb ? self : convertToRGBColorspace()
         let maxNumberOfColors = 500
         let targetSize = quality.targetSize(for: resolution)
-        guard let colorCounts = image?
+        guard let colorCounts = await image?
             .resize(to: targetSize)
             .cgImage?
             .colorCounts(maxAlpha: 150)?
@@ -118,8 +118,8 @@ extension UIImage {
             .prefix(maxNumberOfColors)
         else { return nil }
 
-        let similarColors = mergeSimilar(colors: Array(colorCounts), diffThreshold: 6, maxCount: 20)
-        let dominantColors = mergeSimilar(colors: similarColors, diffThreshold: 18, maxCount: 6)
+        let similarColors = await mergeSimilar(colors: Array(colorCounts), diffThreshold: 6, maxCount: 20)
+        let dominantColors = await mergeSimilar(colors: similarColors, diffThreshold: 18, maxCount: 6)
         let totalDominantColors = dominantColors.reduce(into: 0) { $0 += $1.count }
         return dominantColors.map {
             let percentage = (Double($0.count) / Double(totalDominantColors))
@@ -137,7 +137,7 @@ extension UIImage {
     }
 }
 
-private func mergeSimilar(colors: [ColorCount], diffThreshold: CGFloat = 10.0, maxCount: Int) -> [ColorCount] {
+private func mergeSimilar(colors: [ColorCount], diffThreshold: CGFloat = 10.0, maxCount: Int) async -> [ColorCount] {
     var result = [ColorCount]()
     for colorCount in colors {
         var bestMatchScore: CGFloat?
@@ -202,7 +202,7 @@ extension DominantColorQuality {
 }
 
 private extension CGImage {
-    func colorCounts(maxAlpha: UInt8) -> [ColorCount]? {
+    func colorCounts(maxAlpha: UInt8) async -> [ColorCount]? {
         guard colorSpace?.model == .rgb,
               bitsPerPixel == 32 || bitsPerPixel == 24,
               let data = dataProvider?.data,
