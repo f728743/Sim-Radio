@@ -17,18 +17,24 @@ struct ElasticSlider<LeadingContent: View, TrailingContent: View>: View {
     @State private var stretchingValue: CGFloat = 0
     @State private var viewSize: CGSize = .zero
     @GestureState private var isActive: Bool = false
+    var onValueChanged: ((Double) -> Void)?
+    var onActive: ((Bool) -> Void)?
 
     init(
         value: Binding<Double>,
         in range: ClosedRange<Double>,
         leadingLabel: (() -> LeadingContent)? = nil,
-        trailingLabel: (() -> TrailingContent)? = nil
+        trailingLabel: (() -> TrailingContent)? = nil,
+        onValueChanged: ((Double) -> Void)? = nil,
+        onActive: ((Bool) -> Void)? = nil
     ) {
         _value = value
         self.range = range
         lastStoredValue = value.wrappedValue
         self.leadingLabel = leadingLabel?()
         self.trailingLabel = trailingLabel?()
+        self.onValueChanged = onValueChanged
+        self.onActive = onActive
     }
 
     var body: some View {
@@ -37,6 +43,14 @@ struct ElasticSlider<LeadingContent: View, TrailingContent: View>: View {
                 bottomLabeledTrack
             } else {
                 sideLabeledTrack
+            }
+        }
+        .onChange(of: isActive) {
+            onActive?(isActive)
+        }
+        .onChange(of: value) {
+            if !isActive {
+                lastStoredValue = value
             }
         }
         .animation(.smooth(duration: 0.3, extraBounce: 0.3), value: isActive)
@@ -152,6 +166,7 @@ private extension ElasticSlider {
                         if progress > range.upperBound {
                             stretchingValue = normalized(progress - range.upperBound)
                         }
+                        onValueChanged?(self.value)
                     }
                     .onEnded { _ in
                         lastStoredValue = value
