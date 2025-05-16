@@ -18,10 +18,11 @@ struct PlayerControls: View {
             VStack(spacing: 0) {
                 VStack(spacing: spacing) {
                     trackInfo
-                    let indicatorPadding = ViewConst.playerCardPaddings - ElasticSliderConfig.playbackProgress.growth
-                    TimingIndicator(spacing: spacing)
+
+                    timingIndicator(spacing: spacing)
                         .padding(.top, spacing)
-                        .padding(.horizontal, indicatorPadding)
+                        .padding(.horizontal, ViewConst.playerCardPaddings)
+                        .animation(.default, value: model.commandProfile)
                 }
                 .frame(height: size.height / 2.5, alignment: .top)
                 PlayerButtons(spacing: size.width * 0.14)
@@ -42,6 +43,19 @@ private extension PlayerControls {
         UIColor.palette.playerCard.self
     }
 
+    @ViewBuilder
+    func timingIndicator(spacing: CGFloat) -> some View {
+        if model.isLiveStream {
+            LiveIndicator()
+                .blendMode(.overlay)
+                .padding(.bottom, 50)
+                .frame(height: 60)
+        } else {
+            TimingIndicator(spacing: spacing)
+                .padding(.horizontal, -ElasticSliderConfig.playbackProgress.growth)
+        }
+    }
+
     var trackInfo: some View {
         HStack(alignment: .center, spacing: 15) {
             VStack(alignment: .leading, spacing: 4) {
@@ -52,12 +66,12 @@ private extension PlayerControls {
                     .font(.title3)
                     .fontWeight(.semibold)
                     .foregroundStyle(Color(palette.opaque))
-                    .id(model.state)
-                MarqueeText(model.display.subtitle ?? "", config: cfg)
+                    .id(model.display)
+                MarqueeText(model.display.subtitle, config: cfg)
                     .transformEffect(.identity)
                     .foregroundStyle(Color(palette.opaque))
                     .blendMode(.overlay)
-                    .id(model.state)
+                    .id(model.display)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
         }

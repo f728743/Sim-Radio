@@ -17,7 +17,7 @@ struct NowPlayingInfo {
         meta: Meta,
         isPlaying: Bool,
         queue: Queue? = nil,
-        progress: Progress? = nil,
+        progress: Progress? = nil
     ) {
         self.meta = meta
         self.isPlaying = isPlaying
@@ -50,7 +50,7 @@ extension NowPlayingInfo {
             meta: meta,
             isPlaying: playing,
             queue: queue,
-            progress: progress,
+            progress: progress
         )
     }
 
@@ -65,7 +65,7 @@ extension NowPlayingInfo {
             meta: meta,
             isPlaying: isPlaying,
             queue: queue,
-            progress: .init(elapsedTime: elapsedTime, duration: duration),
+            progress: .init(elapsedTime: elapsedTime, duration: duration)
         )
     }
 }

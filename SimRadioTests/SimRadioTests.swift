@@ -13,7 +13,7 @@ import Testing
 // swiftlint:disable all
 
 struct SimRadioTests {
-    @Test func testMakePlaylistForEndOfDay() async throws {
+    @Test func makePlaylistForEndOfDay() async throws {
         let playlistBuilder = PlaylistBuilder(stationData: stationData)
         let date = Date("03.05.2025 23:55:29")
         let time: CMTime = .init(seconds: date.currentSecondOfDay)
@@ -39,7 +39,7 @@ struct SimRadioTests {
         #expect(playlist.description == playlistDescription)
     }
 
-    @Test func testMakePlaylistForStartOfDay() async throws {
+    @Test func makePlaylistForStartOfDay() async throws {
         let playlistBuilder = PlaylistBuilder(stationData: stationData)
         let date = Date("03.05.2025 00:1:40")
         let time: CMTime = .init(seconds: date.currentSecondOfDay)

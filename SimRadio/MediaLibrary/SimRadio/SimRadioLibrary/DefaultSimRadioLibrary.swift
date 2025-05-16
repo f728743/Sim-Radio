@@ -240,7 +240,7 @@ private extension DefaultSimRadioLibrary {
             origin: origin.absoluteString,
             info: series.info,
             gameSeriesShared: series.gameSeriesShared,
-            stations: series.stations,
+            stations: series.stations
         )
         let jsonData = try JSONEncoder().encode(gameSeries)
         try jsonData.write(to: fileURL)

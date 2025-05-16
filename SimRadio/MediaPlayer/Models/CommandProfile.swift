@@ -5,7 +5,7 @@
 //  Created by Alexey Vorobyov on 10.05.2025.
 //
 
-struct CommandProfile {
+struct CommandProfile: Equatable {
     let isLiveStream: Bool
     let isSwitchTrackEnabled: Bool
 }

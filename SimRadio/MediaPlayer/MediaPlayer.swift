@@ -89,7 +89,7 @@ class MediaPlayer {
             return
         }
         let nextIndex = items.indices.contains(index + 1) ? index + 1 : 0
-        playItem(at: nextIndex)
+        goToItem(at: nextIndex)
     }
 
     func backward() {
@@ -99,14 +99,22 @@ class MediaPlayer {
         else {
             return
         }
-
         let nextIndex = items.indices.contains(index - 1) ? index - 1 : items.count - 1
-        playItem(at: nextIndex)
+        goToItem(at: nextIndex)
     }
 }
 
 private extension MediaPlayer {
-    private func playItem(at index: Int) {
+    func goToItem(at index: Int) {
+        if state.isPlaying {
+            playItem(at: index)
+        } else {
+            state = .paused(items[index])
+            setStemMediaInterfaceNowPlayingInfo()
+        }
+    }
+
+    func playItem(at index: Int) {
         guard items.indices.contains(index) else {
             print("MediaPlayer Error: Index out of bounds for items queue.")
             return
@@ -133,7 +141,7 @@ private extension MediaPlayer {
         setStemMediaInterfaceNowPlayingInfo()
     }
 
-    private func stopCurrentPlayerActivity() {
+    func stopCurrentPlayerActivity() {
         if state.isPlaying, let mediaID = state.currentMediaID {
             switch mediaID {
             case .simRadio:
@@ -159,7 +167,7 @@ private extension MediaPlayer {
                     meta: nowPlayingMeta,
                     isPlaying: state.isPlaying,
                     queue: .init(index: mediaIndex, count: items.count),
-                    progress: progress,
+                    progress: progress
                 )
             )
         }

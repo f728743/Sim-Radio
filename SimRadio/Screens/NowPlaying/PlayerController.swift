@@ -11,16 +11,16 @@ import UIKit
 
 @Observable @MainActor
 class PlayerController {
-    struct Display {
+    struct Display: Hashable {
         let artwork: URL?
         let title: String
-        let subtitle: String?
+        let subtitle: String
     }
 
     var display: Display = .placeholder
 
     var state: MediaPlayerState = .paused(.none)
-    var commandProfile: CommandProfile = .init(isLiveStream: false, isSwitchTrackEnabled: false)
+    var commandProfile: CommandProfile = .init(isLiveStream: true, isSwitchTrackEnabled: false)
     var colors: [UIColor] = []
 
     weak var player: MediaPlayer? {
@@ -32,6 +32,10 @@ class PlayerController {
     weak var mediaState: SimRadioMediaState?
 
     private var cancellables = Set<AnyCancellable>()
+
+    var isLiveStream: Bool {
+        commandProfile.isLiveStream
+    }
 
     var playPauseButton: ButtonType {
         switch state {

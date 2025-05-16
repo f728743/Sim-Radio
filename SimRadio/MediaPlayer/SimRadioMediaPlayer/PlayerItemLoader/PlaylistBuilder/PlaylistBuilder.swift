@@ -160,7 +160,7 @@ private extension PlaylistBuilder {
     }
 
     func makeDailyPlaylist(
-        for date: Date,
+        for date: Date
     ) async throws -> [PlaylistItem] {
         var rnd: any RandomNumberGenerator = SplitMix64(seed: UInt64(date.startOfDay.timeIntervalSince1970))
         let fullDayDuration: TimeInterval = 24 * 60 * 60
