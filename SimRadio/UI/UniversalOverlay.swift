@@ -149,12 +149,12 @@ private class PassthroughWindow: UIWindow {
 }
 
 #Preview {
-    @Previewable @State var mediaState = MediaState.stub
+    @Previewable @State var dependencies = Dependencies.stub
     @Previewable @State var playerController = PlayerController.stub
 
     OverlayableRootView {
         OverlaidRootView()
             .environment(playerController)
-            .environment(mediaState)
+            .environment(dependencies)
     }
 }

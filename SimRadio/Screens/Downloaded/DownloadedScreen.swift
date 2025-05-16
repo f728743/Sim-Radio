@@ -54,8 +54,7 @@ extension DownloadedScreen {
 }
 
 #Preview {
-    @Previewable @State var mediaState = MediaState.stub
-
+    @Previewable @State var dependencies = Dependencies.stub
     DownloadedScreen()
-        .environment(mediaState)
+        .environment(dependencies)
 }

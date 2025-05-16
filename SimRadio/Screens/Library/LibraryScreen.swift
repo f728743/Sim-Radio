@@ -11,7 +11,6 @@ import SwiftUI
 struct LibraryScreen: View {
     @Environment(\.nowPlayingExpandProgress) var expandProgress
     @Environment(Router.self) var router
-//    @Environment(MediaState.self) var mediaState
     @Environment(Dependencies.self) var dependencies
     @State private var viewModel = LibraryScreenViewModel()
 
@@ -113,11 +112,10 @@ private struct RecentlyAddedItem: View {
 }
 
 #Preview {
-    @Previewable @State var mediaState = MediaState.stub
-//    @Previewable @State var playerController = PlayerController.stub
-
+    @Previewable @State var dependencies = Dependencies.stub
+    @Previewable @State var playerController = PlayerController.stub
     LibraryScreen()
         .withRouter()
-        .environment(mediaState)
-//        .environment(playerController) // TODO: remove
+        .environment(dependencies)
+        .environment(playerController)
 }

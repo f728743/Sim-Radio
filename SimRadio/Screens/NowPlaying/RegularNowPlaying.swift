@@ -73,7 +73,7 @@ private extension RegularNowPlaying {
 }
 
 #Preview {
-    @Previewable @State var mediaState = MediaState.stub
+    @Previewable @State var dependencies = Dependencies.stub
     @Previewable @State var playerController = PlayerController.stub
 
     RegularNowPlaying(
@@ -82,10 +82,10 @@ private extension RegularNowPlaying {
         safeArea: (UIApplication.keyWindow?.safeAreaInsets ?? .zero).edgeInsets,
         animationNamespace: Namespace().wrappedValue
     )
-//    .onAppear {
-//        playerController.setItems(mediaState.mediaList.first?.items ?? [])
-//        playerController.onAppear()
-//    }
+    .onAppear {
+        playerController.mediaState = dependencies.mediaState
+        playerController.player = dependencies.mediaPlayer
+    }
     .background {
         ColorfulBackground(
             colors: playerController.colors.map { Color($0) }

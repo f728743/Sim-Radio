@@ -24,10 +24,10 @@ struct RootView: View {
 }
 
 #Preview {
-    @Previewable @State var mediaState = MediaState.stub
+    @Previewable @State var dependencies = Dependencies.stub
     @Previewable @State var playerController = PlayerController.stub
 
     RootView()
-        .environment(mediaState)
+        .environment(dependencies)
         .environment(playerController)
 }

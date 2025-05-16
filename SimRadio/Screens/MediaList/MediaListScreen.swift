@@ -11,7 +11,6 @@ import SwiftUI
 struct MediaListScreen: View {
     @Environment(\.nowPlayingExpandProgress) var expandProgress
     @Environment(Dependencies.self) var dependencies
-//    @Environment(MediaState.self) var mediaState
     @State private var selection: Media.ID?
     @State private var viewModel: MediaListScreenViewModel
 
@@ -188,13 +187,11 @@ private extension EdgeInsets {
 }
 
 #Preview {
-    @Previewable @State var mediaState = MediaState.stub
     @Previewable @State var dependencies = Dependencies.stub
 
     MediaListScreen(
-        items: mediaState.mediaList.first?.items ?? [],
-        listMeta: mediaState.mediaList.first?.meta
+        items: dependencies.mediaState.mediaList.first?.items ?? [],
+        listMeta: dependencies.mediaState.mediaList.first?.meta
     )
-    .environment(mediaState)
     .environment(dependencies)
 }

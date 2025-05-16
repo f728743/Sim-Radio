@@ -93,16 +93,17 @@ extension PlayerButtonConfig {
 }
 
 #Preview {
-    @Previewable @State var mediaState = MediaState.stub
+    @Previewable @State var dependencies = Dependencies.stub
     @Previewable @State var playerController = PlayerController.stub
 
     CompactNowPlaying(
         expanded: .constant(false),
         animationNamespace: Namespace().wrappedValue
     )
-//    .onAppear {
-//        playerController.setItems(mediaState.mediaList.first?.items ?? [])
-//    }
     .background(.gray)
     .environment(playerController)
+    .onAppear {
+        playerController.mediaState = dependencies.mediaState
+        playerController.player = dependencies.mediaPlayer
+    }
 }
