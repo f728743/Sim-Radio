@@ -21,6 +21,7 @@ class AudioSession {
     init() {
         setupAudioSession()
         setupAudioInterruptionObserver()
+        setActive(true)
     }
 
     func setActive(_ active: Bool) {

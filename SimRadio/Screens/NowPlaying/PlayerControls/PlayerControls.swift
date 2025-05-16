@@ -48,7 +48,7 @@ private extension PlayerControls {
         if model.isLiveStream {
             LiveIndicator()
                 .blendMode(.overlay)
-                .padding(.bottom, 50)
+                .padding(.bottom, 30)
                 .frame(height: 60)
         } else {
             TimingIndicator(spacing: spacing)
@@ -88,27 +88,10 @@ private extension PlayerControls {
         }
     }
 
-    func footer(width: CGFloat) -> some View {
-        HStack(alignment: .top, spacing: width * 0.18) {
-            Button {} label: {
-                Image(systemName: "quote.bubble")
-                    .font(.title2)
-            }
-            VStack(spacing: 6) {
-                Button {} label: {
-                    Image(systemName: "airpods.gen3")
-                        .font(.title2)
-                }
-                Text("iPhone's Airpods")
-                    .font(.caption)
-            }
-            Button {} label: {
-                Image(systemName: "list.bullet")
-                    .font(.title2)
-            }
-        }
-        .foregroundStyle(Color(palette.opaque))
-        .blendMode(.overlay)
+    func footer(width _: CGFloat) -> some View {
+        AirPlayButton()
+            .foregroundStyle(Color(palette.opaque))
+            .blendMode(.overlay)
     }
 }
 
