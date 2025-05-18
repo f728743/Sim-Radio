@@ -8,7 +8,6 @@
 import UIKit
 
 class AppDelegate: NSObject, UIApplicationDelegate {
-    var msg: String?
     var dependencies: Dependencies?
 
     func application(
@@ -16,7 +15,6 @@ class AppDelegate: NSObject, UIApplicationDelegate {
         didFinishLaunchingWithOptions _: [UIApplication.LaunchOptionsKey: Any]? = nil
     ) -> Bool {
         setupDependencies()
-        msg = "done"
         return true
     }
 }

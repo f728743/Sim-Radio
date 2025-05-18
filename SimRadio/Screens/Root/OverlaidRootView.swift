@@ -13,7 +13,9 @@ struct OverlaidRootView: View {
     @State private var expandedNowPlaying: Bool = false
     @State private var showNowPlayingReplacement: Bool = false
     @Environment(PlayerController.self) var playerController
-
+    @Environment(\.scenePhase) private var scenePhase
+    @State private var expandWhenGoToBackground: Bool?
+    
     var body: some View {
         ZStack(alignment: .bottom) {
             RootView()
@@ -34,6 +36,21 @@ struct OverlaidRootView: View {
             showOverlayingNowPlayng = true
         }
         .environment(\.nowPlayingExpandProgress, nowPlayingExpandProgress)
+        .onChange(of: scenePhase) { oldPhase, newPhase in
+            switch newPhase {
+            case .background:
+                expandWhenGoToBackground = expandedNowPlaying
+                expandedNowPlaying = false
+            case .inactive:
+                if oldPhase == .background, expandWhenGoToBackground == true {
+                    expandedNowPlaying = true
+                }
+            case .active:
+                expandWhenGoToBackground = nil
+            default:
+                break
+            }
+        }
     }
 
     func showNowPlayng(replacement: Bool) {
