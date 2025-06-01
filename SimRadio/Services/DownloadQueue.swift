@@ -45,7 +45,7 @@ actor DownloadQueue {
 
         continuation.onTermination = { [weak self] _ in
             Task { [weak self] in
-                await self?.cancelAllDownload()
+                await self?.cancelAllDownloads()
             }
         }
     }
@@ -86,7 +86,7 @@ actor DownloadQueue {
         }
     }
 
-    func cancelAllDownload() async {
+    func cancelAllDownloads() async {
         for downloadRequest in activeDownloads.keys {
             await cancel(downloadRequest)
         }

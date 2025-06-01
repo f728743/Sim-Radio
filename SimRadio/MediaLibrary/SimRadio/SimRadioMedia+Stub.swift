@@ -70,8 +70,8 @@ extension MediaList {
 }
 
 private let gta5BaseUrl = "https://raw.githubusercontent.com/tmp-acc/GTA-V-Radio-Stations/master"
-private func stationImageUrl(_ satrion: String) -> URL? {
-    URL(string: "\(gta5BaseUrl)/\(satrion)/\(satrion).png")
+private func stationImageUrl(_ station: String) -> URL? {
+    URL(string: "\(gta5BaseUrl)/\(station)/\(station).png")
 }
 
 private func stationGroupImageUrl() -> URL? {

@@ -15,7 +15,7 @@ struct OverlaidRootView: View {
     @Environment(PlayerController.self) var playerController
     @Environment(\.scenePhase) private var scenePhase
     @State private var expandWhenGoToBackground: Bool?
-    
+
     var body: some View {
         ZStack(alignment: .bottom) {
             RootView()

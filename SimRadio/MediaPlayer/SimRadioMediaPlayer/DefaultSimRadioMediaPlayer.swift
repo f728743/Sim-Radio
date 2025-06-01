@@ -12,10 +12,17 @@ class DefaultSimRadioMediaPlayer {
     weak var mediaState: SimRadioMediaState?
 
     private let queuePlayer = AVQueuePlayer()
+    private let audioTapProcessor: AudioTapProcessor
     private var nextPlayableItem: NextPlayableItem?
     private let config: DefaultSimRadioMediaPlayer.Config = .default
     private var observer: NSObjectProtocol?
     private var playToEndTask: Task<Void, Never>?
+    var tracksObserver: NSKeyValueObservation?
+
+    init() {
+        audioTapProcessor = AudioTapProcessor()
+        audioTapProcessor.delegate = self
+    }
 }
 
 extension DefaultSimRadioMediaPlayer.Config {
@@ -40,6 +47,12 @@ extension DefaultSimRadioMediaPlayer: SimRadioMediaPlayer {
         queuePlayer.removeAllItems()
         playToEndTask?.cancel()
         playToEndTask = nil
+    }
+}
+
+extension DefaultSimRadioMediaPlayer: AudioTapProcessorDelegate {
+    nonisolated func audioTapProcessor(_: AudioTapProcessor, didUpdateSpectrum spectrum: [[Float]]) {
+        print("didUpdateSpectrum", spectrum.first?.count ?? 0)
     }
 }
 
@@ -81,7 +94,10 @@ private extension DefaultSimRadioMediaPlayer {
             duration: .init(seconds: config.initialPlaylistMinDuration)
         )
         let loader = PlayerItemLoader()
-        let playerItem = try await loader.loadPlayerItem(playlist: playlist)
+        let playerItem = try await loader.loadPlayerItem(
+            playlist: playlist,
+            tapProcessor: audioTapProcessor
+        )
         queuePlayer.insert(playerItem, after: nil)
         queuePlayer.play()
         addDidPlayToEndObserver(to: playerItem)
@@ -140,7 +156,10 @@ private extension DefaultSimRadioMediaPlayer {
         )
 
         let loader = PlayerItemLoader()
-        let playerItem = try await loader.loadPlayerItem(playlist: playlist)
+        let playerItem = try await loader.loadPlayerItem(
+            playlist: playlist,
+            tapProcessor: audioTapProcessor
+        )
         return NextPlayableItem(
             stationID: stationID,
             item: playerItem,

@@ -12,7 +12,8 @@ class PlayerItemLoader {
     private var playerItemStatusObserver: NSKeyValueObservation?
 
     func loadPlayerItem(
-        playlist: [PlaylistItem]
+        playlist: [PlaylistItem],
+        tapProcessor: AudioTapProcessor
     ) async throws -> AVPlayerItem {
         let composition = AVMutableComposition()
         let audioMix = AVMutableAudioMix()
@@ -22,6 +23,10 @@ class PlayerItemLoader {
             throw PlayerItemLoadingError.playerItemCreatingError
         }
         let params = AVMutableAudioMixInputParameters(track: mainTrack)
+
+        let createdTap = try tapProcessor.createTap()
+        params.audioTapProcessor = createdTap.takeRetainedValue()
+
         for item in playlist {
             try await load(item.track, track: mainTrack)
             for mix in item.mixes {
@@ -37,6 +42,7 @@ class PlayerItemLoader {
         audioMix.inputParameters = [params]
         let playerItem = AVPlayerItem(asset: composition)
         playerItem.audioMix = audioMix
+
         return playerItem
     }
 }

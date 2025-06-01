@@ -11,6 +11,7 @@ enum PlayerItemLoadingError: Error {
     case playlistError
     case fileNotFound(url: URL)
     case playerItemCreatingError
+    case failedToCreateTap
 }
 
 enum PlaylistGenerationError: Error {
