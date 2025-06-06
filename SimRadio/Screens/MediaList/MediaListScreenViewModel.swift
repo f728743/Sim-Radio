@@ -5,6 +5,7 @@
 //  Created by Alexey Vorobyov on 09.04.2025.
 //
 
+import Combine
 import Observation
 import SwiftUI
 
@@ -19,8 +20,15 @@ class MediaListScreenViewModel {
     var mediaState: MediaState?
     let items: [Media]
     let listMeta: MediaList.Meta?
+    var state: MediaPlayerState = .paused(.none)
+    var palyIndicatorSpectrum: [Float] = .init(repeating: 0, count: MediaPlayer.Const.frequencyBands)
+    private var cancellables = Set<AnyCancellable>()
 
-    weak var player: MediaPlayer?
+    weak var player: MediaPlayer? {
+        didSet {
+            observeMediaPlayerState()
+        }
+    }
 
     init(items: [Media], listMeta: MediaList.Meta?) {
         self.items = items
@@ -59,8 +67,36 @@ class MediaListScreenViewModel {
         mediaState?.downloadStatus[itemID]
     }
 
+    func mediaActivity(_ mediaID: MediaID) -> MediaActivity? {
+        switch state {
+        case let .paused(pausedMediaID): pausedMediaID == mediaID ? .paused : nil
+        case let .playing(playingMediaID): playingMediaID == mediaID ? .spectrum(palyIndicatorSpectrum) : nil
+        }
+    }
+
     var footer: LocalizedStringKey {
         "^[\(items.count) station](inflect: true)"
+    }
+}
+
+private extension MediaListScreenViewModel {
+    private func observeMediaPlayerState() {
+        guard let player else { return }
+        // Observe state changes
+        cancellables.removeAll()
+        player.$state
+            .sink { [weak self] state in
+                guard let self else { return }
+                self.state = state
+                palyIndicatorSpectrum = .init(repeating: 0, count: MediaPlayer.Const.frequencyBands)
+            }
+            .store(in: &cancellables)
+
+        player.$palyIndicatorSpectrum
+            .sink { [weak self] spectrum in
+                self?.palyIndicatorSpectrum = spectrum
+            }
+            .store(in: &cancellables)
     }
 }
 

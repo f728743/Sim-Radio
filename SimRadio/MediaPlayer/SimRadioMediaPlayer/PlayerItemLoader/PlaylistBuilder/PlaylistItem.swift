@@ -86,6 +86,10 @@ extension PlaylistItem {
 
         return PlaylistItem(track: trimmedTrack, mixes: trimmedMixes)
     }
+
+    var duration: CMTime {
+        track.timeRange.duration
+    }
 }
 
 extension [PlaylistItem] {

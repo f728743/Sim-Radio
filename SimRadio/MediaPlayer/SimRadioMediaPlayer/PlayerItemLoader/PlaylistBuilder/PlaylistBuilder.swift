@@ -7,25 +7,9 @@
 
 import AVFoundation
 
-enum PlayerItemLoadingError: Error {
-    case playlistError
-    case fileNotFound(url: URL)
-    case playerItemCreatingError
-    case failedToCreateTap
-}
-
-enum PlaylistGenerationError: Error {
-    case makeDailyPlaylistError(date: Date)
-    case makePlaylistError
-    case wrongCondition
-    case fragmentNotFound(tag: String)
-    case notExhaustiveFragment(tag: String)
-    case wrongPositionTag(tag: String)
-    case wrongSource
-}
-
 class PlaylistBuilder {
     let stationData: SimRadioStationData
+    var playlistСache: [Date: [PlaylistItem]] = [:]
 
     init(stationData: SimRadioStationData) {
         self.stationData = stationData
@@ -49,11 +33,9 @@ class PlaylistBuilder {
         trimLastItem: Bool = false
     ) async throws -> [PlaylistItem] {
         guard duration > .zero else { return [] }
-        let fullDayDuration = CMTime(seconds: 24 * 60 * 60)
         var resultPlaylist: [PlaylistItem] = []
         var accumulatedDuration: CMTime = .zero
         var currentDate = playlistStartDate.startOfDay
-
         var dailyItems = try await makeDailyPlaylist(for: currentDate)
 
         // Find the index of the first relevant item
@@ -81,12 +63,11 @@ class PlaylistBuilder {
             }
 
             let item = dailyItems[index]
-
             var itemFileTimeRange = item.track.timeRange
             var itemPlayableDuration = item.track.timeRange.duration
             let itemStartTimeInOutput = accumulatedDuration // Start time in the output playlist
-
             let parentOriginalStartTimeInDay = item.track.startTime
+
             // Adjustment for start offset (only for the first item)
             if accumulatedDuration == .zero {
                 let offsetIntoItem = timeOffsetInFirstDay - parentOriginalStartTimeInDay
@@ -105,7 +86,10 @@ class PlaylistBuilder {
             }
 
             let remainingNeededDuration = duration - accumulatedDuration
-            let remainingInDayDuration = max(.zero, fullDayDuration - parentOriginalStartTimeInDay)
+            let remainingInDayDuration = max(
+                .zero,
+                .fullDayDuration - parentOriginalStartTimeInDay - itemFileTimeRange.start
+            )
             let actualDurationToAdd = trimLastItem
                 ? min(min(itemPlayableDuration, remainingNeededDuration), remainingInDayDuration)
                 : min(itemPlayableDuration, remainingInDayDuration)
@@ -148,27 +132,98 @@ class PlaylistBuilder {
         }
         return resultPlaylist
     }
+
     // swiftlint:enable cyclomatic_complexity function_body_length
+
+    /// Generates a single `PlaylistItem` starting at the specified date and time offset within that day.
+    /// - Parameters:
+    ///   - playlistStartDate: The date on which the playlist item should start.
+    ///   - timeOffsetInFirstDay: The time offset within the start date's day, in seconds, where the item begins.
+    /// - Returns: A `PlaylistItem` representing the audio segment and its associated mixes,
+    /// adjusted to start at the specified offset.
+    /// - Throws: `PlaylistGenerationError.makeDailyPlaylistError` if no valid item is found
+    /// for the given date and time or if the item's duration is invalid.
+    func makePlaylistItem(
+        startingOn playlistStartDate: Date,
+        at timeOffsetInFirstDay: CMTime
+    ) async throws -> PlaylistItem {
+        let currentDate = playlistStartDate.startOfDay
+        let dailyItems = try await makeDailyPlaylist(for: currentDate)
+
+        // Find the first item that is relevant (i.e., its playing end time is after the timeOffsetInFirstDay)
+        guard let relevantItem = dailyItems.first(where: { $0.track.playing.end > timeOffsetInFirstDay }) else {
+            throw PlaylistGenerationError.makeDailyPlaylistError(date: currentDate)
+        }
+
+        var itemFileTimeRange = relevantItem.track.timeRange
+        var itemPlayableDuration = relevantItem.track.timeRange.duration
+        let parentOriginalStartTimeInDay = relevantItem.track.startTime
+        let itemStartTimeInOutput: CMTime = .zero // Single item, start at 0 in output
+
+        // Adjust for the time offset within the item
+        if timeOffsetInFirstDay > parentOriginalStartTimeInDay {
+            let offsetIntoItem = timeOffsetInFirstDay - parentOriginalStartTimeInDay
+            let newDuration = max(.zero, relevantItem.track.timeRange.duration - offsetIntoItem)
+            itemPlayableDuration = newDuration
+            itemFileTimeRange = CMTimeRange(
+                start: relevantItem.track.timeRange.start + offsetIntoItem,
+                duration: itemPlayableDuration
+            )
+        }
+
+        let remainingInDayDuration = max(
+            .zero,
+            .fullDayDuration - parentOriginalStartTimeInDay - itemFileTimeRange.start
+        )
+        let actualDurationToAdd = min(itemPlayableDuration, remainingInDayDuration)
+
+        if actualDurationToAdd < itemPlayableDuration {
+            itemFileTimeRange = CMTimeRange(
+                start: itemFileTimeRange.start,
+                duration: actualDurationToAdd
+            )
+        }
+
+        let parentActualStartTimeInDay = parentOriginalStartTimeInDay +
+            (itemFileTimeRange.start - relevantItem.track.timeRange.start)
+        let parentActualEndTimeInDay = parentActualStartTimeInDay + itemFileTimeRange.duration
+
+        // Adjust mixes to align with the trimmed track
+        let adjustedMixes: [AudioSegment] = relevantItem.mixes.compactMap { originalMix in
+            originalMix.adjustedMix(
+                parentActualStartTimeInDay: parentActualStartTimeInDay,
+                parentActualEndTimeInDay: parentActualEndTimeInDay,
+                itemStartTimeInOutput: itemStartTimeInOutput
+            )
+        }
+
+        return PlaylistItem(
+            track: AudioSegment(
+                url: relevantItem.track.url,
+                timeRange: itemFileTimeRange,
+                startTime: itemStartTimeInOutput
+            ),
+            mixes: adjustedMixes
+        )
+    }
 }
 
 private extension PlaylistBuilder {
-    var station: SimStation {
-        stationData.station
-    }
-
-    var fileGroups: [SimFileGroup] {
-        stationData.fileGroups
-    }
+    var station: SimStation { stationData.station }
+    var fileGroups: [SimFileGroup] { stationData.fileGroups }
 
     func makeDailyPlaylist(
         for date: Date
     ) async throws -> [PlaylistItem] {
+        if let cached = playlistСache[date] {
+            return cached
+        }
         var rnd: any RandomNumberGenerator = SplitMix64(seed: UInt64(date.startOfDay.timeIntervalSince1970))
-        let fullDayDuration: TimeInterval = 24 * 60 * 60
-        return try await makePlaylist(
-            duration: .init(seconds: fullDayDuration),
+        let playlist = try await makePlaylist(
+            duration: .init(seconds: .fullDayDuration),
             rnd: &rnd
         )
+        return playlist
     }
 
     func makePlaylist(

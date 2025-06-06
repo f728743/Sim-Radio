@@ -21,7 +21,7 @@ class SpectrumAnalyzer {
     let endFrequency: Float
     let spectrumSmooth: Float
     let fftSize: Int
-    let sampleRate: Double
+    var sampleRate: Double
     weak var delegate: SpectrumAnalyzerDelegate?
     private lazy var fftSetup = vDSP_create_fftsetup(
         vDSP_Length(Int(round(log2(Double(fftSize))))), FFTRadix(kFFTRadix2)
@@ -61,7 +61,7 @@ class SpectrumAnalyzer {
         self.spectrumSmooth = spectrumSmooth.clamped(to: 0.0 ... 1.0)
 
         self.fftSize = fftSize
-        aWeights = Self.createFrequencyWeights(fftSize: fftSize, sampleRate: sampleRate)
+        aWeights = Self.makeFrequencyWeights(fftSize: fftSize, sampleRate: sampleRate)
         processingSamples = .init(repeating: 0.0, count: fftSize)
         hannWindow = [Float](unsafeUninitializedCapacity: fftSize) { buffer, initializedCount in
             vDSP_hann_window(buffer.baseAddress!, vDSP_Length(fftSize), Int32(vDSP_HANN_NORM))
@@ -72,13 +72,13 @@ class SpectrumAnalyzer {
         amplitudes = .init(repeating: 0.0, count: fftSize / 2)
         weightedAmplitudes = .init(repeating: 0.0, count: fftSize / 2)
         spectrum = .init(repeating: 0.0, count: frequencyBands)
-        bands = Self.createBands(
+        bands = Self.makeBands(
             frequencyBands: frequencyBands,
             startFrequency: startFrequency,
             endFrequency: endFrequency
         )
 
-        bandIndices = Self.createBandIndices(
+        bandIndices = Self.makeBandIndices(
             fftSize: fftSize,
             sampleRate: sampleRate,
             bands: bands
@@ -91,6 +91,17 @@ class SpectrumAnalyzer {
         if let setup = fftSetup {
             vDSP_destroy_fftsetup(setup)
         }
+    }
+
+    func setSampleRate(_ sampleRate: Double) {
+        guard sampleRate != self.sampleRate else { return }
+        self.sampleRate = sampleRate
+        aWeights = Self.makeFrequencyWeights(fftSize: fftSize, sampleRate: sampleRate)
+        bandIndices = Self.makeBandIndices(
+            fftSize: fftSize,
+            sampleRate: sampleRate,
+            bands: bands
+        )
     }
 
     func analyse(bufferList: UnsafeMutablePointer<AudioBufferList>) {
@@ -212,7 +223,7 @@ private extension SpectrumAnalyzer {
         return averagedSpectrum
     }
 
-    static func createFrequencyWeights(fftSize: Int, sampleRate: Double) -> [Float] {
+    static func makeFrequencyWeights(fftSize: Int, sampleRate: Double) -> [Float] {
         guard fftSize > 0 else { return [] }
         let deltaF = Float(sampleRate) / Float(fftSize)
         let bins = fftSize / 2
@@ -235,7 +246,7 @@ private extension SpectrumAnalyzer {
         return weights
     }
 
-    static func createBandIndices(
+    static func makeBandIndices(
         fftSize: Int,
         sampleRate: Double,
         bands: [Band]
@@ -249,7 +260,7 @@ private extension SpectrumAnalyzer {
         }
     }
 
-    static func createBands(
+    static func makeBands(
         frequencyBands: Int,
         startFrequency: Float,
         endFrequency: Float

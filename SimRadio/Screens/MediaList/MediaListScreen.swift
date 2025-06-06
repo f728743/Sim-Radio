@@ -132,7 +132,8 @@ private extension MediaListScreen {
                 artwork: item.meta.artwork,
                 title: item.meta.title,
                 subtitle: item.meta.listSubtitle,
-                status: viewModel.downloadStatus(for: item.id)
+                downloadStatus: viewModel.downloadStatus(for: item.id),
+                activity: viewModel.mediaActivity(item.id)
             )
         )
         .contentShape(.rect)

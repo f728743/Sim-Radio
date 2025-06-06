@@ -15,11 +15,15 @@ final class AudioTapProcessor {
     private let analyzer: SpectrumAnalyzer
     weak var delegate: AudioTapProcessorDelegate?
 
-    init(sampleRate: Double = 48000.0) {
+    init(
+        frequencyBands: Int,
+        sampleRate: Double = 48000.0
+    ) {
         analyzer = SpectrumAnalyzer(
             fftSize: 2048,
             sampleRate: sampleRate,
-            mono: true
+            mono: true,
+            frequencyBands: frequencyBands
         )
         analyzer.delegate = self
     }
@@ -55,11 +59,21 @@ final class AudioTapProcessor {
     }
 
     private let tapFinalize: MTAudioProcessingTapFinalizeCallback = { tap in
-        print("finalize \(tap)")
         Unmanaged<AudioTapContext>.fromOpaque(MTAudioProcessingTapGetStorage(tap)).release()
     }
 
-    func createTap() throws -> Unmanaged<MTAudioProcessingTap> {
+    private let tapPrepare: MTAudioProcessingTapPrepareCallback = { tap, _, format in
+        let tapContext = Unmanaged<AudioTapContext>
+            .fromOpaque(MTAudioProcessingTapGetStorage(tap))
+            .takeUnretainedValue()
+        guard let analyzer = tapContext.content else {
+            print("Tap callback: tapContext content (SpectrumAnalyzer) was deallocated!")
+            return
+        }
+        analyzer.setSampleRate(format.pointee.mSampleRate)
+    }
+
+    func makeTap() throws -> Unmanaged<MTAudioProcessingTap> {
         let tapContext = AudioTapContext(content: analyzer)
 
         var callbacks = MTAudioProcessingTapCallbacks(
@@ -67,7 +81,7 @@ final class AudioTapProcessor {
             clientInfo: UnsafeMutableRawPointer(Unmanaged.passRetained(tapContext).toOpaque()),
             init: tapInit,
             finalize: tapFinalize,
-            prepare: nil,
+            prepare: tapPrepare,
             unprepare: nil,
             process: tapProcess
         )
@@ -81,11 +95,11 @@ final class AudioTapProcessor {
             &tap
         )
 
-        guard err == noErr, let createdTap = tap else {
+        guard err == noErr, let tap else {
             Unmanaged.passUnretained(tapContext).release()
             throw PlayerItemLoadingError.failedToCreateTap
         }
-        return createdTap
+        return tap
     }
 }
 
@@ -100,9 +114,5 @@ private class AudioTapContext {
 
     init(content: SpectrumAnalyzer) {
         self.content = content
-    }
-
-    deinit {
-        print("AudioTapContext deinit")
     }
 }

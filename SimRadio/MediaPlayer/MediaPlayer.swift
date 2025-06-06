@@ -15,6 +15,10 @@ enum MediaPlayerState: Equatable, Hashable {
 
 @MainActor
 class MediaPlayer {
+    enum Const {
+        static let frequencyBands = 5
+    }
+
     var simRadio: SimRadioMediaPlayer?
     weak var mediaState: SimRadioMediaState?
     private(set) var items: [MediaID] = []
@@ -22,6 +26,7 @@ class MediaPlayer {
     @Published private(set) var progress: NowPlayingInfo.Progress?
     @Published private(set) var state: MediaPlayerState
     @Published private(set) var commandProfile: CommandProfile?
+    @Published private(set) var palyIndicatorSpectrum: [Float]
 
     private var nowPlayingMeta: NowPlayingInfo.Meta?
     private var audioSession: AudioSession
@@ -34,6 +39,7 @@ class MediaPlayer {
         systemMediaInterface = SystemMediaInterface()
         state = .paused(.none)
         commandProfile = CommandProfile(isLiveStream: false, isSwitchTrackEnabled: false)
+        palyIndicatorSpectrum = .init(repeating: 0, count: Const.frequencyBands)
         systemMediaInterface.setRemoteCommandProfile(commandProfile!)
         audioSession.delegate = self
         systemMediaInterface.delegate = self
@@ -227,6 +233,12 @@ extension MediaPlayer: SystemMediaInterfaceDelegate {
         case .previousTrack:
             backward()
         }
+    }
+}
+
+extension MediaPlayer: SimRadioMediaPlayerDelegate {
+    func simRadioMediaPlayer(_: any SimRadioMediaPlayer, didUpdateSpectrum spectrum: [Float]) {
+        palyIndicatorSpectrum = spectrum
     }
 }
 

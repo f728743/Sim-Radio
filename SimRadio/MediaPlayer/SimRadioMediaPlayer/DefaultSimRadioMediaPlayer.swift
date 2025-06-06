@@ -10,26 +10,20 @@ import AVFoundation
 @MainActor
 class DefaultSimRadioMediaPlayer {
     weak var mediaState: SimRadioMediaState?
+    weak var delegate: SimRadioMediaPlayerDelegate?
 
     private let queuePlayer = AVQueuePlayer()
     private let audioTapProcessor: AudioTapProcessor
     private var nextPlayableItem: NextPlayableItem?
-    private let config: DefaultSimRadioMediaPlayer.Config = .default
     private var observer: NSObjectProtocol?
     private var playToEndTask: Task<Void, Never>?
-    var tracksObserver: NSKeyValueObservation?
 
     init() {
-        audioTapProcessor = AudioTapProcessor()
+        audioTapProcessor = AudioTapProcessor(
+            frequencyBands: MediaPlayer.Const.frequencyBands
+        )
         audioTapProcessor.delegate = self
     }
-}
-
-extension DefaultSimRadioMediaPlayer.Config {
-    static let `default` = DefaultSimRadioMediaPlayer.Config(
-        initialPlaylistMinDuration: 60,
-        bufferedPlaylistMinDuration: 10 * 60
-    )
 }
 
 extension DefaultSimRadioMediaPlayer: SimRadioMediaPlayer {
@@ -52,22 +46,17 @@ extension DefaultSimRadioMediaPlayer: SimRadioMediaPlayer {
 
 extension DefaultSimRadioMediaPlayer: AudioTapProcessorDelegate {
     nonisolated func audioTapProcessor(_: AudioTapProcessor, didUpdateSpectrum spectrum: [[Float]]) {
-        print("didUpdateSpectrum", spectrum.first?.count ?? 0)
+        Task { @MainActor [weak self] in
+            guard let self else { return }
+            delegate?.simRadioMediaPlayer(
+                self,
+                didUpdateSpectrum: spectrum.first ?? .init(repeating: 0, count: MediaPlayer.Const.frequencyBands)
+            )
+        }
     }
 }
 
 private extension DefaultSimRadioMediaPlayer {
-    struct Config {
-        /// Minimum duration (in seconds) required for the initial playlist
-        /// - Note: This playlist is optimized for fast loading to minimize playback startup latency
-        /// - The actual duration might be longer depending on available tracks
-        let initialPlaylistMinDuration: TimeInterval
-        /// Minimum duration (in seconds) required for subsequent buffered playlists
-        /// - Note: These playlists are loaded in the background during playback to ensure seamless continuation
-        /// - Typically longer than initial playlists to maintain playback buffer
-        let bufferedPlaylistMinDuration: TimeInterval
-    }
-
     /// Represents the next media item to be queued for playback
     struct NextPlayableItem {
         let stationID: SimStation.ID
@@ -88,24 +77,26 @@ private extension DefaultSimRadioMediaPlayer {
         let playlistBuilder = PlaylistBuilder(stationData: stationData)
         let startingDate = Date()
         let startingTime = CMTime(seconds: startingDate.currentSecondOfDay)
-        let playlist = try await playlistBuilder.makePlaylist(
+
+        let playlistItem = try await playlistBuilder.makePlaylistItem(
             startingOn: startingDate,
-            at: .init(seconds: startingDate.currentSecondOfDay),
-            duration: .init(seconds: config.initialPlaylistMinDuration)
+            at: .init(seconds: startingDate.currentSecondOfDay)
         )
+
         let loader = PlayerItemLoader()
         let playerItem = try await loader.loadPlayerItem(
-            playlist: playlist,
+            playlistItem: playlistItem,
             tapProcessor: audioTapProcessor
         )
+
         queuePlayer.insert(playerItem, after: nil)
         queuePlayer.play()
         addDidPlayToEndObserver(to: playerItem)
 
         guard let nextPlayableItem = try await makeNextPlayableItem(
             stationID: stationID,
-            date: startingDate + playlist.duration.seconds,
-            time: startingTime + playlist.duration
+            date: startingDate + playlistItem.duration.seconds,
+            time: (startingTime + playlistItem.duration).wrappedDay
         ) else {
             throw PlayerItemLoadingError.playerItemCreatingError
         }
@@ -149,22 +140,20 @@ private extension DefaultSimRadioMediaPlayer {
     ) async throws -> NextPlayableItem? {
         guard let stationData = mediaState?.stationData(for: stationID) else { return nil }
         let playlistBuilder = PlaylistBuilder(stationData: stationData)
-        let playlist = try await playlistBuilder.makePlaylist(
+        let playlistItem = try await playlistBuilder.makePlaylistItem(
             startingOn: date,
-            at: time,
-            duration: .init(seconds: config.bufferedPlaylistMinDuration)
+            at: time
         )
-
         let loader = PlayerItemLoader()
         let playerItem = try await loader.loadPlayerItem(
-            playlist: playlist,
+            playlistItem: playlistItem,
             tapProcessor: audioTapProcessor
         )
         return NextPlayableItem(
             stationID: stationID,
             item: playerItem,
-            day: date + playlist.duration.seconds,
-            startTimeInDay: time + playlist.duration
+            day: date + playlistItem.duration.seconds,
+            startTimeInDay: (time + playlistItem.duration).wrappedDay
         )
     }
 }

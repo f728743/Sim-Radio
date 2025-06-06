@@ -12,3 +12,8 @@ protocol SimRadioMediaPlayer {
     func playStation(withID stationID: SimStation.ID)
     func stop()
 }
+
+@MainActor
+protocol SimRadioMediaPlayerDelegate: AnyObject {
+    func simRadioMediaPlayer(_ player: SimRadioMediaPlayer, didUpdateSpectrum spectrum: [Float])
+}

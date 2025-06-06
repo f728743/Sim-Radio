@@ -38,6 +38,7 @@ private extension AppDelegate {
 
         let mediaPlayer = MediaPlayer()
         mediaPlayer.simRadio = simRadioPlayer
+        simRadioPlayer.delegate = mediaPlayer
         mediaPlayer.mediaState = mediaState
 
         let playerController = PlayerController()
